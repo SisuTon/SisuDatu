@@ -1,0 +1,12 @@
+[
+  {
+    "question": "Что такое SISU?",
+    "options": ["Токен", "Напиток", "Животное"],
+    "correct_option_id": 0
+  },
+  {
+    "question": "Кто такая Сису?",
+    "options": ["Дракон", "Кот", "Человек"],
+    "correct_option_id": 0
+  }
+]

@@ -1,0 +1,7 @@
+[
+  {"min_points": 0, "title": "Новичок"},
+  {"min_points": 10, "title": "Ученик"},
+  {"min_points": 50, "title": "Воин Дракона"},
+  {"min_points": 100, "title": "Мастер Сису"},
+  {"min_points": 200, "title": "Легенда"}
+]
