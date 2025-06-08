@@ -1,4 +1,4 @@
-.PHONY: install test deploy backup clean clean-pyc clean-test clean-build
+.PHONY: install test deploy backup clean clean-pyc clean-test clean-build dev docker run lint
 
 # Установка (кросс-платформенная)
 install:
@@ -44,4 +44,16 @@ clean-build:
 
 # Полная очистка
 clean: clean-pyc clean-test clean-build
-	@echo "✅ Все временные файлы очищены" 
+	@echo "✅ Все временные файлы очищены"
+
+dev:
+	./dev.sh
+
+docker:
+	docker build -t sisu-bot .
+
+run:
+	docker run --env-file .env sisu-bot
+
+lint:
+	black . && flake8 . 

@@ -15,4 +15,4 @@ class BaseHandler:
         print(f"[LOG][{chat_id}]: {text}")
 
     async def reply(self, message: types.Message, text: str):
-        await message.reply(hbold(text), parse_mode="HTML")
+        await message.reply(hbold(text), parse_mode="HTML") 

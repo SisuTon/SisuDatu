@@ -1,0 +1,9 @@
+{
+  "tasks": [
+    {
+      "type": "text",
+      "content": "Как дела ?",
+      "points": 100
+    }
+  ]
+}

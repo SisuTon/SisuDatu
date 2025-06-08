@@ -1,0 +1,12 @@
+[
+  {
+    "time": "2025-06-04 21:49:10",
+    "user_id": 446318189,
+    "username": "bakeevsergey",
+    "command": "/allow_chat",
+    "params": {
+      "chat_id": -1002565290281
+    },
+    "result": null
+  }
+]

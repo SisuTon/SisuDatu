@@ -1,14 +1,18 @@
-"""
-Обработчик донатов (кнопка или команда).
-"""
-
-from aiogram import Router, types
+from aiogram import Router
+from aiogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.filters import Command
-from aiogram.fsm.context import FSMContext
 
 router = Router()
 
 @router.message(Command("donate"))
-async def donate_handler(message: types.Message, state: FSMContext):
-    # Здесь логика доната (MVP: просто сообщение)
-    await message.answer("Ты задонатил себе на будущее! 💸")
+async def donate_handler(msg: Message):
+    kb = InlineKeyboardMarkup(
+        inline_keyboard=[
+            [InlineKeyboardButton(text="Купить SISU через TON Trading Bot", url="https://t.me/tontrade?start=HeeuA1fNBh")]
+        ]
+    )
+    await msg.answer(
+        "Задонать себе на будущее — купи токен SISU через TON Trading Bot!\n\n"
+        "После покупки токенов ты получишь баллы и сможешь попасть в топ.",
+        reply_markup=kb
+    ) 
