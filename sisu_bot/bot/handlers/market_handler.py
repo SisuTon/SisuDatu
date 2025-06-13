@@ -1,14 +1,20 @@
 from aiogram import Router
 from aiogram.types import Message
 from aiogram.filters import Command
+from aiogram.utils.chat_action import ChatActionSender
 
 router = Router()
 
 @router.message(Command("market"))
 async def market_handler(msg: Message):
     text = (
-        "🛒 Рынок рангов скоро откроется!\n"
-        "Здесь ты сможешь купить себе статус, NFT и рекламировать свой проект.\n"
-        "Следи за обновлениями!"
+        "🛍 Рынок рангов (скоро!)\n\n"
+        "В разработке:\n"
+        "• Обмен рангами\n"
+        "• NFT-аватарки\n"
+        "• Эксклюзивные бейджи\n"
+        "• Специальные возможности"
     )
-    await msg.answer(text) 
+    
+    async with ChatActionSender.typing(bot=msg.bot, chat_id=msg.chat.id):
+        await msg.answer(text) 

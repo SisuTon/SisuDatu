@@ -1,6 +1,6 @@
 from aiogram import BaseMiddleware
 from aiogram.types import Message
-from bot.services import user_service
+from sisu_bot.bot.services import user_service
 
 class UserSyncMiddleware(BaseMiddleware):
     async def __call__(self, handler, event: Message, data):

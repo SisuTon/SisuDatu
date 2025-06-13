@@ -1,7 +1,7 @@
 from aiogram import Router
 from aiogram.types import Message
 from aiogram.filters import Command
-from bot.services import points_service
+from sisu_bot.bot.services import points_service
 
 router = Router()
 

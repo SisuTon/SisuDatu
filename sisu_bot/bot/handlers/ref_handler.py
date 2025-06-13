@@ -10,7 +10,7 @@ import sys
 # Добавляем путь к корню проекта
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 
-from bot.services.user_service import load_users, save_users
+from sisu_bot.bot.services.user_service import load_users, save_users
 
 # Создаем роутер ОДИН раз
 router = Router()

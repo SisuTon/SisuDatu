@@ -1,29 +1,29 @@
 {
-    "446318189": {
-        "points": 66.5,
-        "rank": "seeker",
-        "active_days": 2,
-        "referrals": 0,
-        "username": "bakeevsergey",
-        "first_name": "Sergey",
-        "last_checkin": "2025-06-07T18:25:45.216852"
-    },
-    "6867521567": {
-        "points": 52,
-        "rank": "seeker",
-        "active_days": 1,
-        "referrals": 0,
-        "username": "SnoopDoggArmy",
-        "first_name": "Snoop Dogg",
-        "last_checkin": "2025-06-06T18:40:19.503354"
-    },
-    "6485553352": {
-        "points": 50,
-        "rank": "seeker",
-        "active_days": 1,
-        "referrals": 0,
-        "username": "YakuzaNakamoto",
-        "first_name": "YakuzaNakamoto",
-        "last_checkin": "2025-06-06T18:38:33.426862"
-    }
+  "446318189": {
+    "points": 80.0,
+    "rank": "seeker",
+    "active_days": 3,
+    "referrals": 0,
+    "username": "bakeevsergey",
+    "first_name": "Sergey",
+    "last_checkin": "2025-06-12T09:38:59.816389"
+  },
+  "6867521567": {
+    "points": 52,
+    "rank": "seeker",
+    "active_days": 1,
+    "referrals": 0,
+    "username": "SnoopDoggArmy",
+    "first_name": "Snoop Dogg",
+    "last_checkin": "2025-06-06T18:40:19.503354"
+  },
+  "6485553352": {
+    "points": 50,
+    "rank": "seeker",
+    "active_days": 1,
+    "referrals": 0,
+    "username": "YakuzaNakamoto",
+    "first_name": "YakuzaNakamoto",
+    "last_checkin": "2025-06-06T18:38:33.426862"
+  }
 }

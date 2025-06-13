@@ -4,8 +4,8 @@ from aiogram import Router, F
 from aiogram.types import Message, ChatMemberUpdated
 from aiogram.filters import Command
 from pathlib import Path
-from bot.services.allowed_chats_service import list_allowed_chats
-from bot.services import top_service
+from sisu_bot.bot.services.allowed_chats_service import list_allowed_chats
+from sisu_bot.bot.services import top_service
 
 router = Router()
 

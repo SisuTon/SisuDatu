@@ -1,15 +1,15 @@
 from aiogram import Router
 from aiogram.types import Message
 from aiogram.filters import Command
-from bot.services.user_service import update_user_info, load_users, save_users
-from bot.services import points_service
+from sisu_bot.bot.services.user_service import update_user_info, load_users, save_users
+from sisu_bot.bot.services import points_service
 import logging
 
 router = Router()
 
 @router.message(Command("start"))
 async def start_handler(msg: Message):
-    args = msg.get_args()
+    args = msg.text.split(maxsplit=1)[1] if len(msg.text.split(maxsplit=1)) > 1 else ""
     user_id = str(msg.from_user.id)
     users = load_users()
     bot = msg.bot

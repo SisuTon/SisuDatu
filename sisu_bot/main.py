@@ -6,32 +6,33 @@ import asyncio
 import logging
 import os
 from dotenv import load_dotenv
+from aiogram.types import Update
 
 # Хендлеры
-from bot.handlers.checkin_handler import router as checkin_router
-from bot.handlers.donate_handler import router as donate_router
-from bot.handlers.media_handler import router as media_router
-from bot.handlers.message_handler import router as message_router
-from bot.handlers.ref_handler import router as ref_router
-from bot.handlers.admin_handler import router as admin_router
-from bot.handlers.ai_handler import router as ai_router
-from bot.handlers.commands import router as commands_router
-from bot.handlers.common import router as common_router
-from bot.handlers.help_handler import router as help_router
-from bot.handlers.market_handler import router as market_router
-from bot.handlers.myrank_handler import router as myrank_router
-from bot.handlers.start_handler import router as start_router
-from bot.handlers.top_handler import router as top_router
-from bot.handlers.dialog_handler import dialog_router
+from sisu_bot.bot.handlers.checkin_handler import router as checkin_router
+from sisu_bot.bot.handlers.donate_handler import router as donate_router
+from sisu_bot.bot.handlers.media_handler import router as media_router
+from sisu_bot.bot.handlers.message_handler import router as message_router
+from sisu_bot.bot.handlers.ref_handler import router as ref_router
+from sisu_bot.bot.handlers.admin_handler import router as admin_router
+from sisu_bot.bot.handlers.ai_handler import router as ai_router
+from sisu_bot.bot.handlers.common import router as common_router
+from sisu_bot.bot.handlers.help_handler import router as help_router
+from sisu_bot.bot.handlers.market_handler import router as market_router
+from sisu_bot.bot.handlers.myrank_handler import router as myrank_router
+from sisu_bot.bot.handlers.top_handler import router as top_router
+from sisu_bot.bot.handlers.dialog_handler import dialog_router
+from sisu_bot.bot.handlers.start_handler import router as start_router
+from sisu_bot.bot.handlers.superadmin_handler import router as superadmin_router
 
 # Middlewares
-from bot.middlewares.preprocess import PreprocessMiddleware
-from bot.middlewares.antifraud import AntiFraudMiddleware
-from bot.middlewares.allowed_chats_middleware import AllowedChatsMiddleware
-from bot.middlewares.user_sync import UserSyncMiddleware
+from sisu_bot.bot.middlewares.preprocess import PreprocessMiddleware
+from sisu_bot.bot.middlewares.antifraud import AntiFraudMiddleware
+from sisu_bot.bot.middlewares.allowed_chats_middleware import AllowedChatsMiddleware
+from sisu_bot.bot.middlewares.user_sync import UserSyncMiddleware
 
 # Сервисы
-from bot.services.command_menu_service import setup_command_menus
+from sisu_bot.bot.services.command_menu_service import setup_command_menus
 
 # Настройка логирования
 logging.basicConfig(
@@ -62,7 +63,7 @@ async def main():
     # Подключаем все роутеры в правильном порядке
     logger.info("Registering routers...")
     # 1. Сначала специфические команды
-    dp.include_router(commands_router)  # Базовые команды
+    dp.include_router(superadmin_router)
     dp.include_router(start_router)     # Команда /start
     dp.include_router(help_router)      # Команда /help
     dp.include_router(checkin_router)   # Команда /checkin

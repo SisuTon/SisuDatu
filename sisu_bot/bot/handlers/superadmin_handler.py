@@ -5,10 +5,11 @@ from aiogram.fsm.state import State, StatesGroup
 from aiogram.fsm.context import FSMContext
 import json
 from pathlib import Path
-from bot.services.allowed_chats_service import list_allowed_chats, remove_allowed_chat
-from bot.services import points_service
-from bot.services.adminlog_service import get_admin_logs
-from bot.services.trigger_stats_service import get_trigger_stats, suggest_new_triggers, auto_add_suggested_triggers
+from sisu_bot.bot.services.allowed_chats_service import list_allowed_chats, remove_allowed_chat, add_allowed_chat
+from sisu_bot.bot.services import points_service
+from sisu_bot.bot.services.adminlog_service import get_admin_logs
+from sisu_bot.bot.services.trigger_stats_service import get_trigger_stats, suggest_new_triggers, auto_add_suggested_triggers
+import logging
 
 SUPERADMINS = [446318189]  # Добавь сюда user_id супер-админов
 AI_DIALOG_ENABLED = False
@@ -73,7 +74,8 @@ class SuperAdminStates(StatesGroup):
 
 @router.message(Command("superadmin_help"))
 async def superadmin_help(msg: Message):
-    if msg.from_user.id not in SUPERADMINS:
+    logging.warning(f"DEBUG superadmin_help: from_user.id={msg.from_user.id}, chat.type={msg.chat.type}")
+    if msg.from_user.id not in SUPERADMINS or msg.chat.type != "private":
         await msg.answer("Нет прав!")
         return
     text = "\n".join([f"{cmd} — {desc}" for cmd, desc in SUPERADMIN_COMMANDS.items()])
@@ -81,8 +83,9 @@ async def superadmin_help(msg: Message):
 
 @router.message(Command("ai_dialog_on"))
 async def ai_dialog_on(msg: Message):
+    logging.warning(f"DEBUG ai_dialog_on: from_user.id={msg.from_user.id}, chat.type={msg.chat.type}")
     global AI_DIALOG_ENABLED
-    if msg.from_user.id not in SUPERADMINS:
+    if msg.from_user.id not in SUPERADMINS or msg.chat.type != "private":
         await msg.answer("Нет прав!")
         return
     AI_DIALOG_ENABLED = True

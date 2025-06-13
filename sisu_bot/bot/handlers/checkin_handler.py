@@ -5,7 +5,7 @@ from aiogram import Router, F
 from aiogram.types import Message
 from aiogram.filters import Command
 from aiogram.utils.keyboard import InlineKeyboardBuilder
-from bot.services import points_service
+from sisu_bot.bot.services import points_service
 from pathlib import Path
 
 router = Router()

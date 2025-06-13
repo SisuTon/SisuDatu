@@ -4,9 +4,9 @@ from aiogram import Router, F
 from aiogram.types import Message
 from aiogram.filters import StateFilter
 from aiogram.fsm.context import FSMContext
-from bot.services import points_service
+from sisu_bot.bot.services import points_service
 from pathlib import Path
-from bot.handlers.admin_handler import AdminStates
+from sisu_bot.bot.handlers.admin_handler import AdminStates
 
 router = Router()
 

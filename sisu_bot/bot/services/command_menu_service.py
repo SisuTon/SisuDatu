@@ -1,6 +1,6 @@
 from aiogram.types import BotCommand, BotCommandScopeDefault, BotCommandScopeChat
-from bot.config import ADMIN_IDS
-from bot.handlers.admin_handler import load_admins
+from sisu_bot.bot.config import ADMIN_IDS
+from sisu_bot.bot.handlers.admin_handler import load_admins
 import logging
 
 # Настройка логирования

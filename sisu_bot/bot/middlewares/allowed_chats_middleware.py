@@ -1,6 +1,6 @@
 from aiogram import BaseMiddleware
 from aiogram.types import Message, Update
-from bot.services.allowed_chats_service import list_allowed_chats
+from sisu_bot.bot.services.allowed_chats_service import list_allowed_chats
 import logging
 
 class AllowedChatsMiddleware(BaseMiddleware):
@@ -16,7 +16,7 @@ class AllowedChatsMiddleware(BaseMiddleware):
 
             # ЛИЧНЫЕ ЧАТЫ: разрешаем только команды
             if chat_type == "private":
-                if text.startswith("/"):
+                if text and text.startswith("/"):
                     # Явно разрешаем /ref команду
                     if text.split()[0].lower() == "/ref":
                         logging.info(f"[Allowed] /ref command in private chat from user {event.from_user.id}")

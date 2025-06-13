@@ -3,11 +3,12 @@ from aiogram.types import Message
 from aiogram.filters import Command, StateFilter
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.fsm.context import FSMContext
-from bot.config import ADMIN_IDS
-from bot.services import points_service
-from bot.services.adminlog_service import log_admin_action
+from sisu_bot.bot.config import ADMIN_IDS
+from sisu_bot.bot.services import points_service
+from sisu_bot.bot.services.adminlog_service import log_admin_action
 import json
 from pathlib import Path
+from sisu_bot.bot.services.points_service import load_users
 
 router = Router()
 
@@ -128,7 +129,6 @@ async def broadcast_start(msg: Message, state: FSMContext):
 @router.message(StateFilter(AdminStates.waiting_broadcast))
 async def broadcast_send(msg: Message, state: FSMContext):
     await state.clear()
-    from bot.services.points_service import load_users
     users = load_users()
     count = 0
     for user_id in users:
@@ -159,7 +159,6 @@ async def challenge_start(msg: Message, state: FSMContext):
 @router.message(StateFilter(AdminStates.waiting_challenge))
 async def challenge_send(msg: Message, state: FSMContext):
     await state.clear()
-    from bot.services.points_service import load_users
     users = load_users()
     count = 0
     for user_id in users:

@@ -9,8 +9,8 @@ from typing import Dict, List, Set, Optional, Any
 import asyncio
 from aiogram.filters import StateFilter, Command
 from aiogram.fsm.context import FSMContext
-from bot.handlers.admin_handler import AdminStates
-from bot.services.trigger_stats_service import log_trigger_usage, get_smart_answer, add_like, add_dislike
+from sisu_bot.bot.handlers.admin_handler import AdminStates
+from sisu_bot.bot.services.trigger_stats_service import log_trigger_usage, get_smart_answer, add_like, add_dislike
 import hashlib
 from collections import defaultdict, deque
 from datetime import datetime
@@ -18,14 +18,19 @@ try:
     from rapidfuzz import fuzz
     FUZZY_AVAILABLE = True
 except ImportError:
-    import difflib
     FUZZY_AVAILABLE = False
-from bot.services.ai_memory_service import sisu_memory, sisu_mood, update_mood, get_mood
-from bot.services.ai_trigger_service import PHRASES, TROLL_TRIGGERS, TROLL_RESPONSES, LEARNING_DATA, save_learning_data, get_learned_response, learn_response
-from bot.services.ai_stats_service import response_stats, user_preferences, update_response_stats, get_user_style
+    class DummyFuzz:
+        @staticmethod
+        def ratio(a, b):
+            return 0
+    fuzz = DummyFuzz()
+from sisu_bot.bot.services.ai_memory_service import sisu_memory, sisu_mood, update_mood, get_mood
+from sisu_bot.bot.services.ai_trigger_service import PHRASES, TROLL_TRIGGERS, TROLL_RESPONSES, LEARNING_DATA, save_learning_data, get_learned_response, learn_response
+from sisu_bot.bot.services.ai_stats_service import response_stats, user_preferences, update_response_stats, get_user_style
 import logging
 from aiogram.fsm.state import State, StatesGroup
-from bot.services.yandexgpt_service import generate_sisu_reply
+from sisu_bot.bot.services.yandexgpt_service import generate_sisu_reply
+from sisu_bot.bot.config import ADMIN_IDS
 
 logger = logging.getLogger(__name__)
 
@@ -386,51 +391,6 @@ SUPERADMIN_COMMANDS = {
     # ... сюда можно добавить другие команды супер-админа ...
 }
 
-# Подсказка для супер-админа
-@router.message(Command("superadmin_help"))
-async def superadmin_help(msg: Message):
-    if msg.from_user.id not in SUPERADMINS:
-        await msg.answer("Нет прав!")
-        return
-    text = "\n".join([f"{cmd} — {desc}" for cmd, desc in SUPERADMIN_COMMANDS.items()])
-    await msg.answer(f"Доступные команды супер-админа:\n{text}")
-
-@router.message(Command("ai_dialog_on"))
-async def ai_dialog_on(msg: Message):
-    global AI_DIALOG_ENABLED
-    if msg.from_user.id not in SUPERADMINS:
-        await msg.answer("Нет прав!")
-        return
-    AI_DIALOG_ENABLED = True
-    await msg.answer("AI-диалог включён!")
-
-@router.message(Command("ai_dialog_off"))
-async def ai_dialog_off(msg: Message):
-    global AI_DIALOG_ENABLED
-    if msg.from_user.id not in SUPERADMINS:
-        await msg.answer("Нет прав!")
-        return
-    AI_DIALOG_ENABLED = False
-    await msg.answer("AI-диалог выключен!")
-
-@router.message(Command("enable_private"))
-async def enable_private(msg: Message):
-    global PRIVATE_ENABLED
-    if msg.from_user.id not in SUPERADMINS:
-        await msg.answer("Нет прав!")
-        return
-    PRIVATE_ENABLED = True
-    await msg.answer("Работа бота в личке включена!")
-
-@router.message(Command("disable_private"))
-async def disable_private(msg: Message):
-    global PRIVATE_ENABLED
-    if msg.from_user.id not in SUPERADMINS:
-        await msg.answer("Нет прав!")
-        return
-    PRIVATE_ENABLED = False
-    await msg.answer("Работа бота в личке отключена!")
-
 # Фирменные фразы Сису (можно расширять)
 SISU_SIGNATURE_PHRASES = [
     "А знаешь, что я только что подумала?",
@@ -595,85 +555,86 @@ SISU_FRIENDLY_PHRASES = [
 
 @router.message(lambda msg: SISU_PATTERN.match(msg.text or "") or (msg.reply_to_message and msg.reply_to_message.from_user and msg.reply_to_message.from_user.is_bot))
 async def sisu_explicit_handler(msg: Message, state: FSMContext):
-    chat_id = msg.chat.id
-    user = msg.from_user
-    user_name = user.first_name or user.username or str(user.id)
-    mood = sisu_mood.get(chat_id, 0)
-    
-    # Проверка на "набор букв"
-    if not re.match(r"^[а-яА-Яa-zA-ZёЁ\- ]{2,}$", user_name):
-        name_part = random.choice([j.format(name=user_name) for j in SISU_NAME_JOKES])
-    else:
-        roll = random.random()
-        if roll < 0.5:
-            name_part = random.choice([v.format(name=user_name) for v in SISU_NAME_VARIANTS])
-        elif roll < 0.8:
+    try:
+        chat_id = msg.chat.id
+        user = msg.from_user
+        user_name = user.first_name or user.username or str(user.id)
+        mood = sisu_mood.get(chat_id, 0)
+        # Проверка на "набор букв"
+        if not re.match(r"^[а-яА-Яa-zA-ZёЁ\- ]{2,}$", user_name):
             name_part = random.choice([j.format(name=user_name) for j in SISU_NAME_JOKES])
         else:
-            name_part = ""
-    
-    async with ChatActionSender.typing(bot=msg.bot, chat_id=chat_id):
-        # Пасхалка: если пользователь спрашивает 'Сису, что ты запомнила?'
-        if (msg.text or '').lower().strip() in ["сису, что ты запомнила?", "сису что ты запомнила", "что ты запомнила?"]:
-            learned = list(LEARNING_DATA["triggers"].values())
-            learned_flat = [item for sublist in learned for item in sublist]
-            if learned_flat:
-                await msg.answer(random.choice(learned_flat))
+            roll = random.random()
+            if roll < 0.5:
+                name_part = random.choice([v.format(name=user_name) for v in SISU_NAME_VARIANTS])
+            elif roll < 0.8:
+                name_part = random.choice([j.format(name=user_name) for j in SISU_NAME_JOKES])
             else:
-                await msg.answer("Я пока только учусь, но скоро буду удивлять!")
-            return
-        
-        # Магический сюжетный поворот (5% шанс)
-        if random.random() < 0.05:
-            magic_phrase = random.choice(SISU_MAGIC_PHRASES)
-            await msg.answer(f"{name_part} {magic_phrase}".strip())
-            sisu_message_counter[chat_id] = sisu_message_counter.get(chat_id, 0) + 1
-            if sisu_message_counter[chat_id] % random.randint(10, 20) == 0:
+                name_part = ""
+        async with ChatActionSender.typing(bot=msg.bot, chat_id=chat_id):
+            # Пасхалка: если пользователь спрашивает 'Сису, что ты запомнила?'
+            if (msg.text or '').lower().strip() in ["сису, что ты запомнила?", "сису что ты запомнила", "что ты запомнила?"]:
                 learned = list(LEARNING_DATA["triggers"].values())
                 learned_flat = [item for sublist in learned for item in sublist]
-                phrase = random.choice(SISU_SIGNATURE_PHRASES + learned_flat) if learned_flat else random.choice(SISU_SIGNATURE_PHRASES)
-                async with ChatActionSender.typing(bot=msg.bot, chat_id=chat_id):
-                    await msg.bot.send_message(chat_id, phrase)
-            return
-
-        # Кастомные ответы на Снуп Догга и токен Сису
-        text = (msg.text or '').lower()
-        if "снуп дог" in text or "snoop dogg" in text or "snoop" in text:
-            snoop_phrase = random.choice(SISU_SNOOP_REPLIES)
-            if name_part and random.random() < 0.5:
-                snoop_phrase = f"{name_part} {snoop_phrase}".strip()
-            await msg.answer(snoop_phrase)
-        return
-
-        if "токен сису" in text or "sisu token" in text or ("тон" in text and "сису" in text):
-            token_phrase = random.choice(SISU_TOKEN_REPLIES)
-            if name_part and random.random() < 0.5:
-                token_phrase = f"{name_part} {token_phrase}".strip()
-            await msg.answer(token_phrase)
-            return
-        
-        # Основной ответ через YandexGPT
+                if learned_flat:
+                    await msg.answer(random.choice(learned_flat))
+                else:
+                    await msg.answer("Я пока только учусь, но скоро буду удивлять!")
+                return
+            # Магический сюжетный поворот (5% шанс)
+            if random.random() < 0.05:
+                magic_phrase = random.choice(SISU_MAGIC_PHRASES)
+                await msg.answer(f"{name_part} {magic_phrase}".strip())
+                sisu_message_counter[chat_id] = sisu_message_counter.get(chat_id, 0) + 1
+                if sisu_message_counter[chat_id] % random.randint(10, 20) == 0:
+                    learned = list(LEARNING_DATA["triggers"].values())
+                    learned_flat = [item for sublist in learned for item in sublist]
+                    phrase = random.choice(SISU_SIGNATURE_PHRASES + learned_flat) if learned_flat else random.choice(SISU_SIGNATURE_PHRASES)
+                    async with ChatActionSender.typing(bot=msg.bot, chat_id=chat_id):
+                        await msg.bot.send_message(chat_id, phrase)
+                return
+            # Кастомные ответы на Снуп Догга и токен Сису
+            text = (msg.text or '').lower()
+            if "снуп дог" in text or "snoop dogg" in text or "snoop" in text:
+                snoop_phrase = random.choice(SISU_SNOOP_REPLIES)
+                if name_part and random.random() < 0.5:
+                    snoop_phrase = f"{name_part} {snoop_phrase}".strip()
+                await msg.answer(snoop_phrase)
+                return
+            if "токен сису" in text or "sisu token" in text or ("тон" in text and "сису" in text):
+                token_phrase = random.choice(SISU_TOKEN_REPLIES)
+                if name_part and random.random() < 0.5:
+                    token_phrase = f"{name_part} {token_phrase}".strip()
+                await msg.answer(token_phrase)
+                return
+            # Основной ответ через YandexGPT
+            try:
+                sisu_reply = await generate_sisu_reply(msg.text)
+                # Усиливаем влияние настроения на обычные ответы
+                if mood <= -2 and random.random() < 0.5:
+                    sisu_reply = f"{name_part} {random.choice(SISU_SARCASTIC_PHRASES)}".strip()
+                elif mood >= 2 and random.random() < 0.5:
+                    sisu_reply = f"{name_part} {random.choice(SISU_FRIENDLY_PHRASES)}".strip()
+                elif name_part and random.random() < 0.7:
+                    sisu_reply = f"{name_part} {sisu_reply}".strip()
+            except Exception as e:
+                logging.error(f"YANDEX ERROR: {e}")
+                logging.error(f"PHRASES fallback: {PHRASES}")
+                sisu_reply = random.choice(PHRASES) if PHRASES else "Сису задумалась... Попробуй ещё раз!"
+            await msg.answer(sisu_reply)
+        sisu_message_counter[chat_id] = sisu_message_counter.get(chat_id, 0) + 1
+        if sisu_message_counter[chat_id] % random.randint(10, 20) == 0:
+            learned = list(LEARNING_DATA["triggers"].values())
+            learned_flat = [item for sublist in learned for item in sublist]
+            phrase = random.choice(SISU_SIGNATURE_PHRASES + learned_flat) if learned_flat else random.choice(SISU_SIGNATURE_PHRASES)
+            async with ChatActionSender.typing(bot=msg.bot, chat_id=chat_id):
+                await msg.bot.send_message(chat_id, phrase)
+    except Exception as e:
+        logging.error(f"FATAL ERROR IN SISU HANDLER: {e}")
         try:
-            sisu_reply = await generate_sisu_reply(msg.text)
-            # Усиливаем влияние настроения на обычные ответы
-            if mood <= -2 and random.random() < 0.5:
-                sisu_reply = f"{name_part} {random.choice(SISU_SARCASTIC_PHRASES)}".strip()
-            elif mood >= 2 and random.random() < 0.5:
-                sisu_reply = f"{name_part} {random.choice(SISU_FRIENDLY_PHRASES)}".strip()
-            elif name_part and random.random() < 0.7:
-                sisu_reply = f"{name_part} {sisu_reply}".strip()
-        except Exception:
-            sisu_reply = random.choice(PHRASES)
-        
-        await msg.answer(sisu_reply)
-    
-    sisu_message_counter[chat_id] = sisu_message_counter.get(chat_id, 0) + 1
-    if sisu_message_counter[chat_id] % random.randint(10, 20) == 0:
-        learned = list(LEARNING_DATA["triggers"].values())
-        learned_flat = [item for sublist in learned for item in sublist]
-        phrase = random.choice(SISU_SIGNATURE_PHRASES + learned_flat) if learned_flat else random.choice(SISU_SIGNATURE_PHRASES)
-        async with ChatActionSender.typing(bot=msg.bot, chat_id=chat_id):
-            await msg.bot.send_message(chat_id, phrase)
+            await msg.answer(random.choice(PHRASES) if PHRASES else "Сису задумалась... Попробуй ещё раз!")
+        except Exception as inner:
+            logging.error(f"FALLBACK SEND ERROR: {inner}")
 
 # 2. Триггеры (TON, токен, Снуп Дог, Плотва, Сглыпа и т.д.)
 @router.message(lambda msg: any(word in (msg.text or '').lower() for word in ["тон", "ton", "снуп дог", "плотва", "сглыпа", "token", "sisutoken"]))
@@ -800,7 +761,6 @@ async def sisu_reply_learning_handler(msg: Message, state: FSMContext):
         return 
 
 # Команда для супер-админа: /sisu_learned — случайная выученная фраза
-from bot.config import ADMIN_IDS
 @router.message(Command("sisu_learned"))
 async def sisu_learned_handler(msg: Message):
     if msg.from_user.id not in ADMIN_IDS:

@@ -5,7 +5,7 @@ import asyncio
 import random
 import re
 
-from bot.utils import load_json_safe, save_json_safe
+from sisu_bot.bot.utils import load_json_safe, save_json_safe
 try:
     from fuzzywuzzy import fuzz
 except ImportError:
