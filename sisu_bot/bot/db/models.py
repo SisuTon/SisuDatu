@@ -38,4 +38,23 @@ class Channel(Base):
     id = Column(Integer, primary_key=True)
     title = Column(String)
     link = Column(String)
-    created_at = Column(DateTime, default=datetime.datetime.utcnow) 
+    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+
+class BotState(Base):
+    __tablename__ = 'bot_state'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    key = Column(String, unique=True, nullable=False)
+    value = Column(String, nullable=True)
+
+class RequiredChannel(Base):
+    __tablename__ = 'required_channels'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    channel_id = Column(String, unique=True, nullable=False)
+    username = Column(String, nullable=True)
+    title = Column(String, nullable=True)
+
+class EmojiMovie(Base):
+    __tablename__ = 'emoji_movies'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    emoji = Column(String, nullable=False)
+    answers = Column(String, nullable=False)  # Сохраняем варианты ответов через запятую 

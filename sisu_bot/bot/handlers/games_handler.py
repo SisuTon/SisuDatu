@@ -8,6 +8,9 @@ import json
 import os
 from typing import Dict, List, Optional
 from sisu_bot.bot.config import SUPERADMIN_IDS, is_superadmin
+from sisu_bot.bot.services.games_service import bulk_add_emoji_movies, get_random_emoji_movie, check_emoji_movie_answer
+from sisu_bot.bot.services.points_service import add_points
+import asyncio
 
 router = Router()
 
@@ -133,33 +136,29 @@ DECLINE_PHRASES = [
 ]
 
 @router.message(Command("emoji_movie"))
-async def emoji_movie_start(msg: Message, state: FSMContext):
-    chat_id = msg.chat.id
-    # Проверяем, не идет ли уже игра
-    if chat_id in active_games:
-        await msg.answer("У нас уже идет игра! Дождись её окончания.")
+async def emoji_movie_handler(msg: Message):
+    movie = get_random_emoji_movie()
+    if not movie:
+        await msg.answer("Нет фильмов для игры. Попроси суперадмина загрузить их через /bulk_emoji!")
         return
-    
-    # Случайно решаем, будет ли Сису играть
-    if random.random() > 0.6:
-        await msg.answer(random.choice(DECLINE_PHRASES))
-        return
-    
-    # Загружаем данные игр
-    games_data = load_games_data()
-    if not games_data["emoji_movies"]:
-        await msg.answer("Ой, я забыла все фильмы! Может, научишь меня новым?")
-        return
-    
-    # Выбираем фильм
-    movie = random.choice(games_data["emoji_movies"])
-    active_games[chat_id] = {
-        "type": "emoji_movie",
-        "answer": movie["answer"].lower()
-    }
-    
-    await msg.answer(f"Лови загадку! Отгадай фильм по эмодзи и ответь мне в reply:\n{movie['emoji']}")
-    await state.set_state(GameStates.waiting_emoji_answer)
+    # Анимация выбора
+    for _ in range(3):
+        await msg.answer("🎲 Крутим барабан...", disable_notification=True)
+        await asyncio.sleep(0.5)
+    await msg.answer(f"Угадай фильм по эмодзи: {movie.emoji}\nОтветь на это сообщение!")
+    # Сохраняем id фильма в state (или можно через in-memory dict, если нет FSM)
+    # Для простоты: ждём ответ в течение 60 секунд
+    def check_reply(m):
+        return m.reply_to_message and m.reply_to_message.message_id == msg.message_id + 4  # 4 сообщения анимации
+    try:
+        reply = await msg.bot.wait_for('message', timeout=60, check=check_reply)
+        if check_emoji_movie_answer(movie.id, reply.text):
+            add_points(reply.from_user.id, 10)
+            await reply.answer("Респект! +10 баллов!")
+        else:
+            await reply.answer("Увы, неверно! Попробуй ещё раз через /emoji_movie")
+    except asyncio.TimeoutError:
+        await msg.answer("Время вышло! Попробуй снова через /emoji_movie")
 
 @router.message(Command("teach_emoji"))
 async def teach_emoji_start(msg: Message, state: FSMContext):
@@ -383,52 +382,21 @@ async def games_admin_help(msg: Message):
     await msg.answer(help_text)
 
 @router.message(Command("bulk_emoji"))
-async def bulk_emoji_start(msg: Message, state: FSMContext):
+async def bulk_emoji_handler(msg: Message):
     if not is_superadmin(msg.from_user.id):
-        await msg.answer("У вас нет прав для использования этой команды.")
+        await msg.answer("Нет прав!")
         return
-    
-    await msg.answer(
-        "Отправьте список фильмов в формате:\n"
-        "эмодзи | название фильма\n"
-        "эмодзи | название фильма\n"
-        "Например:\n"
-        "👻👻👻 | Три богатыря\n"
-        "👨‍👦🐠 | В поисках Немо"
-    )
-    await state.set_state(GameStates.waiting_bulk_emoji)
-
-@router.message(GameStates.waiting_bulk_emoji)
-async def bulk_emoji_process(msg: Message, state: FSMContext):
-    if not is_superadmin(msg.from_user.id):
-        await state.clear()
-        return
-    
-    lines = msg.text.strip().split('\n')
-    games_data = load_games_data()
-    added = 0
-    skipped = 0
-    
+    lines = msg.text.split("\n")[1:]
+    movies = []
     for line in lines:
-        if '|' not in line:
-            continue
-        emoji, answer = [part.strip() for part in line.split('|', 1)]
-        if not emoji or not answer:
-            continue
-        
-        # Проверяем на дубликаты
-        if not any(m["emoji"] == emoji and m["answer"].lower() == answer.lower() for m in games_data["emoji_movies"]):
-            games_data["emoji_movies"].append({
-                "emoji": emoji,
-                "answer": answer
-            })
-            added += 1
-        else:
-            skipped += 1
-    
-    save_games_data(games_data)
-    await msg.answer(f"✅ Добавлено новых фильмов: {added}\n⏭ Пропущено дубликатов: {skipped}")
-    await state.clear()
+        if "|" in line:
+            emoji, answers = line.split("|", 1)
+            movies.append({"emoji": emoji.strip(), "answers": [a.strip() for a in answers.split(",")]})
+    if not movies:
+        await msg.answer("Формат: эмодзи | ответ1, ответ2, ...")
+        return
+    bulk_add_emoji_movies(movies)
+    await msg.answer(f"Загружено фильмов: {len(movies)}")
 
 @router.message(Command("bulk_riddle"))
 async def bulk_riddle_start(msg: Message, state: FSMContext):

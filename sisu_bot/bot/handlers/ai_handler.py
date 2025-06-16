@@ -24,14 +24,13 @@ except ImportError:
         def ratio(a, b):
             return 0
     fuzz = DummyFuzz()
-from sisu_bot.bot.services.ai_memory_service import sisu_memory, sisu_mood, update_mood, get_mood
+from sisu_bot.bot.services.state_service import get_state, get_mood
 from sisu_bot.bot.services.ai_trigger_service import PHRASES, TROLL_TRIGGERS, TROLL_RESPONSES, LEARNING_DATA, save_learning_data, get_learned_response, learn_response
 from sisu_bot.bot.services.ai_stats_service import response_stats, user_preferences, update_response_stats, get_user_style
 import logging
 from aiogram.fsm.state import State, StatesGroup
 from sisu_bot.bot.services.yandexgpt_service import generate_sisu_reply
 from sisu_bot.bot.config import ADMIN_IDS, is_superadmin
-from sisu_bot.bot.services.state_service import get_state
 
 logger = logging.getLogger(__name__)
 
@@ -560,6 +559,10 @@ async def sisu_explicit_handler(msg: Message, state: FSMContext):
         chat_id = msg.chat.id
         user = msg.from_user
         user_name = user.first_name or user.username or str(user.id)
+        # Получаем актуальное настроение Сису
+        sisu_current_mood = get_mood() or "playful"
+        # Формируем system prompt с учётом настроения
+        system_prompt = f"Ты — Сису, волшебный дракон из Raya and the Last Dragon. Твоё текущее настроение: {sisu_current_mood}. Отвечай в этом стиле, с характером и вайбом, соответствующим настроению. Не забывай быть персоной, а не просто ассистентом."
         mood = sisu_mood.get(chat_id, 0)
         # Проверка на "набор букв"
         if not re.match(r"^[а-яА-Яa-zA-ZёЁ\- ]{2,}$", user_name):
@@ -615,7 +618,7 @@ async def sisu_explicit_handler(msg: Message, state: FSMContext):
             # Основной ответ через YandexGPT
             try:
                 logging.info("SISU_HANDLER: YandexGPT reply start")
-                sisu_reply = await generate_sisu_reply(msg.text)
+                sisu_reply = await generate_sisu_reply(msg.text, system_prompt)
                 # Усиливаем влияние настроения на обычные ответы
                 if mood <= -2 and random.random() < 0.5:
                     sisu_reply = f"{name_part} {random.choice(SISU_SARCASTIC_PHRASES)}".strip()

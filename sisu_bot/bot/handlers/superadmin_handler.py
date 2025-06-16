@@ -9,7 +9,7 @@ from sisu_bot.bot.services.allowed_chats_service import list_allowed_chats, remo
 from sisu_bot.bot.services import points_service
 from sisu_bot.bot.services.adminlog_service import get_admin_logs
 from sisu_bot.bot.services.trigger_stats_service import get_trigger_stats, suggest_new_triggers, auto_add_suggested_triggers
-from sisu_bot.bot.services.state_service import get_state, update_state
+from sisu_bot.bot.services.state_service import get_state, update_state, get_mood, set_mood
 import logging
 from sqlalchemy import create_engine, func
 from sqlalchemy.orm import sessionmaker
@@ -43,7 +43,9 @@ SUPERADMIN_COMMANDS = {
     '/trigger_stats': 'Показать статистику триггера',
     '/suggest_triggers': 'Показать предложенные триггеры',
     '/auto_add_triggers': 'Добавить новые триггеры',
-    '/remove_trigger': 'Удалить триггер'
+    '/remove_trigger': 'Удалить триггер',
+    '/get_mood': 'Показать текущее настроение Сису',
+    '/set_mood': 'Изменить настроение Сису'
 }
 
 router = Router()
@@ -83,12 +85,35 @@ class SuperAdminStates(StatesGroup):
 
 @router.message(Command("superadmin_help"))
 async def superadmin_help(msg: Message):
-    logging.info(f"Command /superadmin_help from user {msg.from_user.id} in chat {msg.chat.id}")
     if not is_superadmin(msg.from_user.id) or msg.chat.type != "private":
         await msg.answer("Нет прав!")
         return
-    text = "\n".join([f"{cmd} — {desc}" for cmd, desc in SUPERADMIN_COMMANDS.items()])
-    await msg.answer(f"Доступные команды супер-админа:\n{text}")
+    text = "👑 Шпаргалка для супер-админа SisuDatuBot\n\n"
+    text += "/addpoints [user_id|@username] [баллы] — начислить баллы\n"
+    text += "/removepoints [user_id|@username] [баллы] — снять баллы\n"
+    text += "/setstreak [user_id|@username] [число] — установить серию\n"
+    text += "/broadcast [текст] — рассылка всем\n"
+    text += "/challenge [текст] — челлендж всем\n"
+    text += "/list_games — список всех игр\n"
+    text += "/games_admin — управление играми (bulk, delete, stats)\n"
+    text += "/market — рынок рангов и NFT\n"
+    text += "/donate — поддержать проект\n"
+    text += "/set_required_subs [ссылки] — установить обязательные подписки\n"
+    text += "/check_subs — проверить подписку пользователя\n"
+    text += "/ref — реферальная система\n"
+    text += "/allow_chat — разрешить работу в чате\n"
+    text += "/disallow_chat — запретить работу в чате\n"
+    text += "/list_chats — список разрешённых чатов\n"
+    text += "/stats — статистика бота\n"
+    text += "/adminlog — лог действий админов\n"
+    text += "/addadmin — добавить админа\n"
+    text += "/removeadmin — убрать админа\n"
+    text += "/list_admins — список админов\n"
+    text += "/auto_add_triggers — автодобавление триггеров\n"
+    text += "/remove_trigger — удалить триггер\n"
+    text += "/get_mood — показать текущее настроение Сису\n"
+    text += "/set_mood — изменить настроение Сису\n"
+    await msg.answer(text)
 
 @router.message(Command("ai_dialog_on"))
 async def ai_dialog_on(msg: Message):
@@ -282,7 +307,7 @@ async def stats_handler(msg: Message):
     total_points = session.query(User).with_entities(func.sum(User.points)).scalar() or 0
     total_messages = session.query(User).with_entities(func.sum(User.message_count)).scalar() or 0
     session.close()
-    text = f"�� Статистика бота:\n\n"
+    text = f"Статистика бота:\n\n"
     text += f"👥 Всего пользователей: {total_users}\n"
     text += f"💎 Всего баллов: {total_points}\n"
     text += f"💬 Всего сообщений: {total_messages}"
@@ -355,4 +380,25 @@ async def remove_trigger_handler(msg: Message):
         return
     trigger = " ".join(args[1:])
     # TODO: Implement trigger removal
-    await msg.answer(f"✅ Триггер '{trigger}' удалён.") 
+    await msg.answer(f"✅ Триггер '{trigger}' удалён.")
+
+@router.message(Command("get_mood"))
+async def get_mood_handler(msg: Message):
+    if not is_superadmin(msg.from_user.id):
+        await msg.answer("Нет прав!")
+        return
+    mood = get_mood()
+    await msg.answer(f"Текущее настроение Сису: {mood}")
+
+@router.message(Command("set_mood"))
+async def set_mood_handler(msg: Message):
+    if not is_superadmin(msg.from_user.id):
+        await msg.answer("Нет прав!")
+        return
+    args = msg.text.split(maxsplit=1)
+    if len(args) < 2:
+        await msg.answer("Используй: /set_mood <mood>")
+        return
+    new_mood = args[1].strip()
+    set_mood(new_mood)
+    await msg.answer(f"Настроение Сису изменено на: {new_mood}") 

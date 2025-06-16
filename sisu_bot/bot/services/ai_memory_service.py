@@ -21,5 +21,5 @@ def update_mood(chat_id, text):
             sisu_mood[chat_id] += random.choice([-1, 1])
             sisu_mood[chat_id] = max(-4, min(4, sisu_mood[chat_id]))
 
-def get_mood(chat_id):
+def get_mood_local(chat_id):
     return sisu_mood[chat_id] 

@@ -26,7 +26,7 @@ SISU_SYSTEM_PROMPT = (
     "Не упоминай, что ты ИИ или бот. Просто веди себя как свободная, настоящая Сису!"
 )
 
-async def generate_sisu_reply(prompt: str) -> str:
+async def generate_sisu_reply(prompt: str, system_prompt: str = None) -> str:
     """
     Генерация ответа через YandexGPT API.
     """
@@ -40,11 +40,12 @@ async def generate_sisu_reply(prompt: str) -> str:
         "x-folder-id": FOLDER_ID,
         "Content-Type": "application/json"
     }
+    system_prompt = system_prompt or SISU_SYSTEM_PROMPT
     data = {
         "modelUri": f"gpt://{FOLDER_ID}/yandexgpt/latest",
         "completionOptions": {"stream": False, "temperature": 0.9, "maxTokens": 200},
         "messages": [
-            {"role": "system", "text": SISU_SYSTEM_PROMPT},
+            {"role": "system", "text": system_prompt},
             {"role": "user", "text": prompt}
         ]
     }

@@ -1,6 +1,8 @@
 import json
 from sisu_bot.core.config import DATA_DIR
 import logging
+from sisu_bot.bot.db.init_db import Session
+from sisu_bot.bot.db.models import BotState
 
 logger = logging.getLogger(__name__)
 
@@ -40,4 +42,39 @@ def update_state(**kwargs):
     state = load_state()
     state.update(kwargs)
     save_state(state)
-    return state 
+    return state
+
+def get_mood():
+    session = Session()
+    mood = session.query(BotState).filter_by(key='mood').first()
+    session.close()
+    return mood.value if mood else 'neutral'
+
+def set_mood(new_mood):
+    session = Session()
+    mood = session.query(BotState).filter_by(key='mood').first()
+    if mood:
+        mood.value = new_mood
+    else:
+        mood = BotState(key='mood', value=new_mood)
+        session.add(mood)
+    session.commit()
+    session.close()
+    return new_mood
+
+def get_state_db():
+    session = Session()
+    state = {row.key: row.value for row in session.query(BotState).all()}
+    session.close()
+    return state
+
+def update_state_db(**kwargs):
+    session = Session()
+    for key, value in kwargs.items():
+        row = session.query(BotState).filter_by(key=key).first()
+        if row:
+            row.value = value
+        else:
+            session.add(BotState(key=key, value=value))
+    session.commit()
+    session.close() 
