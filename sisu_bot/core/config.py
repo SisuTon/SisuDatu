@@ -10,6 +10,9 @@ BASE_DIR = Path(__file__).parent.parent
 DATA_DIR = BASE_DIR / 'data'
 DATA_DIR.mkdir(parents=True, exist_ok=True)
 
+# Универсальные пути к данным и базе
+DB_PATH = DATA_DIR / 'bot.sqlite3'
+
 # Telegram
 TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
 if not TELEGRAM_BOT_TOKEN:

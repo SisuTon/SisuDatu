@@ -1,12 +1,8 @@
 from aiogram import Router
-from pathlib import Path
+from sisu_bot.core.config import DATA_DIR
 import json
 
 router = Router()
-
-# Пути к файлам
-DATA_DIR = Path(__file__).parent.parent.parent / 'data'
-RANKS_PATH = DATA_DIR / 'ranks.json'
 
 # Загрузка рангов
 try:

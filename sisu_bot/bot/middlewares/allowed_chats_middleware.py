@@ -2,6 +2,8 @@ from aiogram import BaseMiddleware
 from aiogram.types import Message, Update
 from sisu_bot.bot.services.allowed_chats_service import list_allowed_chats
 import logging
+from aiogram.fsm.context import FSMContext
+from sisu_bot.bot.handlers.donate_handler import DonateStates
 
 class AllowedChatsMiddleware(BaseMiddleware):
     async def __call__(self, handler, event, data):
@@ -14,18 +16,24 @@ class AllowedChatsMiddleware(BaseMiddleware):
             chat_id = str(event.chat.id)
             text = event.text or ""
 
-            # ЛИЧНЫЕ ЧАТЫ: разрешаем только команды
+            # ЛИЧНЫЕ ЧАТЫ: разрешаем все команды и FSM состояния
             if chat_type == "private":
-                if text and text.startswith("/"):
-                    # Явно разрешаем /ref команду
-                    if text.split()[0].lower() == "/ref":
-                        logging.info(f"[Allowed] /ref command in private chat from user {event.from_user.id}")
+                # Проверяем состояние FSM
+                state: FSMContext = data.get("state")
+                if state:
+                    current_state = await state.get_state()
+                    if current_state:
+                        logging.info(f"[Allowed] FSM state in private chat: {current_state}")
                         return await handler(event, data)
+                
+                # Разрешаем все команды
+                if text and text.startswith("/"):
                     logging.info(f"[Allowed] Command in private chat: {text}")
                     return await handler(event, data)
-                else:
-                    logging.info(f"[Blocked] Non-command in private chat: {text}")
-                    return  # блокируем не-команды
+                
+                # Блокируем остальные сообщения
+                logging.info(f"[Blocked] Non-command in private chat: {text}")
+                return
 
             # ГРУППЫ: только whitelisted
             if chat_type in ("group", "supergroup"):

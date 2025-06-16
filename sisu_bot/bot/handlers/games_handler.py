@@ -7,6 +7,7 @@ import random
 import json
 import os
 from typing import Dict, List, Optional
+from sisu_bot.bot.config import SUPERADMIN_IDS, is_superadmin
 
 router = Router()
 
@@ -30,13 +31,6 @@ class GameStates(StatesGroup):
 
 # Путь к файлу с данными игр
 GAMES_DATA_FILE = "data/games_data.json"
-
-# Список супер-админов (ID пользователей)
-SUPERADMIN_IDS = [123456789]  # Замените на реальные ID супер-админов
-
-# Проверка на супер-админа
-def is_superadmin(user_id: int) -> bool:
-    return user_id in SUPERADMIN_IDS
 
 # Загрузка данных игр
 def load_games_data():

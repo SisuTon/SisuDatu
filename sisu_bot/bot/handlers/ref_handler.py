@@ -6,11 +6,14 @@ from aiogram.filters import Command
 import logging
 import os
 import sys
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from sisu_bot.bot.db.models import User
+from sisu_bot.core.config import DB_PATH
+from sisu_bot.bot.db.init_db import Session
 
 # Добавляем путь к корню проекта
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
-
-from sisu_bot.bot.services.user_service import load_users, save_users
 
 # Создаем роутер ОДИН раз
 router = Router()
@@ -30,20 +33,23 @@ async def handle_ref_command(msg: Message):
             await msg.answer("Реферальная ссылка доступна только в личных сообщениях!")
             return
         
-        users = load_users()
-        user_id = str(msg.from_user.id)
+        session = Session()
+        user_id = msg.from_user.id
+        user = session.query(User).filter(User.id == user_id).first()
         
         logging.info(f"REF: Loading users data for {user_id}")
         
-        if user_id not in users:
+        if not user:
             logging.info(f"REF: Creating new user entry for {user_id}")
-            users[user_id] = {
-                "points": 0,
-                "days": 0,
-                "referrals": 0,
-                "username": msg.from_user.username or "unknown"
-            }
-            save_users(users)
+            user = User(
+                id=user_id,
+                points=0,
+                active_days=0,
+                referrals=0,
+                username=msg.from_user.username or "unknown"
+            )
+            session.add(user)
+            session.commit()
         
         bot_username = (await msg.bot.get_me()).username
         ref_link = f"https://t.me/{bot_username}?start=ref{user_id}"
@@ -62,6 +68,8 @@ async def handle_ref_command(msg: Message):
         logging.info(f"REF: Sending response to {user_id}")
         await msg.answer(response)
         logging.info(f"REF: Successfully sent ref link to {user_id}")
+        
+        session.close()
         
     except Exception as e:
         logging.error(f"REF: Error in ref_handler: {e}", exc_info=True)

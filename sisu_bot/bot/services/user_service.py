@@ -1,30 +1,54 @@
 import json
-from pathlib import Path
+from sisu_bot.core.config import DB_PATH
+import shutil
+from datetime import datetime
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from sisu_bot.bot.db.models import User
 
-USERS_PATH = Path(__file__).parent.parent.parent / 'data' / 'users.json'
+engine = create_engine(f'sqlite:///{DB_PATH}')
+Session = sessionmaker(bind=engine)
 
-def load_users():
-    if USERS_PATH.exists():
-        with open(USERS_PATH, encoding='utf-8') as f:
-            return json.load(f)
-    return {}
-
-def save_users(users):
-    with open(USERS_PATH, 'w', encoding='utf-8') as f:
-        json.dump(users, f, ensure_ascii=False, indent=4)
+def get_user(user_id):
+    session = Session()
+    user = session.query(User).filter(User.id == user_id).first()
+    session.close()
+    return user
 
 def update_user_info(user_id, username=None, first_name=None):
-    users = load_users()
-    user_id = str(user_id)
-    if user_id not in users:
-        users[user_id] = {}
-    if username:
-        users[user_id]["username"] = username
-    if first_name:
-        users[user_id]["first_name"] = first_name
-    save_users(users)
+    session = Session()
+    user = session.query(User).filter(User.id == user_id).first()
+    if not user:
+        user = User(id=user_id, username=username, first_name=first_name)
+        session.add(user)
+    else:
+        if username:
+            user.username = username
+        if first_name:
+            user.first_name = first_name
+    session.commit()
+    session.close()
+
+def increment_message_count(user_id):
+    session = Session()
+    user = session.query(User).filter(User.id == user_id).first()
+    if not user:
+        user = User(id=user_id, message_count=1)
+        session.add(user)
+    else:
+        user.message_count += 1
+    session.commit()
+    session.close()
+    return user.message_count
+
+def get_message_count(user_id):
+    session = Session()
+    user = session.query(User).filter(User.id == user_id).first()
+    session.close()
+    return user.message_count if user else 0
 
 def get_top_users(limit=5):
-    users = load_users()
-    top = sorted(users.items(), key=lambda x: x[1].get("points", 0), reverse=True)[:limit]
+    session = Session()
+    top = session.query(User).order_by(User.points.desc()).limit(limit).all()
+    session.close()
     return top 

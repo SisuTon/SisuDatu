@@ -8,9 +8,10 @@ router = Router()
 @router.message(Command("myrank"))
 async def myrank_handler(msg: Message):
     user = points_service.get_user(str(msg.from_user.id))
-    points = user["points"]
-    rank_code = user["rank"]
+    points = user.points
+    rank_code = user.rank
     rank = points_service.RANKS[rank_code]["title"]
+    supporter = user.is_supporter
     # Считаем сколько до следующего ранга
     next_rank = None
     min_points_next = None
@@ -19,13 +20,18 @@ async def myrank_handler(msg: Message):
             if not min_points_next or r["min_points"] < min_points_next:
                 next_rank = r["title"]
                 min_points_next = r["min_points"]
+    supporter_text = "\n<b>Статус:</b> 👑Supporter👑" if supporter else ""
     if next_rank:
-        to_next = min_points_next - points
-        msg_text = f"Твой ранг: {rank}\nБаллы: {points}\nДо следующего ранга ({next_rank}): {to_next}"
+        msg_text = f"Твой ранг: {rank}\nБаллы: {points}\nДо следующего ранга ({next_rank}): {min_points_next - points}{supporter_text}"
     else:
-        msg_text = f"Твой ранг: {rank}\nБаллы: {points}\nТы достиг максимального ранга!"
+        msg_text = f"Твой ранг: {rank}\nБаллы: {points}\nТы достиг максимального ранга!{supporter_text}"
     # В группе — публично, в личке — только тебе
     if msg.chat.type != "private":
-        await msg.answer(f"@{msg.from_user.username or msg.from_user.id} — {msg_text}")
+        username = msg.from_user.username or msg.from_user.id
+        if supporter:
+            user_tag = f"👑@{username}👑"
+        else:
+            user_tag = f"@{username}"
+        await msg.answer(f"{user_tag} — {msg_text}", parse_mode="HTML")
     else:
-        await msg.answer(msg_text) 
+        await msg.answer(msg_text, parse_mode="HTML") 

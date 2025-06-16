@@ -7,10 +7,15 @@ from sisu_bot.bot.config import ADMIN_IDS
 from sisu_bot.bot.services import points_service
 from sisu_bot.bot.services.adminlog_service import log_admin_action
 import json
-from pathlib import Path
-from sisu_bot.bot.services.points_service import load_users
+from sisu_bot.core.config import DB_PATH, DATA_DIR
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from sisu_bot.bot.db.models import User
 
 router = Router()
+
+engine = create_engine(f'sqlite:///{DB_PATH}')
+Session = sessionmaker(bind=engine)
 
 def is_superadmin(user_id):
     return user_id in ADMIN_IDS
@@ -19,7 +24,7 @@ def is_any_admin(user_id):
     return is_superadmin(user_id) or str(user_id) in load_admins()
 
 def load_admins():
-    ADMINS_PATH = Path(__file__).parent.parent.parent / 'data' / 'admins.json'
+    ADMINS_PATH = DATA_DIR / 'admins.json'
     if ADMINS_PATH.exists():
         with open(ADMINS_PATH, encoding='utf-8') as f:
             return json.load(f)["admins"]
@@ -73,7 +78,7 @@ async def addpoints_handler(msg: Message):
         return
     user = points_service.add_points(user_id, points, msg.from_user.username)
     log_admin_action(msg.from_user.id, msg.from_user.username, "/addpoints", params={"user_id": user_id, "points": points}, result=user)
-    await msg.answer(f"✅ Начислено {points} баллов пользователю {user_id}.\nТекущий баланс: {user['points']} баллов, ранг: {user['rank']}")
+    await msg.answer(f"✅ Начислено {points} баллов пользователю {user_id}.\nТекущий баланс: {user.points} баллов, ранг: {user.rank}")
 
 @router.message(Command("removepoints"))
 async def removepoints_handler(msg: Message):
@@ -92,7 +97,7 @@ async def removepoints_handler(msg: Message):
         return
     user = points_service.add_points(user_id, -points, msg.from_user.username)
     log_admin_action(msg.from_user.id, msg.from_user.username, "/removepoints", params={"user_id": user_id, "points": points}, result=user)
-    await msg.answer(f"✅ Снято {points} баллов у пользователя {user_id}.\nТекущий баланс: {user['points']} баллов, ранг: {user['rank']}")
+    await msg.answer(f"✅ Снято {points} баллов у пользователя {user_id}.\nТекущий баланс: {user.points} баллов, ранг: {user.rank}")
 
 @router.message(Command("setstreak"))
 async def setstreak_handler(msg: Message):
@@ -109,13 +114,16 @@ async def setstreak_handler(msg: Message):
     except ValueError:
         await msg.answer("Серия должна быть числом!")
         return
-    users = points_service.load_users()
-    user = users.get(user_id, {"points": 0, "rank": "novice"})
-    user["streak"] = streak
-    users[user_id] = user
-    points_service.save_users(users)
+    session = Session()
+    user = session.query(User).filter(User.id == user_id).first()
+    if not user:
+        user = User(id=user_id)
+        session.add(user)
+    user.active_days = streak
+    session.commit()
     log_admin_action(msg.from_user.id, msg.from_user.username, "/setstreak", params={"user_id": user_id, "streak": streak})
     await msg.answer(f"✅ Серия чек-инов пользователя {user_id} установлена на {streak} дней.")
+    session.close()
 
 @router.message(Command("broadcast"))
 async def broadcast_start(msg: Message, state: FSMContext):
@@ -129,21 +137,23 @@ async def broadcast_start(msg: Message, state: FSMContext):
 @router.message(StateFilter(AdminStates.waiting_broadcast))
 async def broadcast_send(msg: Message, state: FSMContext):
     await state.clear()
-    users = load_users()
+    session = Session()
+    users = session.query(User).all()
     count = 0
-    for user_id in users:
+    for user in users:
         try:
             if msg.text:
-                await msg.bot.send_message(user_id, msg.text)
+                await msg.bot.send_message(user.id, msg.text)
             elif msg.photo:
-                await msg.bot.send_photo(user_id, msg.photo[-1].file_id, caption=msg.caption or "")
+                await msg.bot.send_photo(user.id, msg.photo[-1].file_id, caption=msg.caption or "")
             elif msg.video:
-                await msg.bot.send_video(user_id, msg.video[-1].file_id, caption=msg.caption or "")
+                await msg.bot.send_video(user.id, msg.video[-1].file_id, caption=msg.caption or "")
             elif msg.document:
-                await msg.bot.send_document(user_id, msg.document.file_id, caption=msg.caption or "")
+                await msg.bot.send_document(user.id, msg.document.file_id, caption=msg.caption or "")
         except Exception:
             continue
         count += 1
+    session.close()
     log_admin_action(msg.from_user.id, msg.from_user.username, "/broadcast_send", params={}, result=f"{count} users")
     await msg.answer(f"✅ Рассылка отправлена {count} пользователям.")
 
@@ -159,20 +169,22 @@ async def challenge_start(msg: Message, state: FSMContext):
 @router.message(StateFilter(AdminStates.waiting_challenge))
 async def challenge_send(msg: Message, state: FSMContext):
     await state.clear()
-    users = load_users()
+    session = Session()
+    users = session.query(User).all()
     count = 0
-    for user_id in users:
+    for user in users:
         try:
             if msg.text:
-                await msg.bot.send_message(user_id, f"🔥 Челлендж!\n{msg.text}")
+                await msg.bot.send_message(user.id, f"🔥 Челлендж!\n{msg.text}")
             elif msg.photo:
-                await msg.bot.send_photo(user_id, msg.photo[-1].file_id, caption=f"🔥 Челлендж!\n{msg.caption or ''}")
+                await msg.bot.send_photo(user.id, msg.photo[-1].file_id, caption=f"🔥 Челлендж!\n{msg.caption or ''}")
             elif msg.video:
-                await msg.bot.send_video(user_id, msg.video[-1].file_id, caption=f"🔥 Челлендж!\n{msg.caption or ''}")
+                await msg.bot.send_video(user.id, msg.video[-1].file_id, caption=f"🔥 Челлендж!\n{msg.caption or ''}")
             elif msg.document:
-                await msg.bot.send_document(user_id, msg.document.file_id, caption=f"🔥 Челлендж!\n{msg.caption or ''}")
+                await msg.bot.send_document(user.id, msg.document.file_id, caption=f"🔥 Челлендж!\n{msg.caption or ''}")
         except Exception:
             continue
         count += 1
+    session.close()
     log_admin_action(msg.from_user.id, msg.from_user.username, "/challenge_send", params={}, result=f"{count} users")
     await msg.answer(f"✅ Челлендж отправлен {count} пользователям.")

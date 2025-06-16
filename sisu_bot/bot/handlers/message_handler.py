@@ -1,11 +1,13 @@
 import json
 import random
+import re
 from aiogram import Router, F
 from aiogram.types import Message, ChatMemberUpdated
 from aiogram.filters import Command
 from pathlib import Path
 from sisu_bot.bot.services.allowed_chats_service import list_allowed_chats
 from sisu_bot.bot.services import top_service
+from sisu_bot.bot.services import user_service
 
 router = Router()
 
@@ -22,6 +24,8 @@ SISU_GREETINGS = [
     "🐲 Привет, друзья! Это Сису — самая весёлая дракониха.\nЯ могу остаться здесь только если мой хранитель @bakeevsergey скажет \"да\".\nПопроси его, если хочешь, чтобы я осталась!",
 ]
 
+SISU_PATTERN = re.compile(r"^(сису|sisu|@SisuDatuBot)[,\s]", re.IGNORECASE)
+
 @router.message(Command("start"))
 async def cmd_start(message: Message):
     if str(message.chat.id) not in list_allowed_chats() and message.chat.type != "private":
@@ -37,20 +41,23 @@ async def bot_added_to_chat(event: ChatMemberUpdated):
             random.choice(SISU_GREETINGS)
         )
 
-def is_non_command_text(message: Message) -> bool:
+def is_non_command_and_not_sisu(message: Message) -> bool:
     text = getattr(message, 'text', None)
     if not text:
         return False
-    import re
-    # Не команда и не /cmd@BotName
-    return not re.match(r"^/\w+(@\w+)?", text)
+    return not text.startswith("/") and not SISU_PATTERN.match(text)
 
-@router.message(is_non_command_text)
+@router.message(is_non_command_and_not_sisu)
 async def update_user_info_handler(msg: Message):
     # Начислять баллы только в группах
     if msg.chat.type != "private":
         user = msg.from_user
         top_service.sync_user_data(user.id, user.username, user.first_name)
+        # Увеличиваем счетчик сообщений
+        message_count = user_service.increment_message_count(user.id)
+        # Если достигли 5 сообщений, поздравляем
+        if message_count == 5:
+            await msg.answer("🎉 Поздравляем! Ты достиг 5 сообщений! Теперь ты активный участник!")
     # В личке — не начислять баллы, просто молчать или отвечать на команды
 
 # Все остальные текстовые сообщения игнорируются (баллы не начисляются, бот молчит) 

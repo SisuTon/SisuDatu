@@ -30,7 +30,8 @@ from sisu_bot.bot.services.ai_stats_service import response_stats, user_preferen
 import logging
 from aiogram.fsm.state import State, StatesGroup
 from sisu_bot.bot.services.yandexgpt_service import generate_sisu_reply
-from sisu_bot.bot.config import ADMIN_IDS
+from sisu_bot.bot.config import ADMIN_IDS, is_superadmin
+from sisu_bot.bot.services.state_service import get_state
 
 logger = logging.getLogger(__name__)
 
@@ -378,7 +379,6 @@ def is_ai_dialog_message(message: Message, state: FSMContext) -> bool:
         return False
     return True
 
-SUPERADMINS = [446318189]  # Добавь сюда user_id супер-админов
 AI_DIALOG_ENABLED = False
 PRIVATE_ENABLED = False
 
@@ -555,6 +555,7 @@ SISU_FRIENDLY_PHRASES = [
 
 @router.message(lambda msg: SISU_PATTERN.match(msg.text or "") or (msg.reply_to_message and msg.reply_to_message.from_user and msg.reply_to_message.from_user.is_bot))
 async def sisu_explicit_handler(msg: Message, state: FSMContext):
+    logging.info(f"SISU_HANDLER: triggered by message: {msg.text!r} from {msg.from_user.id}")
     try:
         chat_id = msg.chat.id
         user = msg.from_user
@@ -574,6 +575,7 @@ async def sisu_explicit_handler(msg: Message, state: FSMContext):
         async with ChatActionSender.typing(bot=msg.bot, chat_id=chat_id):
             # Пасхалка: если пользователь спрашивает 'Сису, что ты запомнила?'
             if (msg.text or '').lower().strip() in ["сису, что ты запомнила?", "сису что ты запомнила", "что ты запомнила?"]:
+                logging.info("SISU_HANDLER: early return — пасхалка 'что ты запомнила'")
                 learned = list(LEARNING_DATA["triggers"].values())
                 learned_flat = [item for sublist in learned for item in sublist]
                 if learned_flat:
@@ -583,6 +585,7 @@ async def sisu_explicit_handler(msg: Message, state: FSMContext):
                 return
             # Магический сюжетный поворот (5% шанс)
             if random.random() < 0.05:
+                logging.info("SISU_HANDLER: early return — магический сюжетный поворот")
                 magic_phrase = random.choice(SISU_MAGIC_PHRASES)
                 await msg.answer(f"{name_part} {magic_phrase}".strip())
                 sisu_message_counter[chat_id] = sisu_message_counter.get(chat_id, 0) + 1
@@ -596,12 +599,14 @@ async def sisu_explicit_handler(msg: Message, state: FSMContext):
             # Кастомные ответы на Снуп Догга и токен Сису
             text = (msg.text or '').lower()
             if "снуп дог" in text or "snoop dogg" in text or "snoop" in text:
+                logging.info("SISU_HANDLER: early return — кастомный ответ на Снуп Догга")
                 snoop_phrase = random.choice(SISU_SNOOP_REPLIES)
                 if name_part and random.random() < 0.5:
                     snoop_phrase = f"{name_part} {snoop_phrase}".strip()
                 await msg.answer(snoop_phrase)
                 return
             if "токен сису" in text or "sisu token" in text or ("тон" in text and "сису" in text):
+                logging.info("SISU_HANDLER: early return — кастомный ответ на токен Сису")
                 token_phrase = random.choice(SISU_TOKEN_REPLIES)
                 if name_part and random.random() < 0.5:
                     token_phrase = f"{name_part} {token_phrase}".strip()
@@ -609,6 +614,7 @@ async def sisu_explicit_handler(msg: Message, state: FSMContext):
                 return
             # Основной ответ через YandexGPT
             try:
+                logging.info("SISU_HANDLER: YandexGPT reply start")
                 sisu_reply = await generate_sisu_reply(msg.text)
                 # Усиливаем влияние настроения на обычные ответы
                 if mood <= -2 and random.random() < 0.5:
@@ -621,6 +627,7 @@ async def sisu_explicit_handler(msg: Message, state: FSMContext):
                 logging.error(f"YANDEX ERROR: {e}")
                 logging.error(f"PHRASES fallback: {PHRASES}")
                 sisu_reply = random.choice(PHRASES) if PHRASES else "Сису задумалась... Попробуй ещё раз!"
+            logging.info("SISU_HANDLER: sending YandexGPT or fallback answer")
             await msg.answer(sisu_reply)
         sisu_message_counter[chat_id] = sisu_message_counter.get(chat_id, 0) + 1
         if sisu_message_counter[chat_id] % random.randint(10, 20) == 0:
@@ -683,7 +690,7 @@ async def ai_dialog_handler(msg: Message, state: FSMContext):
     if msg.chat.type != "private" and random.random() > 0.07:
         return
     # В личке — только если включено супер-админом
-    if msg.chat.type == "private" and msg.from_user.id not in SUPERADMINS:
+    if msg.chat.type == "private" and not is_superadmin(msg.from_user.id):
         return
     try:
         sisu_reply = await generate_sisu_reply(msg.text)
@@ -728,7 +735,7 @@ async def sisu_reply_learning_handler(msg: Message, state: FSMContext):
     negative_reacts = ["-", "👎", "скучно", "фу", "не смешно", "грустно", "плохо", "отстой"]
     if user_text.strip().lower() in positive_reacts:
         await msg.answer(random.choice([
-            "Ну, видимо, зашло! 😏",
+            "Ну, видимо, зашло! ",
             "Вот это я понимаю — реакция!",
             "Сису довольна собой 🐉",
             "Спасибо за фидбек!",
@@ -805,4 +812,28 @@ SISU_SNOOP_REPLIES = [
     "Snoop Dogg — the real OG! 👑",
     "Snoop Dogg — my hero! 🦸‍♂️",
     "Snoop Dogg — the legend! 🌟"
-] 
+]
+
+@router.message()
+async def handle_message(msg: Message):
+    """Обработчик всех сообщений для AI-диалога"""
+    # Проверяем состояние AI-диалога
+    state = get_state()
+    if not state.get("ai_dialog_enabled", False):
+        return
+
+    # Проверяем, что это личный чат и включена работа в личке
+    if msg.chat.type == "private" and not state.get("private_enabled", False):
+        return
+
+    # Проверяем, что это ответ на сообщение бота
+    if not msg.reply_to_message or not msg.reply_to_message.from_user.is_bot:
+        return
+
+    logging.info(f"AI dialog message from user {msg.from_user.id} in chat {msg.chat.id}")
+    try:
+        response = await generate_sisu_reply(msg.text)
+        await msg.answer(response)
+    except Exception as e:
+        logging.error(f"Error in AI dialog: {e}", exc_info=True)
+        await msg.answer("Извини, у меня не получается ответить прямо сейчас. Попробуй позже!") 

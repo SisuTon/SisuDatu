@@ -1,8 +1,7 @@
 import json
-from pathlib import Path
+from sisu_bot.core.config import DATA_DIR
 import random
 
-DATA_DIR = Path(__file__).parent.parent.parent / 'data'
 PHRASES_PATH = DATA_DIR / 'ai_fallback_phrases.json'
 TROLL_PATH = DATA_DIR / 'troll_triggers.json'
 LEARNING_PATH = DATA_DIR / 'learning_data.json'

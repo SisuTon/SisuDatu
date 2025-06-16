@@ -4,16 +4,25 @@ from aiogram.filters import Command, StateFilter
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.fsm.context import FSMContext
 import json
-from pathlib import Path
+from sisu_bot.core.config import DB_PATH, DATA_DIR
 from sisu_bot.bot.services.allowed_chats_service import list_allowed_chats, remove_allowed_chat, add_allowed_chat
 from sisu_bot.bot.services import points_service
 from sisu_bot.bot.services.adminlog_service import get_admin_logs
 from sisu_bot.bot.services.trigger_stats_service import get_trigger_stats, suggest_new_triggers, auto_add_suggested_triggers
+from sisu_bot.bot.services.state_service import get_state, update_state
 import logging
+from sqlalchemy import create_engine, func
+from sqlalchemy.orm import sessionmaker
+from sisu_bot.bot.db.models import User
+from sisu_bot.bot.config import SUPERADMIN_IDS, is_superadmin
 
-SUPERADMINS = [446318189]  # Добавь сюда user_id супер-админов
 AI_DIALOG_ENABLED = False
 PRIVATE_ENABLED = False
+
+# Унифицированный путь к БД
+# DB_PATH = Path(__file__).parent.parent.parent.parent / 'data' / 'bot.sqlite3'
+engine = create_engine(f'sqlite:///{DB_PATH}')
+Session = sessionmaker(bind=engine)
 
 SUPERADMIN_COMMANDS = {
     '/ai_dialog_on': 'Включить AI-диалог',
@@ -39,8 +48,8 @@ SUPERADMIN_COMMANDS = {
 
 router = Router()
 
-BANS_PATH = Path(__file__).parent.parent.parent / 'data' / 'bans.json'
-ADMINS_PATH = Path(__file__).parent.parent.parent / 'data' / 'admins.json'
+BANS_PATH = DATA_DIR / 'bans.json'
+ADMINS_PATH = DATA_DIR / 'admins.json'
 
 def load_bans():
     if BANS_PATH.exists():
@@ -63,19 +72,19 @@ def save_admins(admins):
         json.dump({"admins": admins}, f, ensure_ascii=False, indent=2)
 
 async def notify_admins(text: str, bot):
-    for admin_id in SUPERADMINS:
+    for admin_id in SUPERADMIN_IDS:
         try:
             await bot.send_message(admin_id, text)
-        except Exception:
-            pass
+        except Exception as e:
+            logging.error(f"Error notifying admin {admin_id}: {e}")
 
 class SuperAdminStates(StatesGroup):
     waiting_sendto = State()
 
 @router.message(Command("superadmin_help"))
 async def superadmin_help(msg: Message):
-    logging.warning(f"DEBUG superadmin_help: from_user.id={msg.from_user.id}, chat.type={msg.chat.type}")
-    if msg.from_user.id not in SUPERADMINS or msg.chat.type != "private":
+    logging.info(f"Command /superadmin_help from user {msg.from_user.id} in chat {msg.chat.id}")
+    if not is_superadmin(msg.from_user.id) or msg.chat.type != "private":
         await msg.answer("Нет прав!")
         return
     text = "\n".join([f"{cmd} — {desc}" for cmd, desc in SUPERADMIN_COMMANDS.items()])
@@ -83,44 +92,43 @@ async def superadmin_help(msg: Message):
 
 @router.message(Command("ai_dialog_on"))
 async def ai_dialog_on(msg: Message):
-    logging.warning(f"DEBUG ai_dialog_on: from_user.id={msg.from_user.id}, chat.type={msg.chat.type}")
-    global AI_DIALOG_ENABLED
-    if msg.from_user.id not in SUPERADMINS or msg.chat.type != "private":
+    logging.info(f"Command /ai_dialog_on from user {msg.from_user.id} in chat {msg.chat.id}")
+    if not is_superadmin(msg.from_user.id) or msg.chat.type != "private":
         await msg.answer("Нет прав!")
         return
-    AI_DIALOG_ENABLED = True
+    update_state(ai_dialog_enabled=True)
     await msg.answer("AI-диалог включён!")
 
 @router.message(Command("ai_dialog_off"))
 async def ai_dialog_off(msg: Message):
-    global AI_DIALOG_ENABLED
-    if msg.from_user.id not in SUPERADMINS:
+    logging.info(f"Command /ai_dialog_off from user {msg.from_user.id} in chat {msg.chat.id}")
+    if not is_superadmin(msg.from_user.id) or msg.chat.type != "private":
         await msg.answer("Нет прав!")
         return
-    AI_DIALOG_ENABLED = False
+    update_state(ai_dialog_enabled=False)
     await msg.answer("AI-диалог выключен!")
 
 @router.message(Command("enable_private"))
 async def enable_private(msg: Message):
-    global PRIVATE_ENABLED
-    if msg.from_user.id not in SUPERADMINS:
+    logging.info(f"Command /enable_private from user {msg.from_user.id} in chat {msg.chat.id}")
+    if not is_superadmin(msg.from_user.id) or msg.chat.type != "private":
         await msg.answer("Нет прав!")
         return
-    PRIVATE_ENABLED = True
+    update_state(private_enabled=True)
     await msg.answer("Работа бота в личке включена!")
 
 @router.message(Command("disable_private"))
 async def disable_private(msg: Message):
-    global PRIVATE_ENABLED
-    if msg.from_user.id not in SUPERADMINS:
+    logging.info(f"Command /disable_private from user {msg.from_user.id} in chat {msg.chat.id}")
+    if not is_superadmin(msg.from_user.id) or msg.chat.type != "private":
         await msg.answer("Нет прав!")
         return
-    PRIVATE_ENABLED = False
+    update_state(private_enabled=False)
     await msg.answer("Работа бота в личке отключена!")
 
 @router.message(Command("ban"))
 async def ban_handler(msg: Message):
-    if msg.from_user.id not in SUPERADMINS or msg.chat.type != "private":
+    if not is_superadmin(msg.from_user.id) or msg.chat.type != "private":
         await notify_admins(f"❗️ Попытка вызова /ban от пользователя {msg.from_user.id} (@{msg.from_user.username}) в чате {msg.chat.id}", msg.bot)
         return
     args = msg.text.split()
@@ -138,7 +146,7 @@ async def ban_handler(msg: Message):
 
 @router.message(Command("unban"))
 async def unban_handler(msg: Message):
-    if msg.from_user.id not in SUPERADMINS or msg.chat.type != "private":
+    if not is_superadmin(msg.from_user.id) or msg.chat.type != "private":
         await notify_admins(f"❗️ Попытка вызова /unban от пользователя {msg.from_user.id} (@{msg.from_user.username}) в чате {msg.chat.id}", msg.bot)
         return
     args = msg.text.split()
@@ -156,7 +164,7 @@ async def unban_handler(msg: Message):
 
 @router.message(Command("addadmin"))
 async def addadmin_handler(msg: Message):
-    if msg.from_user.id not in SUPERADMINS or msg.chat.type != "private":
+    if not is_superadmin(msg.from_user.id) or msg.chat.type != "private":
         await notify_admins(f"❗️ Попытка вызова /addadmin от пользователя {msg.from_user.id} (@{msg.from_user.username}) в чате {msg.chat.id}", msg.bot)
         return
     args = msg.text.split()
@@ -174,7 +182,7 @@ async def addadmin_handler(msg: Message):
 
 @router.message(Command("removeadmin"))
 async def removeadmin_handler(msg: Message):
-    if msg.from_user.id not in SUPERADMINS or msg.chat.type != "private":
+    if not is_superadmin(msg.from_user.id) or msg.chat.type != "private":
         await notify_admins(f"❗️ Попытка вызова /removeadmin от пользователя {msg.from_user.id} (@{msg.from_user.username}) в чате {msg.chat.id}", msg.bot)
         return
     args = msg.text.split()
@@ -192,7 +200,7 @@ async def removeadmin_handler(msg: Message):
 
 @router.message(Command("sendto"))
 async def sendto_start(msg: Message, state: FSMContext):
-    if msg.from_user.id not in SUPERADMINS or msg.chat.type != "private":
+    if not is_superadmin(msg.from_user.id) or msg.chat.type != "private":
         await notify_admins(f"❗️ Попытка вызова /sendto от пользователя {msg.from_user.id} (@{msg.from_user.username}) в чате {msg.chat.id}", msg.bot)
         return
     args = msg.text.split()
@@ -228,7 +236,7 @@ async def sendto_send(msg: Message, state: FSMContext):
 
 @router.message(Command("allow_chat"))
 async def allow_chat_handler(msg: Message):
-    if msg.from_user.id not in SUPERADMINS or msg.chat.type != "private":
+    if not is_superadmin(msg.from_user.id) or msg.chat.type != "private":
         await notify_admins(f"❗️ Попытка вызова /allow_chat от пользователя {msg.from_user.id} (@{msg.from_user.username}) в чате {msg.chat.id}", msg.bot)
         return
     args = msg.text.split()
@@ -241,19 +249,20 @@ async def allow_chat_handler(msg: Message):
 
 @router.message(Command("list_chats"))
 async def list_chats_handler(msg: Message):
-    if msg.from_user.id not in SUPERADMINS or msg.chat.type != "private":
+    if not is_superadmin(msg.from_user.id) or msg.chat.type != "private":
         await msg.answer("Нет прав!")
         return
     chats = list_allowed_chats()
     if not chats:
         await msg.answer("Список разрешённых чатов пуст.")
     else:
-        await msg.answer("Список разрешённых чатов:\n" + "\n".join(chats))
+        text = "Список разрешённых чатов:\n" + "\n".join(chats)
+        await msg.answer(text)
 
 @router.message(Command("disallow_chat"))
 async def disallow_chat_handler(msg: Message):
-    if msg.from_user.id not in SUPERADMINS or msg.chat.type != "private":
-        await msg.answer("Нет прав!")
+    if not is_superadmin(msg.from_user.id) or msg.chat.type != "private":
+        await notify_admins(f"❗️ Попытка вызова /disallow_chat от пользователя {msg.from_user.id} (@{msg.from_user.username}) в чате {msg.chat.id}", msg.bot)
         return
     args = msg.text.split()
     if len(args) < 2:
@@ -265,85 +274,85 @@ async def disallow_chat_handler(msg: Message):
 
 @router.message(Command("stats"))
 async def stats_handler(msg: Message):
-    if msg.from_user.id not in SUPERADMINS or msg.chat.type != "private":
+    if not is_superadmin(msg.from_user.id) or msg.chat.type != "private":
         await msg.answer("Нет прав!")
         return
-    users = points_service.load_users()
-    total_users = len(users)
-    total_points = sum(user.get("points", 0) for user in users.values())
-    text = f"📊 Статистика бота:\n\nВсего пользователей: {total_users}\nВсего баллов: {total_points}"
+    session = Session()
+    total_users = session.query(User).count()
+    total_points = session.query(User).with_entities(func.sum(User.points)).scalar() or 0
+    total_messages = session.query(User).with_entities(func.sum(User.message_count)).scalar() or 0
+    session.close()
+    text = f"�� Статистика бота:\n\n"
+    text += f"👥 Всего пользователей: {total_users}\n"
+    text += f"💎 Всего баллов: {total_points}\n"
+    text += f"💬 Всего сообщений: {total_messages}"
     await msg.answer(text)
 
 @router.message(Command("adminlog"))
 async def adminlog_handler(msg: Message):
-    if msg.from_user.id not in SUPERADMINS or msg.chat.type != "private":
+    if not is_superadmin(msg.from_user.id) or msg.chat.type != "private":
         await msg.answer("Нет прав!")
         return
-    logs = get_admin_logs(limit=20)
+    logs = get_admin_logs()
     if not logs:
-        await msg.answer("Лог пуст.")
-        return
-    text = "<b>📝 Последние действия админов:</b>\n\n"
-    for log in logs:
-        text += f"<b>{log['time']}</b> — <code>{log['command']}</code>\n"
-        text += f"👤 <b>{log['username'] or log['user_id']}</b>"
-        if log.get('params'):
-            text += f" | <i>{log['params']}</i>"
-        if log.get('result'):
-            text += f" | <i>{log['result']}</i>"
-        text += "\n\n"
-    await msg.answer(text, parse_mode="HTML")
+        await msg.answer("Лог действий админов пуст.")
+    else:
+        text = "📝 Последние действия админов:\n\n"
+        for log in logs:
+            text += f"{log}\n"
+        await msg.answer(text)
 
 @router.message(Command("trigger_stats"))
 async def trigger_stats_handler(msg: Message):
-    if msg.from_user.id not in SUPERADMINS or msg.chat.type != "private":
+    if not is_superadmin(msg.from_user.id) or msg.chat.type != "private":
         await msg.answer("Нет прав!")
         return
-    args = msg.text.split()
-    if len(args) < 2:
-        await msg.answer("Используй: /trigger_stats [триггер]")
-        return
-    trigger = args[1]
-    stats = get_trigger_stats(trigger)
+    stats = get_trigger_stats()
     if not stats:
-        await msg.answer(f"Триггер {trigger} не найден.")
-        return
-    text = f"📊 Статистика триггера {trigger}:\n\nИспользований: {stats['count']}\nПоследнее использование: {stats['last_used']}"
-    await msg.answer(text)
+        await msg.answer("Статистика триггеров пуста.")
+    else:
+        text = "📊 Статистика триггеров:\n\n"
+        for trigger, count in stats.items():
+            text += f"{trigger}: {count}\n"
+        await msg.answer(text)
 
 @router.message(Command("suggest_triggers"))
 async def suggest_triggers_handler(msg: Message):
-    if msg.from_user.id not in SUPERADMINS or msg.chat.type != "private":
+    if not is_superadmin(msg.from_user.id) or msg.chat.type != "private":
         await msg.answer("Нет прав!")
         return
     triggers = suggest_new_triggers()
     if not triggers:
-        await msg.answer("Нет предложений для новых триггеров.")
-        return
-    text = "Предложенные триггеры:\n" + "\n".join(triggers)
-    await msg.answer(text)
+        await msg.answer("Нет предложенных триггеров.")
+    else:
+        text = "💡 Предложенные триггеры:\n\n"
+        for trigger in triggers:
+            text += f"{trigger}\n"
+        await msg.answer(text)
 
 @router.message(Command("auto_add_triggers"))
 async def auto_add_triggers_handler(msg: Message):
-    if msg.from_user.id not in SUPERADMINS or msg.chat.type != "private":
+    if not is_superadmin(msg.from_user.id) or msg.chat.type != "private":
         await msg.answer("Нет прав!")
         return
     added = auto_add_suggested_triggers()
     if not added:
         await msg.answer("Нет новых триггеров для добавления.")
-        return
-    text = "Добавлены триггеры:\n" + "\n".join(added)
-    await msg.answer(text)
+    else:
+        text = "✅ Добавлены новые триггеры:\n\n"
+        for trigger in added:
+            text += f"{trigger}\n"
+        await msg.answer(text)
 
 @router.message(Command("remove_trigger"))
 async def remove_trigger_handler(msg: Message):
-    if msg.from_user.id not in SUPERADMINS or msg.chat.type != "private":
+    if not is_superadmin(msg.from_user.id) or msg.chat.type != "private":
         await msg.answer("Нет прав!")
         return
     args = msg.text.split()
     if len(args) < 2:
-        await msg.answer("Используй: /remove_trigger [триггер]")
+        await msg.answer("Используй: /remove_trigger [trigger]")
         return
-    trigger = args[1]
-    # TODO: Реализовать удаление триггера из базы/файла
-    await msg.answer(f"Триггер {trigger} удалён (заглушка, реализуйте удаление).") 
+    trigger = " ".join(args[1:])
+    # TODO: Implement trigger removal
+    await msg.answer(f"✅ Триггер '{trigger}' удалён.") 
