@@ -9,6 +9,7 @@ passlib==1.7.4
 aiohttp==3.9.3
 yandexcloud==0.227.0
 aiogram==3.*
+pytest==8.2.1
 
 # Python version restriction (for pip >= 21.0)
 # Requires Python >=3.10,<3.12 

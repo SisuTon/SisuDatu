@@ -8,5 +8,21 @@
       "chat_id": -1002565290281
     },
     "result": null
+  },
+  {
+    "time": "2025-06-17 12:27:41",
+    "user_id": 446318189,
+    "username": "bakeevsergey",
+    "command": "/broadcast",
+    "params": {},
+    "result": null
+  },
+  {
+    "time": "2025-06-17 12:27:49",
+    "user_id": 446318189,
+    "username": "bakeevsergey",
+    "command": "/broadcast_send",
+    "params": {},
+    "result": "3 users"
   }
 ]

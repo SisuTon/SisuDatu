@@ -23,9 +23,9 @@ sisu_mood = {}
 
 # === Командные хендлеры ===
 
-@router.message(Command("start"))
-async def cmd_start(msg: Message):
-    await msg.answer("Привет! Я Сису — дракон-помощник. Спрашивай всё, что хочешь 🐉")
+# @router.message(Command("start"))
+# async def cmd_start(msg: Message):
+#     await msg.answer("Привет! Я Сису — дракон-помощник. Спрашивай всё, что хочешь 🐉")
 
 @router.message(Command("help"))
 async def cmd_help(msg: Message):

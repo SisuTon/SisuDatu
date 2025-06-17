@@ -5,6 +5,7 @@ import json
 router = Router()
 
 # Загрузка рангов
+RANKS_PATH = DATA_DIR / 'ranks.json'
 try:
     with open(RANKS_PATH, 'r', encoding='utf-8') as f:
         RANKS = json.load(f)

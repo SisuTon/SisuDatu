@@ -9,6 +9,8 @@ from sqlalchemy.orm import sessionmaker
 from sisu_bot.bot.db.models import User
 from sisu_bot.core.config import DB_PATH, REQUIRED_SUBSCRIPTIONS, SUBSCRIPTION_GREETING, SUBSCRIPTION_DENY
 from sisu_bot.bot.config import is_superadmin
+from sisu_bot.bot.handlers.donate_handler import get_donate_keyboard, TON_WALLET
+from aiogram.exceptions import TelegramBadRequest
 
 router = Router()
 
@@ -22,35 +24,23 @@ REQUIRED_CHANNELS = [
     {'title': 'Чат SISU', 'url': 'https://t.me/+F_kH9rcBxL02ZWFi'}
 ]
 
-@router.message(Command("start"))
-async def start_handler(msg: Message):
-    user_id = msg.from_user.id
-    # Проверка подписки (заглушка, реальную проверку реализовать отдельно)
-    is_subscribed = await check_user_subs(user_id)
-    if not is_subscribed:
-        kb = InlineKeyboardMarkup(
-            inline_keyboard=[
-                [InlineKeyboardButton(text=ch['title'], url=ch['url'])] for ch in REQUIRED_SUBSCRIPTIONS
-            ] + [[InlineKeyboardButton(text="Проверить подписку", callback_data="check_subs")]]
-        )
-        await msg.answer(SUBSCRIPTION_GREETING, reply_markup=kb, parse_mode="HTML")
-        return
-    await msg.answer("Привет! Ты в SisuDatuBot. Используй /help для списка команд.")
-
-# Callback для проверки подписки
-@router.callback_query(lambda c: c.data == "check_subs")
-async def check_subs_callback(call):
-    user_id = call.from_user.id
-    is_subscribed = await check_user_subs(user_id)
-    if is_subscribed:
-        await call.message.edit_text("✅ Подписка подтверждена! Теперь тебе доступны все функции бота. Используй /help.")
-    else:
-        await call.answer(SUBSCRIPTION_DENY, show_alert=True)
-
-def check_user_subs(user_id):
-    # TODO: Реализовать реальную проверку через Bot API (getChatMember)
-    # Сейчас всегда возвращает False для теста
-    return False
+async def check_user_subs(user_id, bot=None):
+    # Проверяет подписку на все каналы/чаты из REQUIRED_SUBSCRIPTIONS
+    # bot должен быть передан из хендлера
+    if bot is None:
+        return False
+    for ch in REQUIRED_SUBSCRIPTIONS:
+        chat_id = ch.get("chat_id")
+        try:
+            member = await bot.get_chat_member(chat_id, user_id)
+            if member.status in ("left", "kicked"):
+                return False
+        except TelegramBadRequest:
+            return False
+        except Exception as e:
+            logging.warning(f"Ошибка проверки подписки: {e}")
+            return False
+    return True
 
 @router.message(Command("start"))
 async def start_handler(msg: Message):
@@ -58,8 +48,21 @@ async def start_handler(msg: Message):
     user_id = msg.from_user.id
     session = Session()
     user = session.query(User).filter(User.id == user_id).first()
-    
+
+    # Проверка подписки для всех пользователей!
+    is_subscribed = await check_user_subs(user_id, bot=msg.bot)
+    if not is_subscribed:
+        kb = InlineKeyboardMarkup(
+            inline_keyboard=[
+                [InlineKeyboardButton(text=ch['title'], url=ch['url'])] for ch in REQUIRED_SUBSCRIPTIONS
+            ] + [[InlineKeyboardButton(text="Проверить подписку", callback_data="check_subs")]]
+        )
+        await msg.answer(SUBSCRIPTION_GREETING, reply_markup=kb, parse_mode="HTML")
+        session.close()
+        return
+
     if not user:
+        # Новый пользователь — регистрируем
         user = User(
             id=user_id,
             points=0,
@@ -71,7 +74,7 @@ async def start_handler(msg: Message):
             pending_referral=None
         )
         session.add(user)
-    
+
     # Проверяем реферала
     if args and args.startswith("ref"):
         ref_id = int(args[3:])  # Убираем "ref" из начала и конвертируем в int
@@ -88,10 +91,21 @@ async def start_handler(msg: Message):
                 )
             else:
                 logging.info(f"Пользователь {user_id} уже был приглашён {user.invited_by}")
-    
+
     update_user_info(user_id, msg.from_user.username, msg.from_user.first_name)
     session.commit()
     session.close()
+    await msg.answer("Привет! Ты в SisuDatuBot. Используй /help для списка команд.")
+
+# Callback для проверки подписки
+@router.callback_query(lambda c: c.data == "check_subs")
+async def check_subs_callback(call):
+    user_id = call.from_user.id
+    is_subscribed = await check_user_subs(user_id, bot=call.bot)
+    if is_subscribed:
+        await call.message.edit_text("✅ Подписка подтверждена! Теперь тебе доступны все функции бота. Используй /help.")
+    else:
+        await call.answer(SUBSCRIPTION_DENY, show_alert=True)
 
 # --- Супер-админ команды для управления обязательными подписками ---
 

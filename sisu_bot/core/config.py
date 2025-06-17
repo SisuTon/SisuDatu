@@ -41,6 +41,10 @@ RATE_LIMIT_PER_HOUR = int(os.getenv('RATE_LIMIT_PER_HOUR', '1000'))
 # Кэширование
 CACHE_TTL = int(os.getenv('CACHE_TTL', '3600'))
 
+# Logging
+LOG_LEVEL = os.getenv('LOG_LEVEL', 'INFO')
+LOG_FILE = os.getenv('LOG_FILE', 'bot.log')
+
 # Пути к файлам данных
 PHRASES_PATH = DATA_DIR / 'ai_fallback_phrases.json'
 TROLL_PATH = DATA_DIR / 'troll_triggers.json'
@@ -65,8 +69,8 @@ if PROFILE == 'main':
         "Ты не обязана никому ничего объяснять, можешь быть дерзкой, но не злой. "
     )
     REQUIRED_SUBSCRIPTIONS = [
-        {"title": "Канал SISU", "url": "https://t.me/SisuDatuTon"},
-        {"title": "Чат SISU", "url": "https://t.me/+F_kH9rcBxL02ZWFi"}
+        {"title": "Канал SISU", "url": "https://t.me/SisuDatuTon", "chat_id": "@SisuDatuTon"},
+        {"title": "Чат SISU", "url": "https://t.me/+F_kH9rcBxL02ZWFi", "chat_id": "-1002541438902"}
     ]
 else:  # mirror/integration profile
     SISU_SYSTEM_PROMPT = (
@@ -102,4 +106,49 @@ def get_user_role(user_id):
         return 'admin'
     if user_id in ZERO_ADMIN_IDS:
         return 'zero_admin'
-    return 'user' 
+    return 'user'
+
+# Конфигурация уровней доната/подписки
+DONATION_TIERS = {
+    "bronze": {
+        "title": "Бронзовый Supporter 🥉",
+        "min_amount_ton": 1.0,
+        "duration_days": 30, # Пример: 30 дней
+        "benefits": [
+            "Бейдж в профиле",
+            "Приоритет в поддержке",
+            "Множитель баллов x1.2",
+            "Увеличенный лимит TTS (5 сообщений/день)"
+        ],
+        "tts_limit": 5,
+        "points_multiplier": 1.2
+    },
+    "silver": {
+        "title": "Серебряный Supporter 🥈",
+        "min_amount_ton": 5.0,
+        "duration_days": 90, # Пример: 90 дней
+        "benefits": [
+            "Все из Бронзы",
+            "Уникальный бейдж",
+            "Множитель баллов x1.5",
+            "Увеличенный лимит TTS (10 сообщений/день)",
+            "Доступ к эксклюзивному чату"
+        ],
+        "tts_limit": 10,
+        "points_multiplier": 1.5
+    },
+    "gold": {
+        "title": "Золотой Supporter 🥇",
+        "min_amount_ton": 10.0,
+        "duration_days": 30, # 30 дней для Gold
+        "benefits": [
+            "Все из Серебра",
+            "Пользовательский бейдж",
+            "Множитель баллов x2.0",
+            "Увеличенный лимит TTS (100 сообщений/день)",
+            "Приоритетное голосование за новые фичи"
+        ],
+        "tts_limit": 100, # 100 сообщений/день для Gold
+        "points_multiplier": 2.0
+    }
+} 

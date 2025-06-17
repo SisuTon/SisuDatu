@@ -45,36 +45,32 @@ def update_state(**kwargs):
     return state
 
 def get_mood():
-    session = Session()
-    mood = session.query(BotState).filter_by(key='mood').first()
-    session.close()
-    return mood.value if mood else 'neutral'
+    with Session() as session:
+        mood = session.query(BotState).filter_by(key='mood').first()
+        return mood.value if mood else 'neutral'
 
 def set_mood(new_mood):
-    session = Session()
-    mood = session.query(BotState).filter_by(key='mood').first()
-    if mood:
-        mood.value = new_mood
-    else:
-        mood = BotState(key='mood', value=new_mood)
-        session.add(mood)
-    session.commit()
-    session.close()
-    return new_mood
+    with Session() as session:
+        mood = session.query(BotState).filter_by(key='mood').first()
+        if mood:
+            mood.value = new_mood
+        else:
+            mood = BotState(key='mood', value=new_mood)
+            session.add(mood)
+        session.commit()
+        return new_mood
 
 def get_state_db():
-    session = Session()
-    state = {row.key: row.value for row in session.query(BotState).all()}
-    session.close()
-    return state
+    with Session() as session:
+        state = {row.key: row.value for row in session.query(BotState).all()}
+        return state
 
 def update_state_db(**kwargs):
-    session = Session()
-    for key, value in kwargs.items():
-        row = session.query(BotState).filter_by(key=key).first()
-        if row:
-            row.value = value
-        else:
-            session.add(BotState(key=key, value=value))
-    session.commit()
-    session.close() 
+    with Session() as session:
+        for key, value in kwargs.items():
+            row = session.query(BotState).filter_by(key=key).first()
+            if row:
+                row.value = value
+            else:
+                session.add(BotState(key=key, value=value))
+        session.commit() 

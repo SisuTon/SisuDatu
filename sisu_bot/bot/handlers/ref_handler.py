@@ -11,6 +11,7 @@ from sqlalchemy.orm import sessionmaker
 from sisu_bot.bot.db.models import User
 from sisu_bot.core.config import DB_PATH
 from sisu_bot.bot.db.init_db import Session
+from sisu_bot.bot.services import points_service
 
 # Добавляем путь к корню проекта
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
@@ -73,4 +74,57 @@ async def handle_ref_command(msg: Message):
         
     except Exception as e:
         logging.error(f"REF: Error in ref_handler: {e}", exc_info=True)
-        await msg.answer("Произошла ошибка при генерации реферальной ссылки. Попробуйте позже.") 
+        await msg.answer("Произошла ошибка при генерации реферальной ссылки. Попробуйте позже.")
+
+@router.message(Command("reftop"))
+async def handle_reftop_command(msg: Message):
+    """
+    Обработчик команды /reftop - показывает топ пользователей по количеству рефералов
+    """
+    try:
+        session = Session()
+        # Получаем топ-10 пользователей по количеству рефералов
+        top_users = session.query(User).order_by(User.referrals.desc()).limit(10).all()
+        
+        if not top_users:
+            await msg.answer("Пока нет активных рефералов!")
+            return
+            
+        text = "🏆 <b>ТОП РЕФЕРАЛОВ:</b>\n\n"
+        medals = ["🥇", "🥈", "🥉"]
+        
+        for i, user in enumerate(top_users, 1):
+            username = user.username or "Пользователь"
+            first_name = user.first_name or username
+            referrals = user.referrals or 0
+            
+            # Получаем реферальный ранг
+            rank_info = points_service.get_rank_by_points(user.points, referrals)
+            referral_rank = rank_info['referral_title']
+            
+            # Эмодзи для реферальных рангов
+            referral_emojis = {
+                "Рекрут": "🎯",
+                "Рекрутер": "🎪",
+                "Наставник": "👨‍🏫",
+                "Мастер Рекрутинга": "🎭",
+                "Драконий Рекрутер": "🐉",
+                "Легендарный Рекрутер": "🌟"
+            }
+            rank_emoji = referral_emojis.get(referral_rank, "🎯")
+            
+            medal = medals[i-1] if i <= 3 else f"{i}."
+            tag = f"@{username}" if username != "Пользователь" else f'<a href="tg://user?id={user.id}">{first_name}</a>'
+            
+            text += f"{medal} {tag}\n"
+            text += f"   👥 Рефералов: {referrals}\n"
+            text += f"   {rank_emoji} Ранг: {referral_rank}\n\n"
+        
+        text += "\nПриглашай друзей и поднимайся в рейтинге! 🚀"
+        await msg.answer(text, parse_mode="HTML")
+        
+    except Exception as e:
+        logging.error(f"Error in reftop handler: {e}")
+        await msg.answer("Произошла ошибка при получении топа рефералов.")
+    finally:
+        session.close() 

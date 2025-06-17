@@ -2,22 +2,17 @@ from aiogram import Router
 from aiogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery, InputMediaPhoto, InputMediaDocument
 from aiogram.filters import Command
 from sisu_bot.bot.config import ADMIN_IDS
+from sisu_bot.core.config import DONATION_TIERS
 from sisu_bot.bot.services import points_service
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
+from datetime import datetime, timedelta
+import logging
 
 router = Router()
 
 # TON адрес для донатов
 TON_WALLET = "UQDpKfZQy_gFnsZxwE2A6FeTQUXimR9VWjnd1C_8R5Cn0hnv"
-
-# Суммы в нано-TON (1 TON = 1000000000 нано-TON)
-DONATE_AMOUNTS = {
-    "0.5 TON": "500000000",
-    "1 TON": "1000000000",
-    "2 TON": "2000000000",
-    "5 TON": "5000000000"
-}
 
 # ID группы для публичного сообщения (замени на свой)
 SUPPORTER_ANNOUNCE_CHAT_ID = -1002565290281  # пример, замени на свой
@@ -33,13 +28,15 @@ class DonateStates(StatesGroup):
 def get_donate_keyboard():
     """Создает клавиатуру с кнопками для разных сумм доната через универсальный TON deeplink и копирования кошелька"""
     buttons = []
-    # Кнопки с фиксированными суммами через универсальный deeplink
-    for amount, nano_amount in DONATE_AMOUNTS.items():
-        url = f"ton://transfer/{TON_WALLET}?amount={nano_amount}"
+    # Кнопки для каждого уровня доната
+    for tier_code, tier_info in DONATION_TIERS.items():
+        amount_nano = str(int(tier_info["min_amount_ton"] * 1_000_000_000))
+        url = f"ton://transfer/{TON_WALLET}?amount={amount_nano}"
         buttons.append(InlineKeyboardButton(
-            text=f"💎 {amount}",
+            text=f"💎 {tier_info['min_amount_ton']} TON - {tier_info['title']}",
             url=url
         ))
+    
     # Кнопка с произвольной суммой
     buttons.append(InlineKeyboardButton(
         text="💎 Другая сумма",
@@ -55,10 +52,10 @@ def get_donate_keyboard():
         text="✅ Я задонатил!",
         callback_data="donate_confirm"
     )
-    # Формируем клавиатуру: суммы по 2 в ряд, затем копировать, затем 'Я задонатил!'
+    # Формируем клавиатуру: уровни по 1 в ряд, затем произвольная сумма, затем копировать, затем 'Я задонатил!'
     keyboard = InlineKeyboardMarkup(
         inline_keyboard=[
-            buttons[i:i + 2] for i in range(0, len(buttons), 2)
+            [btn] for btn in buttons
         ] + [[copy_button], [confirm_button]]
     )
     return keyboard
@@ -73,14 +70,15 @@ async def donate_confirm_callback(call, state: FSMContext):
     await call.answer()
     await call.message.answer(
         "Пожалуйста, пришли хеш транзакции или скриншот перевода TON сюда одним сообщением.\n\n"
-        "После проверки админом ты получишь 500 баллов и статус Supporter!"
+        "После проверки админом ты получишь свой статус Supporter!"
     )
+    # Сохраняем user_id в состоянии для последующего подтверждения
+    await state.update_data(user_id_awaiting_proof=call.from_user.id)
     await state.set_state(DonateStates.waiting_proof)
 
 @router.message(Command("donate"))
 async def donate_handler(msg: Message):
     if msg.chat.type in ("group", "supergroup"):
-        # Рекламное сообщение с кнопкой перехода в личку
         keyboard = InlineKeyboardMarkup(
             inline_keyboard=[
                 [InlineKeyboardButton(
@@ -90,96 +88,127 @@ async def donate_handler(msg: Message):
             ]
         )
         await msg.answer(
-            "💎 <b>Поддержи проект Sisu Datu Bot!</b>\n\n"
-            "Стань Supporter и получи плюшки:\n"
-            "• Бейдж в профиле и топе\n"
-            "• Приоритет в поддержке\n"
-            "• В будущем — эксклюзивные фичи и розыгрыши!\n\n"
+            "💎 <b>Сделай Sisu Datu Bot круче — поддержи проект!</b>\n\n"
+            "Нажми кнопку и поддержи проект в личке!\n\n"
             "<i>Для приватности донать только в личке с ботом!</i>",
             reply_markup=keyboard,
             parse_mode="HTML"
         )
         return
-    # В личке — полноценный процесс доната
     keyboard = get_donate_keyboard()
+    benefits_text = (
+        "━━━━━━━━━━━━━━━━━━\n"
+        "<b>🔥 Варианты поддержки:</b>\n\n"
+        "🥉 <b>Bronze</b> — 1 TON\n"
+        "Ты в клубе избранных! Получаешь магический знак и +1000 баллов. Остальные пусть завидуют!\n\n"
+        "🥈 <b>Silver</b> — 5 TON\n"
+        "Становишься ближе к сердцу дракона! Ещё больше магии и +3000 баллов.\n\n"
+        "🥇 <b>Gold</b> — 10 TON\n"
+        "Ты — легенда! Твой ник сияет в топе, +7000 баллов и уважение всей драконьей братии.\n"
+        "━━━━━━━━━━━━━━━━━━"
+    )
     await msg.answer(
-        "🙏 Спасибо за желание поддержать проект!\n\n"
-        f"<b>TON-кошелек для доната:</b> <code>{TON_WALLET}</code>\n\n"
-        "Выбери сумму для поддержки через мобильный TON-кошелек (например, Tonkeeper) или скопируй адрес для ручного перевода.\n\n"
-        "<i>Кнопки работают только на мобильных устройствах с установленным TON-кошельком!</i>\n\n"
-        "• 0.5 TON — небольшая поддержка\n"
-        "• 1 TON — стандартная поддержка\n"
-        "• 2 TON — значительная поддержка\n"
-        "• 5 TON — VIP поддержка\n"
-        "• Другая сумма — укажи сам\n\n"
-        "<b>Что дает статус поддержки?</b>\n"
-        "• Благодарность от команды и бейдж в профиле\n"
-        "• Приоритет в ответах и поддержке\n"
-        "• Возможность влиять на развитие проекта\n"
-        "• В будущем — эксклюзивные фичи и розыгрыши!",
+        "💎 <b>Сделай Sisu Datu Bot круче — поддержи проект!</b>\n\n"
+        "🔗 TON-кошелек:\n"
+        f"<code>{TON_WALLET}</code>\n\n"
+        "📱 <i>Донать удобно через мобильный TON-кошелек!</i>\n\n"
+        f"{benefits_text}\n\n"
+        "🐉 После доната ты появишься в топе как <b>Донатер</b> (Воин дракона)!\n\n"
+        "👇 Жми <b>Я задонатил!</b> после перевода.",
         reply_markup=keyboard,
         parse_mode="HTML"
     )
 
-@router.message(Command("start"))
-async def start_donate_handler(msg: Message):
-    # Если пользователь зашел по deep link /start donate, сразу показываем донат-меню
-    if msg.chat.type == "private" and msg.text.strip().startswith("/start donate"):
-        keyboard = get_donate_keyboard()
-        await msg.answer(
-            "🙏 Спасибо за желание поддержать проект!\n\n"
-            f"<b>TON-кошелек для доната:</b> <code>{TON_WALLET}</code>\n\n"
-            "Выбери сумму для поддержки через мобильный TON-кошелек (например, Tonkeeper) или скопируй адрес для ручного перевода.\n\n"
-            "<i>Кнопки работают только на мобильных устройствах с установленным TON-кошельком!</i>\n\n"
-            "• 0.5 TON — небольшая поддержка\n"
-            "• 1 TON — стандартная поддержка\n"
-            "• 2 TON — значительная поддержка\n"
-            "• 5 TON — VIP поддержка\n"
-            "• Другая сумма — укажи сам\n\n"
-            "<b>Что дает статус поддержки?</b>\n"
-            "• Благодарность от команды и бейдж в профиле\n"
-            "• Приоритет в ответах и поддержке\n"
-            "• Возможность влиять на развитие проекта\n"
-            "• В будущем — эксклюзивные фичи и розыгрыши!",
-            reply_markup=keyboard,
-            parse_mode="HTML"
-        )
-
 @router.message(DonateStates.waiting_proof)
 async def handle_donate_proof(msg: Message, state: FSMContext):
-    user_id = msg.from_user.id
-    # Пересылаем админу(ам) с кнопкой "Подтвердить донат"
+    data = await state.get_data()
+    user_id_awaiting_proof = data.get("user_id_awaiting_proof")
+    if not user_id_awaiting_proof:
+        logging.error(f"handle_donate_proof: No user_id_awaiting_proof in state for {msg.from_user.id}")
+        await msg.answer("Произошла ошибка. Пожалуйста, попробуйте начать процесс доната снова.")
+        await state.clear()
+        return
+
+    # Пересылаем админу(ам) с кнопками выбора уровня доната
+    keyboard_buttons = []
+    for tier_code, tier_info in DONATION_TIERS.items():
+        keyboard_buttons.append(InlineKeyboardButton(
+            text=f"Подтвердить {tier_info['title']}",
+            callback_data=f"approve_donate_{user_id_awaiting_proof}_{tier_code}"
+        ))
+    # Разбиваем кнопки на ряды по 2
+    tier_keyboard = InlineKeyboardMarkup(inline_keyboard=[keyboard_buttons[i:i + 2] for i in range(0, len(keyboard_buttons), 2)])
+
     for admin_id in ADMIN_IDS:
+        caption_text = f"Донат от @{msg.from_user.username or msg.from_user.id}\nID: {user_id_awaiting_proof}\n\nПредполагаемый уровень: [Заполнить админу]"
         if msg.photo:
-            await msg.bot.send_photo(admin_id, msg.photo[-1].file_id, caption=f"Донат от @{msg.from_user.username or msg.from_user.id}\nID: {user_id}",
-                                     reply_markup=InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text="Подтвердить донат", callback_data=f"approve_donate_{user_id}")]]))
+            await msg.bot.send_photo(admin_id, msg.photo[-1].file_id, caption=caption_text,
+                                     reply_markup=tier_keyboard)
         elif msg.document:
-            await msg.bot.send_document(admin_id, msg.document.file_id, caption=f"Донат от @{msg.from_user.username or msg.from_user.id}\nID: {user_id}",
-                                        reply_markup=InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text="Подтвердить донат", callback_data=f"approve_donate_{user_id}")]]))
+            await msg.bot.send_document(admin_id, msg.document.file_id, caption=caption_text,
+                                        reply_markup=tier_keyboard)
         else:
-            await msg.bot.send_message(admin_id, f"Донат от @{msg.from_user.username or msg.from_user.id}\nID: {user_id}\n\n{msg.text}",
-                                      reply_markup=InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text="Подтвердить донат", callback_data=f"approve_donate_{user_id}")]]))
-    await msg.answer("Спасибо! Сообщение отправлено админу. Ожидай подтверждения.")
+            await msg.bot.send_message(admin_id, f"{caption_text}\n\nСообщение: {msg.text}",
+                                      reply_markup=tier_keyboard)
+    await msg.answer("Спасибо! Сообщение отправлено админу. Ожидай подтверждения и своего статуса Supporter.")
     await state.clear()
 
 @router.callback_query(lambda c: c.data and c.data.startswith("approve_donate_"))
-async def approve_donate_callback(call: CallbackQuery):
-    user_id = call.data.split("_")[-1]
-    user = points_service.set_supporter(user_id)
-    user = points_service.add_points(user_id, 500)
+async def approve_donate_tier_callback(call: CallbackQuery):
+    parts = call.data.split("_")
+    user_id = int(parts[2])
+    tier_code = parts[3]
+
+    if tier_code not in DONATION_TIERS:
+        logging.error(f"approve_donate_tier_callback: Invalid tier_code {tier_code}")
+        await call.answer("Ошибка: Неизвестный уровень доната.", show_alert=True)
+        return
+
+    tier_info = DONATION_TIERS[tier_code]
+    # Фиксированные баллы за донат
+    fixed_points = {"bronze": 1000, "silver": 3000, "gold": 7000}.get(tier_code, 1000)
+    duration_days = tier_info["duration_days"]
+
+    # Устанавливаем статус Supporter и баллы
+    session = points_service.Session() # Используем сессию из points_service для консистентности
+    user = session.query(points_service.User).filter(points_service.User.id == user_id).first()
+
+    if not user:
+        user = points_service.User(id=user_id)
+        session.add(user)
+
+    user.is_supporter = True
+    user.supporter_tier = tier_code
+    user.supporter_until = datetime.utcnow() + timedelta(days=duration_days)
+    # Начисляем фиксированные баллы
+    points_service.add_points(user_id, fixed_points)
+    # Важно: ChatPoints баллы не должны зависеть от доната, это баллы за активность
+
+    session.commit()
+    session.close()
+
     # Уведомляем пользователя
     try:
-        await call.bot.send_message(user_id, "🎉 Твой донат подтвержден!\n\nТы получил 500 баллов и статус Supporter. Спасибо за поддержку!")
-    except Exception:
-        pass
+        await call.bot.send_message(user_id, 
+            f"🎉 Твой донат подтвержден!\n\n"\
+            f"Ты получил статус <b>{tier_info['title']}</b> до {user.supporter_until.strftime('%d.%m.%Y')}!\n"\
+            f"Начислено {fixed_points} баллов.\n"\
+            f"<b>Плюшки:</b> {', '.join(tier_info['benefits'])}"
+            , parse_mode="HTML"
+        )
+    except Exception as e:
+        logging.error(f"Ошибка при отправке уведомления пользователю {user_id} о подтверждении доната: {e}", exc_info=True)
+
     # Публичное сообщение в группу
     try:
-        username = user.get("username")
+        username = user.username
         name = username and f"@{username}" or f"ID {user_id}"
         await call.bot.send_message(
             SUPPORTER_ANNOUNCE_CHAT_ID,
-            f"🎉 {name} поддержал проект и стал Supporter!\nСпасибо за вклад в развитие Sisu Datu Bot! 🐉💎"
+            f"🎉 {name} поддержал проект и стал <b>{tier_info['title']}</b>!\nСпасибо за вклад в развитие Sisu Datu Bot! 🐉💎",
+            parse_mode="HTML"
         )
-    except Exception:
-        pass
-    await call.answer("Донат подтвержден, статус и баллы начислены!", show_alert=True) 
+    except Exception as e:
+        logging.error(f"Ошибка при отправке публичного уведомления о донате: {e}", exc_info=True)
+
+    await call.answer(f"Донат подтвержден для {user_id} на уровень {tier_info['title']}!", show_alert=True) 

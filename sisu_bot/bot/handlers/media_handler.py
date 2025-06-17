@@ -49,7 +49,7 @@ async def photo_handler(msg: Message, state: FSMContext):
     # В личке не отвечаем на фото
     if msg.chat.type == "private":
         return
-    points_service.add_points(str(msg.from_user.id), PHOTO_POINTS)
+    points_service.add_points(str(msg.from_user.id), PHOTO_POINTS, chat_id=msg.chat.id)
     phrase = random.choice(PHRASES["photo"])
     await msg.answer(phrase)
 
@@ -58,6 +58,6 @@ async def video_handler(msg: Message, state: FSMContext):
     # В личке не отвечаем на видео
     if msg.chat.type == "private":
         return
-    points_service.add_points(str(msg.from_user.id), VIDEO_POINTS)
+    points_service.add_points(str(msg.from_user.id), VIDEO_POINTS, chat_id=msg.chat.id)
     phrase = random.choice(PHRASES["video"])
     await msg.answer(phrase) 

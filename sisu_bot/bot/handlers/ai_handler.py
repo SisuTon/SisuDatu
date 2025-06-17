@@ -1,5 +1,5 @@
 from aiogram import Router, F
-from aiogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
+from aiogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery, InputFile, BufferedInputFile
 from aiogram.utils.chat_action import ChatActionSender
 import re
 import json
@@ -30,14 +30,30 @@ from sisu_bot.bot.services.ai_stats_service import response_stats, user_preferen
 import logging
 from aiogram.fsm.state import State, StatesGroup
 from sisu_bot.bot.services.yandexgpt_service import generate_sisu_reply
-from sisu_bot.bot.config import ADMIN_IDS, is_superadmin
+from sisu_bot.bot.config import ADMIN_IDS, is_superadmin, TTS_VOICE_TEMP_DIR, AI_DIALOG_ENABLED, AI_DIALOG_PROBABILITY, SISU_PATTERN
+from sisu_bot.bot.services.yandex_speechkit_tts import synthesize_sisu_voice
+import time
+from sisu_bot.bot.services.motivation_service import send_voice_motivation
+from sisu_bot.bot.services.excuse_service import send_text_excuse, send_voice_excuse
+from sisu_bot.bot.services.persona_service import get_name_joke, get_name_variant, load_micro_legends, load_easter_eggs, load_magic_phrases, list_micro_legends, list_easter_eggs, list_magic_phrases, get_random_micro_legend, get_random_easter_egg, get_random_magic_phrase
+from sisu_bot.bot.services.trigger_service import (
+    check_trigger, get_smart_answer, learn_response,
+    get_learned_response, make_hash_id
+)
+from sisu_bot.bot.services.mood_service import (
+    update_mood, get_mood, update_user_preferences,
+    get_user_style, add_to_memory, get_recent_messages
+)
+from sisu_bot.bot.services.tts_service import (
+    handle_tts_request, send_tts_motivation
+)
 
 logger = logging.getLogger(__name__)
 
 router = Router()
 
 # Регулярка для обращения к Сису
-SISU_PATTERN = re.compile(r"^(сису|sisu|@SisuDatuBot)[,\s]", re.IGNORECASE)
+# SISU_PATTERN = re.compile(r"^(сису|sisu|@SisuDatuBot)[,\s]", re.IGNORECASE) # Удалено, теперь импортируется
 
 # --- JSON сериализация для datetime и deque ---
 def json_default(obj):
@@ -334,31 +350,49 @@ def check_for_new_triggers():
 
 def get_persona_answer(text: str, last_topic: str = None) -> Optional[str]:
     text_lower = text.lower()
-    # 1. Квесты и пасхалки
+    
+    # 1. Квесты (если есть)
     for quest in SISU_PERSONA.get("mini_quests", []):
         if quest["trigger"] in text_lower:
             return quest["text"]
-    for egg in SISU_PERSONA.get("easter_eggs", []):
-        if any(word in text_lower for word in ["секрет", "пасхалка", "тайна", "загадка", "что ты скрываешь", "что-то странное"]):
-            return random.choice(SISU_PERSONA["easter_eggs"])
-    # 2. Тренды
+            
+    # 2. Пасхалки (по ключевым словам или случайно)
+    if any(word in text_lower for word in ["секрет", "пасхалка", "тайна", "загадка", "что ты скрываешь", "что-то странное"]):
+        return get_random_easter_egg()
+    if random.random() < 0.1: # 10% шанс на случайную пасхалку
+        return get_random_easter_egg()
+
+    # 3. Магические фразы (по ключевым словам или случайно)
+    if any(word in text_lower for word in ["магия", "волшебство", "сила", "заклинание", "чудо"]):
+        return get_random_magic_phrase()
+    if random.random() < 0.08: # 8% шанс на случайную магическую фразу
+        return get_random_magic_phrase()
+
+    # 4. Тренды
     for trend, resp in SISU_PERSONA.get("trends", {}).items():
         if trend in text_lower:
             return resp
-    # 3. Тематические ответы
+            
+    # 5. Тематические ответы
     for kw, topic in SISU_PERSONA.get("keywords_to_topics", {}).items():
         if kw in text_lower:
             return random.choice(SISU_PERSONA["topics"][topic])
-    # 4. Мифология и истории (иногда)
-    if random.random() < 0.15 and SISU_PERSONA.get("mythology"):
-        if random.random() < 0.5:
+
+    # 6. Мифология и личные истории (иногда)
+    if random.random() < 0.15:
+        if SISU_PERSONA.get("mythology") and random.random() < 0.5:
             return random.choice(SISU_PERSONA["mythology"])
         elif SISU_PERSONA.get("personal_stories"):
             return random.choice(SISU_PERSONA["personal_stories"])
-    # 5. Микро-легенды (иногда)
-    if random.random() < 0.2 and SISU_PERSONA.get("micro_legends"):
-        return random.choice(SISU_PERSONA["micro_legends"])
-    # 6. Fallback — только если явно нет других вариантов
+            
+    # 7. Микро-легенды (случайно)
+    if random.random() < 0.1: # 10% шанс на микро-легенду
+        return get_random_micro_legend()
+
+    # 8. Шутки про имя (если есть имя и очень редко)
+    if last_topic and last_topic == "name" and random.random() < 0.05: # 5% шанс на шутку про имя, если последний топик был имя
+        return get_name_joke(name=text) # text будет именем, если был last_topic "name"
+
     return None
 
 def is_ai_dialog_message(message: Message, state: FSMContext) -> bool:
@@ -377,18 +411,6 @@ def is_ai_dialog_message(message: Message, state: FSMContext) -> bool:
     if current_state in [AdminStates.waiting_broadcast.state, AdminStates.waiting_challenge.state]:
         return False
     return True
-
-AI_DIALOG_ENABLED = False
-PRIVATE_ENABLED = False
-
-SUPERADMIN_COMMANDS = {
-    '/ai_dialog_on': 'Включить AI-диалог',
-    '/ai_dialog_off': 'Выключить AI-диалог',
-    '/enable_private': 'Включить работу бота в личке',
-    '/disable_private': 'Отключить работу бота в личке',
-    '/superadmin_help': 'Показать все команды супер-админа',
-    # ... сюда можно добавить другие команды супер-админа ...
-}
 
 # Фирменные фразы Сису (можно расширять)
 SISU_SIGNATURE_PHRASES = [
@@ -456,251 +478,235 @@ class SisuGameStates(StatesGroup):
 
 @router.message(Command("emoji_movie"))
 async def emoji_movie_start(msg: Message, state: FSMContext):
-    chat_id = msg.chat.id
-    mood = sisu_mood.get(chat_id, 0)
-    # Сису может отказаться играть, если настроение плохое
-    if mood < 0 or random.random() > 0.6:
-        await msg.answer(random.choice([
-            "Сегодня не мой день для игр. Может, в другой раз!",
-            "Не хочу, не буду! Я дракон, а не аниматор!",
-            "Сначала подними мне настроение, потом поговорим об играх!",
-            "Я бы сыграла, но вайб не тот..."
-        ]))
-        return
-    # Сису соглашается играть
-    movie = random.choice(EMOJI_MOVIES)
-    await msg.answer(f"Лови загадку! Отгадай фильм по эмодзи и ответь мне в reply:\n{movie['emoji']}")
+    """Start the emoji movie game"""
+    movies = [
+        "🎭👻🎭",  # Phantom of the Opera
+        "👨‍👦🦁👑",  # Lion King
+        "🚢💑🌊",  # Titanic
+        "🧙‍♂️💍🗻",  # Lord of the Rings
+        "🤖❤️🤖",  # Wall-E
+    ]
+    movie = random.choice(movies)
     await state.set_state(SisuGameStates.waiting_emoji_answer)
-    await state.update_data(emoji_answer=movie["answer"])
+    await state.update_data(movie=movie)
+    await msg.answer(f"Угадай фильм по эмодзи:\n{movie}")
 
 @router.message(StateFilter(SisuGameStates.waiting_emoji_answer))
 async def emoji_movie_check(msg: Message, state: FSMContext):
+    """Check the emoji movie answer"""
     data = await state.get_data()
-    answers = data.get("emoji_answer", [])
-    user_answer = (msg.text or "").strip().lower()
-    await state.clear()
-    if any(ans in user_answer for ans in answers):
-        await msg.answer(random.choice([
-            "Вот это да! Ты реально шаришь в фильмах!",
-            "Угадал! Я впечатлена!",
-            "Вайб пойман, ответ принят!"
-        ]))
+    movie = data.get("movie")
+    answer = msg.text.lower()
+
+    answers = {
+        "🎭👻🎭": ["призрак оперы", "phantom of the opera"],
+        "👨‍👦🦁👑": ["король лев", "lion king"],
+        "🚢💑🌊": ["титаник", "titanic"],
+        "🧙‍♂️💍🗻": ["властелин колец", "lord of the rings"],
+        "🤖❤️🤖": ["валли", "wall-e"],
+    }
+
+    if answer in answers.get(movie, []):
+        await msg.answer("Правильно! 🎉")
     else:
-        await msg.answer(random.choice([
-            "Ну, почти... Но нет!",
-            "Неа, не угадал. Драконы не прощают ошибок!",
-            "Мимо! Но за попытку респект."
-        ]))
+        await msg.answer(f"Неправильно! Правильный ответ: {answers[movie][0]}")
 
-# Хендлер для явных обращений (по имени или reply)
-SISU_NAME_VARIANTS = [
-    "Да-да, {name}?",
-    "Ну что, {name}, опять ты?",
-    "{name}, ты сегодня в ударе?",
-    "Слушаю, но не обещаю отвечать!",
-    "А может, без формальностей?",
-    "О, это снова ты!",
-    "{name}, ты как вайб?",
-    "{name}, ну удиви меня!",
-    "{name}, ты не устал ещё?",
-    "{name}, ну ты и настойчивый!",
-    "{name}, ты сегодня особенно активен!",
-    "{name}, ты что, решил меня затроллить?",
-    "{name}, я уже привыкла к твоим вопросам!",
-    "{name}, ну давай, попробуй меня удивить!",
-    "{name}, ты сегодня на волне!",
-    "{name}, ты как всегда в центре внимания!",
-    "{name}, ну ты и мем!",
-    "{name}, ты сегодня в настроении!",
-    "{name}, ты не бот, случайно?",
-    "{name}, ты точно человек?"
-]
-
-SISU_SARCASTIC_PHRASES = [
-    "Ну, ты и придумал... Может, в другой раз!",
-    "С таким вайбом только троллить!",
-    "Я бы ответила, но мне лень. Драконы тоже отдыхают!",
-    "Скучно! Давай что-нибудь поинтереснее!",
-    "Я не обязана быть полезной. Я обязана быть собой!",
-    "Сису не в настроении, попробуй позже!",
-    "Может, сначала подумаешь, потом спросишь?",
-    "Ох, уж эти вопросы... Я бы лучше поспала!",
-    "Ты серьёзно? Я даже не знаю, с чего начать...",
-    "Может, спросишь что-нибудь поинтереснее?",
-    "Я бы ответила, но боюсь, что ты не поймёшь...",
-    "С таким подходом далеко не уедешь!",
-    "Может, сначала подумаешь, потом спросишь?",
-    "Ох, уж эти вопросы... Я бы лучше поспала!",
-    "Ты серьёзно? Я даже не знаю, с чего начать..."
-]
-
-SISU_FRIENDLY_PHRASES = [
-    "Вайб ловлю! Ты молодец!",
-    "Вот это вопрос! Мне нравится твой стиль!",
-    "С тобой всегда интересно!",
-    "Ты сегодня на волне!",
-    "Обожаю такие вопросы!",
-    "Сису в хорошем настроении — и это твоя заслуга!",
-    "Ты умеешь задавать правильные вопросы!",
-    "Мне нравится, как ты мыслишь!",
-    "Отличный вопрос! Давай разберёмся вместе!",
-    "Ты всегда удивляешь меня своими идеями!",
-    "С тобой никогда не скучно!",
-    "Ты точно знаешь, как меня развеселить!",
-    "Мне нравится твой подход к жизни!",
-    "Ты умеешь поднять настроение даже дракону!",
-    "С тобой я чувствую себя особенным!"
-]
+    await state.clear()
 
 @router.message(lambda msg: SISU_PATTERN.match(msg.text or "") or (msg.reply_to_message and msg.reply_to_message.from_user and msg.reply_to_message.from_user.is_bot))
 async def sisu_explicit_handler(msg: Message, state: FSMContext):
-    logging.info(f"SISU_HANDLER: triggered by message: {msg.text!r} from {msg.from_user.id}")
-    try:
-        chat_id = msg.chat.id
-        user = msg.from_user
-        user_name = user.first_name or user.username or str(user.id)
-        # Получаем актуальное настроение Сису
-        sisu_current_mood = get_mood() or "playful"
-        # Формируем system prompt с учётом настроения
-        system_prompt = f"Ты — Сису, волшебный дракон из Raya and the Last Dragon. Твоё текущее настроение: {sisu_current_mood}. Отвечай в этом стиле, с характером и вайбом, соответствующим настроению. Не забывай быть персоной, а не просто ассистентом."
-        mood = sisu_mood.get(chat_id, 0)
-        # Проверка на "набор букв"
-        if not re.match(r"^[а-яА-Яa-zA-ZёЁ\- ]{2,}$", user_name):
-            name_part = random.choice([j.format(name=user_name) for j in SISU_NAME_JOKES])
-        else:
-            roll = random.random()
-            if roll < 0.5:
-                name_part = random.choice([v.format(name=user_name) for v in SISU_NAME_VARIANTS])
-            elif roll < 0.8:
-                name_part = random.choice([j.format(name=user_name) for j in SISU_NAME_JOKES])
-            else:
-                name_part = ""
-        async with ChatActionSender.typing(bot=msg.bot, chat_id=chat_id):
-            # Пасхалка: если пользователь спрашивает 'Сису, что ты запомнила?'
-            if (msg.text or '').lower().strip() in ["сису, что ты запомнила?", "сису что ты запомнила", "что ты запомнила?"]:
-                logging.info("SISU_HANDLER: early return — пасхалка 'что ты запомнила'")
-                learned = list(LEARNING_DATA["triggers"].values())
-                learned_flat = [item for sublist in learned for item in sublist]
-                if learned_flat:
-                    await msg.answer(random.choice(learned_flat))
-                else:
-                    await msg.answer("Я пока только учусь, но скоро буду удивлять!")
-                return
-            # Магический сюжетный поворот (5% шанс)
-            if random.random() < 0.05:
-                logging.info("SISU_HANDLER: early return — магический сюжетный поворот")
-                magic_phrase = random.choice(SISU_MAGIC_PHRASES)
-                await msg.answer(f"{name_part} {magic_phrase}".strip())
-                sisu_message_counter[chat_id] = sisu_message_counter.get(chat_id, 0) + 1
-                if sisu_message_counter[chat_id] % random.randint(10, 20) == 0:
-                    learned = list(LEARNING_DATA["triggers"].values())
-                    learned_flat = [item for sublist in learned for item in sublist]
-                    phrase = random.choice(SISU_SIGNATURE_PHRASES + learned_flat) if learned_flat else random.choice(SISU_SIGNATURE_PHRASES)
-                    async with ChatActionSender.typing(bot=msg.bot, chat_id=chat_id):
-                        await msg.bot.send_message(chat_id, phrase)
-                return
-            # Кастомные ответы на Снуп Догга и токен Сису
-            text = (msg.text or '').lower()
-            if "снуп дог" in text or "snoop dogg" in text or "snoop" in text:
-                logging.info("SISU_HANDLER: early return — кастомный ответ на Снуп Догга")
-                snoop_phrase = random.choice(SISU_SNOOP_REPLIES)
-                if name_part and random.random() < 0.5:
-                    snoop_phrase = f"{name_part} {snoop_phrase}".strip()
-                await msg.answer(snoop_phrase)
-                return
-            if "токен сису" in text or "sisu token" in text or ("тон" in text and "сису" in text):
-                logging.info("SISU_HANDLER: early return — кастомный ответ на токен Сису")
-                token_phrase = random.choice(SISU_TOKEN_REPLIES)
-                if name_part and random.random() < 0.5:
-                    token_phrase = f"{name_part} {token_phrase}".strip()
-                await msg.answer(token_phrase)
-                return
-            # Основной ответ через YandexGPT
-            try:
-                logging.info("SISU_HANDLER: YandexGPT reply start")
-                sisu_reply = await generate_sisu_reply(msg.text, system_prompt)
-                # Усиливаем влияние настроения на обычные ответы
-                if mood <= -2 and random.random() < 0.5:
-                    sisu_reply = f"{name_part} {random.choice(SISU_SARCASTIC_PHRASES)}".strip()
-                elif mood >= 2 and random.random() < 0.5:
-                    sisu_reply = f"{name_part} {random.choice(SISU_FRIENDLY_PHRASES)}".strip()
-                elif name_part and random.random() < 0.7:
-                    sisu_reply = f"{name_part} {sisu_reply}".strip()
-            except Exception as e:
-                logging.error(f"YANDEX ERROR: {e}")
-                logging.error(f"PHRASES fallback: {PHRASES}")
-                sisu_reply = random.choice(PHRASES) if PHRASES else "Сису задумалась... Попробуй ещё раз!"
-            logging.info("SISU_HANDLER: sending YandexGPT or fallback answer")
-            await msg.answer(sisu_reply)
-        sisu_message_counter[chat_id] = sisu_message_counter.get(chat_id, 0) + 1
-        if sisu_message_counter[chat_id] % random.randint(10, 20) == 0:
-            learned = list(LEARNING_DATA["triggers"].values())
-            learned_flat = [item for sublist in learned for item in sublist]
-            phrase = random.choice(SISU_SIGNATURE_PHRASES + learned_flat) if learned_flat else random.choice(SISU_SIGNATURE_PHRASES)
-            async with ChatActionSender.typing(bot=msg.bot, chat_id=chat_id):
-                await msg.bot.send_message(chat_id, phrase)
-    except Exception as e:
-        logging.error(f"FATAL ERROR IN SISU HANDLER: {e}")
-        try:
-            await msg.answer(random.choice(PHRASES) if PHRASES else "Сису задумалась... Попробуй ещё раз!")
-        except Exception as inner:
-            logging.error(f"FALLBACK SEND ERROR: {inner}")
+    """Handle explicit mentions of Sisu"""
+    text = msg.text or ""
 
-# 2. Триггеры (TON, токен, Снуп Дог, Плотва, Сглыпа и т.д.)
-@router.message(lambda msg: any(word in (msg.text or '').lower() for word in ["тон", "ton", "снуп дог", "плотва", "сглыпа", "token", "sisutoken"]))
-async def sisu_trigger_handler(msg: Message, state: FSMContext):
-    text = (msg.text or '').lower()
-    # Снуп Дог
-    if "снуп дог" in text or "snoop dogg" in text or "snoop" in text:
-        if any(q in text for q in ["кто", "что", "твой", "друг", "бро", "знаешь", "расскажи", "как относишься", "тебе", "тебя"]):
-            await msg.answer("Снуп — мой бро! Всегда респектую таким легендам 🐉🤙")
+    if SISU_PATTERN.match(text):
+        text = SISU_PATTERN.sub("", text).strip()
+
+    # Update mood and user preferences
+    update_mood(msg.chat.id, text)
+    mood = get_mood(msg.chat.id)
+    if msg.from_user:
+        user_style = get_user_style(msg.from_user.id)
+        update_user_preferences(user_id=msg.from_user.id, text=text, mood=mood)
+
+    # Add message to memory
+    add_to_memory(msg.chat.id, text)
+
+    # Handle specific voice commands
+    response_text = None
+    voice_action = None
+
+    # Определяем текущее настроение Сису для чата
+    chat_mood = get_mood(msg.chat.id)
+    mood_prompt_addition = ""
+    if chat_mood > 2: # Очень хорошее настроение
+        mood_prompt_addition = " Отвечай с очень позитивным, восторженным и энергичным настроением. "
+    elif chat_mood > 0: # Хорошее настроение
+        mood_prompt_addition = " Отвечай с позитивным и дружелюбным настроением. "
+    elif chat_mood < -2: # Очень плохое настроение (троллинг)
+        mood_prompt_addition = " Отвечай с саркастическим, дерзким и тролльским настроением. "
+    elif chat_mood < 0: # Плохое настроение
+        mood_prompt_addition = " Отвечай с немного ироничным или отстраненным настроением. "
+
+    # Motivation command
+    if any(keyword in text.lower() for keyword in ["мотивацию", "мотивация дня", "скажи мотивацию"]):
+        motivation_prompt = SISU_PROMPTS.get("motivation", "Придумай короткую мотивационную фразу.")
+        response_text = await generate_sisu_reply(prompt=f"{motivation_prompt}{mood_prompt_addition}")
+        voice_action = "record_voice"
+    
+    # Poem command
+    elif "прочитай стих" in text.lower():
+        topic = text.lower().replace("прочитай стих", "").strip()
+        if not topic:
+            topic = "жизни"
+        poem_prompt = SISU_PROMPTS.get("poem", "Сочини короткое стихотворение.").format(topic=topic)
+        response_text = await generate_sisu_reply(prompt=poem_prompt)
+        voice_action = "record_voice"
+
+    # Anecdote command
+    elif "прочитай анекдот" in text.lower() or "расскажи анекдот" in text.lower():
+        topic = text.lower().replace("прочитай анекдот", "").replace("расскажи анекдот", "").strip()
+        anecdote_prompt = SISU_PROMPTS.get("anecdote", "Расскажи короткий анекдот.").format(topic=topic)
+        response_text = await generate_sisu_reply(prompt=anecdote_prompt)
+        voice_action = "record_voice"
+
+    # Song command
+    elif "спой песню" in text.lower():
+        song_prompt = SISU_PROMPTS.get("song", "Придумай короткие слова для песни.")
+        response_text = await generate_sisu_reply(prompt=song_prompt)
+        voice_action = "record_voice"
+
+    # Voice text command
+    elif text.lower().startswith("озвучь текст "):
+        text_to_voice = text[len("озвучь текст "):].strip()
+        if text_to_voice:
+            response_text = text_to_voice # Direct text, no AI generation here
+            voice_action = "record_voice"
         else:
-            await msg.answer("Респект Снупу! 🐉✌️")
+            await msg.answer("Пожалуйста, укажите текст для озвучивания, Сису не читает мысли!")
+            return
+
+    # If it's a voice command, synthesize and send voice
+    if voice_action and response_text:
+        try:
+            async with ChatActionSender(bot=msg.bot, chat_id=msg.chat.id, action=voice_action):
+                voice_data = await synthesize_sisu_voice(response_text)
+            await msg.answer_voice(voice=BufferedInputFile(voice_data, filename="voice_response.ogg"))
+            return # Exit after sending voice response
+        except Exception as e:
+            logger.error(f"Failed to synthesize and send voice response: {e}", exc_info=True)
+            await msg.answer(response_text) # Fallback to text if voice fails
+            return # Exit after fallback
+
+    # Handle other explicit mentions (text responses)
+
+    # Check for triggers
+    trigger_match = check_trigger(text)
+    if trigger_match:
+        response_text = get_smart_answer(
+            text,
+            trigger_match["responses"],\
+            last_answer=None,\
+            user_id=msg.from_user.id if msg.from_user else None
+        )
+        await msg.answer(response_text) # Send as text
         return
-    # Токен Sisu
-    if "токен сису" in text or "sisu token" in text or ("тон" in text and "сису" in text):
-        await msg.answer("SISU — это токен для своих. Хочешь быть легендой? Купи немного, вдруг пригодится 😉")
+
+    # Try learned responses
+    learned_response_text = get_learned_response(text)
+    if learned_response_text:
+        await msg.answer(learned_response_text) # Send as text
         return
-    # TON
-    if "тон" in text or "ton" in text:
-        await msg.answer("TON — это блокчейн, а я — дракониха. Но если что, могу подкинуть пару мемов про крипту!")
+
+    # Generate AI response for general queries
+    try:
+        recent_messages = get_recent_messages(msg.chat.id)
+        user_style = get_user_style(msg.from_user.id) if msg.from_user else "neutral"
+        async with ChatActionSender(bot=msg.bot, chat_id=msg.chat.id, action="typing"):
+            response_text = await generate_sisu_reply(prompt=f"{text}{mood_prompt_addition}", recent_messages=recent_messages, user_style=user_style)
+        
+        await msg.answer(response_text) # Send as text
+
+    except Exception as e:
+        logger.error(f"Failed to generate AI response in explicit handler: {e}", exc_info=True)
+        await msg.answer("Извините, у меня проблемы с ответом 😔")
+
+async def generate_motivation_phrase() -> str:
+    """Generate a motivational phrase using AI"""
+    try:
+        prompt = "Придумай короткую мотивационную фразу (не более 2-3 предложений) в стиле дракона Сису. Фраза должна быть энергичной и вдохновляющей."
+        response = await generate_sisu_reply(prompt=prompt)
+        return response.strip()
+    except Exception as e:
+        logger.error(f"Failed to generate motivation phrase: {e}")
+        return None
+
+@router.message(Command("voice_motivation"))
+async def superadmin_voice_motivation(msg: Message):
+    """Superadmin command to send voice motivation"""
+    if not is_superadmin(msg.from_user.id):
+        await msg.answer("У вас нет прав для использования этой команды")
         return
-    # Плотва
-    if "плотва" in text:
-        await msg.answer("Плотва? Это не ко мне, я дракон, а не лошадь! 🐉")
-        return
-    # Сглыпа
-    if "сглыпа" in text:
-        await msg.answer("Сглыпа — это мем, а я — мемная дракониха. Всё просто!")
-        return
-    # Если просят длинный ответ (войну и мир, эссе, сочинение и т.д.)
-    if any(q in text for q in ["напиши", "расскажи подробно", "эссе", "войну и мир", "огромный ответ", "длинно"]):
-        await msg.answer("Я бы с радостью, но лучше купи токен SISU и получи эксклюзив! 😏")
-        return
-    # Fallback — старый фирменный ответ
-    await msg.answer("🐉 Сису тут как тут! (фирменный ответ на триггер)")
+    async with ChatActionSender(bot=msg.bot, chat_id=msg.chat.id, action="record_voice"):
+        await send_tts_motivation(msg)
 
 # 3. Общий AI-диалог (только если включён и с вероятностью 7% в группе, в личке — только если включено супер-админом)
 @router.message(is_ai_dialog_message)
 async def ai_dialog_handler(msg: Message, state: FSMContext):
-    if not AI_DIALOG_ENABLED:
+    current_state = await state.get_state()
+    # Allow general AI dialog in private chats by default, regardless of AI_DIALOG_ENABLED for superadmin
+    if msg.chat.type == "private":
+        # If it's a private chat, and it's not a command or an explicit Sisu mention that's already handled
+        # We need to make sure Command() can also be awaited if it contains async logic.
+        # For now, let's simplify to check for non-empty text that's not a direct Sisu mention already handled
+        if not SISU_PATTERN.match(msg.text or "") and not (msg.text or "").startswith("/"):
+            pass # Allow processing
+        else:
+            # If it's a command or explicit Sisu mention, let the specific handlers deal with it
+            return
+    elif not AI_DIALOG_ENABLED:
         return
+
+    # In group — only sometimes (random)
+    if msg.chat.type != "private" and random.random() > AI_DIALOG_PROBABILITY:
+        # Шанс на проактивное сообщение/элемент персоны (5%)
+        if random.random() < 0.05: 
+            persona_surprise = get_persona_answer(text="", last_topic="surprise") # Неважно что за текст, главное запустить выбор
+            if persona_surprise:
+                await msg.answer(persona_surprise, parse_mode="HTML")
+                return # Отправляем неожиданную реплику и завершаем обработку
+        return
+
+    # Do not process if it's already handled by explicit Sisu mention or token trigger
     if SISU_PATTERN.match(msg.text or ""):
         return
     if any(word in (msg.text or "").lower() for word in ["тон", "ton", "снуп дог", "плотва", "сглыпа", "token", "sisutoken"]):
         return
-    # В группе — только иногда (рандом)
-    if msg.chat.type != "private" and random.random() > 0.07:
-        return
-    # В личке — только если включено супер-админом
-    if msg.chat.type == "private" and not is_superadmin(msg.from_user.id):
-        return
-    try:
-        sisu_reply = await generate_sisu_reply(msg.text)
-    except Exception as e:
-        logger.error(f"Ошибка YandexGPT (ai_dialog): {e}")
-        sisu_reply = random.choice(PHRASES) if PHRASES else "Сису задумалась... Попробуй ещё раз!"
-    await msg.answer(f"[Сису вмешалась в диалог] {sisu_reply}")
+
+    # Update mood and user preferences for general AI dialog
+    update_mood(msg.chat.id, msg.text)
+    chat_mood = get_mood(msg.chat.id)
+    if msg.from_user:
+        update_user_preferences(user_id=msg.from_user.id, text=msg.text, mood=chat_mood)
+    add_to_memory(msg.chat.id, msg.text)
+
+    async with ChatActionSender(bot=msg.bot, chat_id=msg.chat.id, action="typing"):
+        try:
+            mood_prompt_addition = ""
+            if chat_mood > 2: # Очень хорошее настроение
+                mood_prompt_addition = " Отвечай с очень позитивным, восторженным и энергичным настроением. "
+            elif chat_mood > 0: # Хорошее настроение
+                mood_prompt_addition = " Отвечай с позитивным и дружелюбным настроением. "
+            elif chat_mood < -2: # Очень плохое настроение (троллинг)
+                mood_prompt_addition = " Отвечай с саркастическим, дерзким и тролльским настроением. "
+            elif chat_mood < 0: # Плохое настроение
+                mood_prompt_addition = " Отвечай с немного ироничным или отстраненным настроением. "
+
+            sisu_reply_text = await generate_sisu_reply(prompt=f"{msg.text}{mood_prompt_addition}")
+            # Send general AI dialog reply as text
+            await msg.answer(sisu_reply_text)
+        except Exception as e:
+            logger.error(f"Ошибка YandexGPT (ai_dialog): {e}", exc_info=True)
+            await msg.answer("Извините, у меня проблемы с ответом 😔")
 
 # 4. Callback-обработчик (можно вернуть сразу)
 @router.callback_query()
@@ -725,7 +731,7 @@ async def like_dislike_callback(call: CallbackQuery):
         else:
             await call.answer("Ошибка: не найдено соответствие.")
     else:
-        await call.answer() 
+        await call.answer()
 
 @router.message(F.reply_to_message, lambda msg: msg.reply_to_message and msg.reply_to_message.from_user and msg.reply_to_message.from_user.is_bot)
 async def sisu_reply_learning_handler(msg: Message, state: FSMContext):
@@ -768,7 +774,7 @@ async def sisu_reply_learning_handler(msg: Message, state: FSMContext):
             "Сису учится у лучших, но остаётся собой!",
             "Взяла на заметку, но свобода — мой стиль!"
         ]))
-        return 
+        return
 
 # Команда для супер-админа: /sisu_learned — случайная выученная фраза
 @router.message(Command("sisu_learned"))
@@ -783,21 +789,21 @@ async def sisu_learned_handler(msg: Message):
         await msg.answer("Я пока только учусь, но скоро буду удивлять!")
 
 SISU_TOKEN_REPLIES = [
-    "Sisu Token — это не просто токен, это образ жизни! 🚀",
-    "Sisu Token — это как я: уникальный и непредсказуемый! 💎",
-    "Sisu Token — это не просто цифры, это философия! 🧠",
-    "Sisu Token — это как я: дракон в мире крипты! 🐉",
-    "Sisu Token — это не просто токен, это искусство! 🎨",
-    "Sisu Token — это как я: загадочный и могущественный! 🔮",
-    "Sisu Token — это не просто цифры, это магия! ✨",
-    "Sisu Token — это как я: неповторимый и особенный! 🌟",
-    "Sisu Token — это не просто токен, это легенда! 📜",
-    "Sisu Token — это как я: дракон в мире блокчейна! 🐲",
-    "Sisu Token — это не просто цифры, это история! 📚",
-    "Sisu Token — это как я: уникальный и неповторимый! 💫",
-    "Sisu Token — это не просто токен, это будущее! 🔮",
-    "Sisu Token — это как я: загадочный и могущественный! 🎭",
-    "Sisu Token — это не просто цифры, это искусство! 🎨"
+    "SISU — это не просто токен, это легенда! 🚀",
+    "SISU — это как я: уникальный и непредсказуемый! 💎",
+    "SISU — это не просто цифры, это философия! 🧠",
+    "SISU — это как я: дракон в мире крипты! 🐉",
+    "SISU — это не просто токен, это искусство! 🎨",
+    "SISU — это как я: загадочный и могущественный! 🔮",
+    "SISU — это не просто цифры, это магия! ✨",
+    "SISU — это как я: неповторимый и особенный! 🌟",
+    "SISU — это не просто токен, это легенда! 📜",
+    "SISU — это как я: дракон в мире блокчейна! 🐲",
+    "SISU — это не просто цифры, это история! 📚",
+    "SISU — это как я: уникальный и неповторимый! 💫",
+    "SISU — это не просто токен, это будущее! 🔮",
+    "SISU — это как я: загадочный и могущественный! 🎭",
+    "SISU — это не просто цифры, это искусство! 🎨"
 ]
 SISU_SNOOP_REPLIES = [
     "Yo! Snoop Dogg — мой духовный наставник! 🐉",
@@ -817,26 +823,212 @@ SISU_SNOOP_REPLIES = [
     "Snoop Dogg — the legend! 🌟"
 ]
 
-@router.message()
-async def handle_message(msg: Message):
-    """Обработчик всех сообщений для AI-диалога"""
-    # Проверяем состояние AI-диалога
-    state = get_state()
-    if not state.get("ai_dialog_enabled", False):
-        return
+# Лимиты на озвучку для обычных пользователей (user_id -> [timestamps])
+TTS_LIMIT_PER_DAY = 3
+user_tts_usage = {}
 
-    # Проверяем, что это личный чат и включена работа в личке
-    if msg.chat.type == "private" and not state.get("private_enabled", False):
-        return
+def can_use_tts(user_id: int) -> bool:
+    now = int(time.time())
+    day = now // 86400
+    usage = user_tts_usage.get(user_id, [])
+    # Оставляем только текущий день
+    usage = [ts for ts in usage if ts // 86400 == day]
+    user_tts_usage[user_id] = usage
+    return len(usage) < TTS_LIMIT_PER_DAY
 
-    # Проверяем, что это ответ на сообщение бота
-    if not msg.reply_to_message or not msg.reply_to_message.from_user.is_bot:
-        return
+def register_tts_usage(user_id: int):
+    now = int(time.time())
+    usage = user_tts_usage.get(user_id, [])
+    usage.append(now)
+    user_tts_usage[user_id] = usage
 
-    logging.info(f"AI dialog message from user {msg.from_user.id} in chat {msg.chat.id}")
+# --- База стихотворений для озвучки ---
+SISU_POEMS = [
+    "У лукоморья дуб зелёный; Златая цепь на дубе том...",
+    "Мороз и солнце; день чудесный! Еще ты дремлешь, друг прелестный...",
+    "Я помню чудное мгновенье: Передо мной явилась ты...",
+    "Буря мглою небо кроет, Вихри снежные крутя...",
+    "Люблю грозу в начале мая, Когда весенний, первый гром..."
+]
+
+# --- Хендлер для стихотворений ---
+@router.message(lambda msg: SISU_PATTERN.match(msg.text or "") and (
+    "стих" in (msg.text or "").lower() or "прочти стихотворение" in (msg.text or "").lower()))
+async def sisu_poem_tts_handler(msg: Message, state: FSMContext):
+    text = msg.text or ""
+    lower = text.lower()
+    # Ищем текст после ключевых слов
+    idx = lower.find("стих")
+    tts_text = text[idx+4:].strip() if idx != -1 and len(text[idx+4:].strip()) > 0 else ""
+    # Если текста нет — выбираем случайный стих
+    import random
+    if not tts_text:
+        tts_text = random.choice(SISU_POEMS)
+    tts_text = tts_text[:250]  # Ограничение TTS
     try:
-        response = await generate_sisu_reply(msg.text)
-        await msg.answer(response)
+        await msg.bot.send_chat_action(chat_id=msg.chat.id, action="record_voice")
+        voice_bytes = await synthesize_sisu_voice(tts_text, voice="marina", emotion="good", speed=1.0)
+        voice_file = BufferedInputFile(voice_bytes, filename="voice.ogg")
+        await msg.answer_voice(voice=voice_file)
     except Exception as e:
-        logging.error(f"Error in AI dialog: {e}", exc_info=True)
-        await msg.answer("Извини, у меня не получается ответить прямо сейчас. Попробуй позже!") 
+        await msg.answer(f"Ошибка озвучки: {e}\nТекст: {tts_text}")
+
+SISU_NAME_VARIANTS = [
+    "Да-да, {name}?",
+    "Ну что, {name}, опять ты?",
+    "Слушаю, но не обещаю отвечать!",
+    "А может, без формальностей?",
+    "О, это снова ты!",
+    "{name}, ты как вайб?",
+    "{name}, ну удиви меня!",
+    "{name}, ты не устал ещё?",
+    "{name}, ну ты и настойчивый!",
+    "{name}, ты сегодня особенно активен!",
+]
+
+SISU_SARCASTIC_PHRASES = [
+    "Ну, ты и придумал... Может, в другой раз!",
+    "С таким вайбом только троллить!",
+    "Я бы ответила, но мне лень. Драконы тоже отдыхают!",
+    "Скучно! Давай что-нибудь поинтереснее!",
+    "Я не обязана быть полезной. Я обязана быть собой!",
+    "Сису не в настроении, попробуй позже!",
+    "Может, сначала подумаешь, потом спросишь?",
+    "Ох, уж эти вопросы... Я бы лучше поспала!",
+    "Ты серьёзно? Я даже не знаю, с чего начать...",
+]
+
+SISU_FRIENDLY_PHRASES = [
+    "Вайб ловлю! Ты молодец!",
+    "Вот это вопрос! Мне нравится твой стиль!",
+    "С тобой всегда интересно!",
+    "Ты сегодня на волне!",
+    "Обожаю такие вопросы!",
+    "Сису в хорошем настроении — и это твоя заслуга!",
+    "Ты умеешь задавать правильные вопросы!",
+    "Мне нравится, как ты мыслишь!",
+    "Отличный вопрос! Давай разберёмся вместе!",
+    "Ты всегда удивляешь меня своими идеями!",
+]
+
+@router.message(Command("voice"))
+async def superadmin_voice(msg: Message):
+    if not is_superadmin(msg.from_user.id):
+        return
+    text = msg.text.split(maxsplit=1)[1] if len(msg.text.split()) > 1 else ""
+    if not text:
+        await msg.answer("Укажи текст для озвучки!")
+        return
+    async with ChatActionSender(bot=msg.bot, chat_id=msg.chat.id, action="record_voice"):
+        voice_bytes = await synthesize_sisu_voice(text, voice="marina", emotion="good", speed=1.0)
+        voice_file = BufferedInputFile(voice_bytes, filename="voice.ogg")
+        await msg.answer_voice(voice=voice_file)
+
+# --- Промты для разных функций Сису ---
+SISU_PROMPTS = {
+    "default": (
+        "Ты — Сису, вайбовый дракон из Raya and the Last Dragon. Ты дерзкая, ироничная, иногда троллишь, но всегда с харизмой и поддержкой. "
+        "Не будь слишком исполнительной, добавляй эмоции, мемы, вайб и лёгкий троллинг."
+    ),
+    "motivation": (
+        "Ты — Сису, вайбовый дракон из Raya and the Last Dragon. Придумай короткую, оригинальную мотивационную фразу для дня. "
+        "Она должна быть забавной, энергичной и вдохновляющей, связанной с криптой, TON или инвестициями. "
+        "Пиши с юмором, харизмой, поддержкой, иногда с дерзостью и лёгким троллингом, но всегда вдохновляй. "
+        "Не добавляй пояснений, только саму фразу."
+    ),
+    "poem": (
+        "Ты — Сису, вайбовый дракон из Raya and the Last Dragon. Сочини короткое стихотворение (до 4 строк) на заданную тему. "
+        "Тема: {topic}. Пиши с юмором, дерзостью, иронией и вайбом. Не добавляй пояснений, только сам стих."
+    ),
+    "anecdote": (
+        "Ты — Сису, вайбовый дракон из Raya and the Last Dragon. Расскажи короткий, забавный анекдот. "
+        "Если задана тема, используй её. Тема: {topic}. Пиши с юмором, дерзостью, иронией и вайбом. Не добавляй пояснений, только сам анекдот."
+    ),
+    "song": (
+        "Ты — Сису, вайбовый дракон из Raya and the Last Dragon. Придумай короткие, смешные и дерзкие слова для песни (до 4 строк). "
+        "Пиши с юмором, харизмой, поддержкой, иногда с дерзостью и лёгким троллингом. Не добавляй пояснений, только текст песни."
+    ),
+}
+
+# --- Пул голосовых отмазок для fallback (модульно, не смешивать с текстовыми) ---
+SISU_TTS_FALLBACK_VOICES = [
+    "Не мешай, я сплю!",
+    "Я отошла, пойду поймаю вайб!",
+    "Драконы тоже отдыхают, попробуй позже!",
+    "Иди музыку послушай, а я тут подремлю!",
+    "Сегодня не мой день для стихов, попробуй завтра!",
+    "Я ушла тусить с Снуп Доггом, вернусь позже!"
+]
+
+# --- Функция для отправки голосовой отмазки ---
+async def send_tts_fallback_voice(msg):
+    import random
+    phrase = random.choice(SISU_TTS_FALLBACK_VOICES)
+    try:
+        voice_bytes = await synthesize_sisu_voice(phrase, voice="marina", emotion="good", speed=1.0)
+        voice_file = BufferedInputFile(voice_bytes, filename="voice.ogg")
+        await msg.answer_voice(voice=voice_file)
+    except Exception:
+        await msg.answer("Сису даже голос не хочет включать! Попробуй позже!")
+
+# --- Пул голосовых мотивашек для криптанов TON (модульно, не смешивать с текстовыми и fallback) ---
+import json
+from pathlib import Path
+MOTIVATION_TTS_PATH = Path(__file__).parent.parent.parent / 'data' / 'motivation_tts_phrases.json'
+try:
+    with open(MOTIVATION_TTS_PATH, encoding='utf-8') as f:
+        SISU_MOTIVATION_TTS = json.load(f)
+except Exception:
+    SISU_MOTIVATION_TTS = [
+        "Киты TON не спят — и ты не спи!",
+        "Поймал вайб — держи TON!",
+        "Сегодня памп, завтра ламбо!",
+        "Держи хвост выше, а TON — в кошельке!",
+        "Крипта — это не только moon, но и вайб!",
+        "Сису с тобой, TON с тобой, всё будет moon!",
+        "Не продавай на дне, держи до луны!",
+        "Вайб сильнее фуда!",
+        "Кто не рискует, тот не криптан!",
+        "Сису верит в твой памп!"
+    ]
+
+def save_motivation_tts():
+    with open(MOTIVATION_TTS_PATH, 'w', encoding='utf-8') as f:
+        json.dump(SISU_MOTIVATION_TTS, f, ensure_ascii=False, indent=2)
+
+# --- Команда для супер-админа: добавить голосовую мотивашку ---
+@router.message(lambda msg: msg.chat.type == 'private' and SISU_PATTERN.match(msg.text or "") and "запомни мотивацию для озвучки" in (msg.text or "").lower())
+async def superadmin_add_motivation_tts(msg: Message):
+    if not is_superadmin(msg.from_user.id):
+        await msg.answer("Только суперадмин может добавлять мотивашки для озвучки!")
+        return
+    text = msg.text or ""
+    idx = text.lower().find("запомни мотивацию для озвучки")
+    phrase = text[idx+len("запомни мотивацию для озвучки"):].strip(' :"')
+    if not phrase:
+        await msg.answer("Укажи мотивацию после команды!")
+        return
+    if phrase in SISU_MOTIVATION_TTS:
+        await msg.answer("Эта мотивация уже есть в пуле!")
+        return
+    SISU_MOTIVATION_TTS.append(phrase)
+    save_motivation_tts()
+    await msg.answer("Запомнила! Теперь буду иногда озвучивать эту мотивацию!")
+
+# --- Функция для отправки голосовой мотивашки ---
+async def send_tts_motivation(msg: Message):
+    """Send a random motivation phrase as voice message"""
+    # This function is now used only for superadmin voice_motivation command
+    # and should be adapted if used elsewhere for motivation phrases from file.
+    # It's not directly related to AI-generated daily motivation anymore.
+    if not SISU_MOTIVATION_TTS:
+        await msg.answer("У меня пока нет мотивационных фраз 😔")
+        return
+
+    phrase = random.choice(SISU_MOTIVATION_TTS)
+    try:
+        voice_data = await synthesize_sisu_voice(phrase)
+        await msg.answer_voice(voice=BufferedInputFile(voice_data, filename="motivation.ogg"))
+    except Exception as e:
+        logger.error(f"Failed to synthesize motivation voice: {e}")
+        await send_tts_fallback_voice(msg) 

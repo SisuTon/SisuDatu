@@ -8,6 +8,7 @@ from pathlib import Path
 from sisu_bot.bot.services.allowed_chats_service import list_allowed_chats
 from sisu_bot.bot.services import top_service
 from sisu_bot.bot.services import user_service
+from sisu_bot.bot.config import SISU_PATTERN
 
 router = Router()
 
@@ -23,8 +24,6 @@ SISU_GREETINGS = [
     "✨ Привет! Я — дракониха Сису, и я уже чувствую магию этого чата!\nНо чтобы остаться, мне нужно разрешение от @bakeevsergey.\nПиши ему, если хочешь, чтобы я осталась!",
     "🐲 Привет, друзья! Это Сису — самая весёлая дракониха.\nЯ могу остаться здесь только если мой хранитель @bakeevsergey скажет \"да\".\nПопроси его, если хочешь, чтобы я осталась!",
 ]
-
-SISU_PATTERN = re.compile(r"^(сису|sisu|@SisuDatuBot)[,\s]", re.IGNORECASE)
 
 @router.message(Command("start"))
 async def cmd_start(message: Message):

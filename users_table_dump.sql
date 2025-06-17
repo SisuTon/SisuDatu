@@ -1,0 +1,29 @@
+PRAGMA foreign_keys=OFF;
+BEGIN TRANSACTION;
+CREATE TABLE users (
+	id INTEGER NOT NULL, 
+	username VARCHAR, 
+	first_name VARCHAR, 
+	points FLOAT, 
+	rank VARCHAR, 
+	active_days INTEGER, 
+	referrals INTEGER, 
+	message_count INTEGER, 
+	last_checkin DATETIME, 
+	is_supporter BOOLEAN, 
+	invited_by INTEGER, 
+	pending_referral INTEGER, 
+	created_at DATETIME, 
+	updated_at DATETIME, 
+	role VARCHAR, 
+	PRIMARY KEY (id), 
+	FOREIGN KEY(invited_by) REFERENCES users (id)
+);
+INSERT INTO users VALUES(1,'user1',NULL,100.0,'novice',0,0,0,NULL,0,NULL,NULL,'2025-06-16 21:46:15.793325','2025-06-16 21:46:15.793330','user');
+INSERT INTO users VALUES(2,'user2',NULL,200.0,'novice',0,0,0,NULL,0,NULL,NULL,'2025-06-16 21:46:15.793332','2025-06-16 21:46:15.793332','user');
+INSERT INTO users VALUES(3,'user3',NULL,50.0,'novice',0,0,0,NULL,0,NULL,NULL,'2025-06-16 21:46:15.793333','2025-06-16 21:46:15.793334','user');
+INSERT INTO users VALUES(123456,'testuser','Test',0.0,'novice',0,0,0,NULL,0,NULL,NULL,'2025-06-16 21:46:15.869610','2025-06-16 21:46:15.869615','user');
+INSERT INTO users VALUES(446318189,'bakeevsergey','Sergey',50.5,'seeker',1,0,0,'2025-06-16 21:55:10.897780',0,NULL,NULL,'2025-06-16 21:54:53.245934','2025-06-16 21:55:10.898259','user');
+INSERT INTO users VALUES(519507266,'Nemow24','Alex',50.0,'seeker',1,0,0,'2025-06-16 22:20:37.649577',0,NULL,NULL,'2025-06-16 22:20:37.633976','2025-06-16 22:20:37.650426','user');
+INSERT INTO users VALUES(6485553352,'YakuzaNakamoto','YakuzaNakamoto',50.0,'seeker',1,0,0,'2025-06-16 22:21:41.392731',0,NULL,NULL,'2025-06-16 22:21:41.390255','2025-06-16 22:21:41.392979','user');
+COMMIT;

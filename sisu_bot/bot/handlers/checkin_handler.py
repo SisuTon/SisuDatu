@@ -29,50 +29,58 @@ async def check_and_activate_referral(user_id: int, bot) -> bool:
     Проверяет и активирует реферала, если выполнены все условия
     Возвращает True, если реферал был активирован
     """
-    session = Session()
-    user = session.query(User).filter(User.id == user_id).first()
-    
-    # Проверяем, есть ли ожидающий реферал
-    if not user or not user.pending_referral:
-        session.close()
-        return False
-    
-    # Проверяем условия активации
-    if (user.message_count >= 5 and  # Минимум 5 сообщений
-        user.last_checkin):  # Был чек-ин
+    with Session() as session:
+        user = session.query(User).filter(User.id == user_id).first()
         
-        ref_id = user.pending_referral
-        ref_user = session.query(User).filter(User.id == ref_id).first()
-        if ref_user:
-            # Активируем реферала
-            user.invited_by = ref_id
-            user.pending_referral = None
+        # Проверяем, есть ли ожидающий реферал
+        if not user or not user.pending_referral:
+            return False
+        
+        # Проверяем условия активации
+        if (user.message_count >= 5 and  # Минимум 5 сообщений
+            user.last_checkin):  # Был чек-ин
             
-            # Начисляем награду пригласившему
-            ref_user.points += 100
-            ref_user.referrals += 1
-            
-            # Сохраняем изменения
-            session.commit()
-            
-            # Уведомляем обоих пользователей
-            try:
-                await bot.send_message(ref_id, 
-                    "🎉 Поздравляем! Твой реферал активирован!\n"
-                    "• +100 баллов\n"
-                    "• +1 к счётчику рефералов"
-                )
-                await bot.send_message(user_id,
-                    "🎯 Реферальная программа активирована!\n"
-                    "Пригласивший тебя получил награду."
-                )
-            except Exception as e:
-                print(f"Ошибка при отправке уведомлений: {e}")
-            
-            session.close()
-            return True
+            ref_id = user.pending_referral
+            ref_user = session.query(User).filter(User.id == ref_id).first()
+            if ref_user:
+                # Активируем реферала
+                user.invited_by = ref_id
+                user.pending_referral = None
+                
+                # Базовые награды
+                base_points = 100
+                ref_user.points += base_points
+                ref_user.referrals += 1
+                
+                # Дополнительные награды за количество рефералов
+                if ref_user.referrals == 5:
+                    ref_user.points += 500  # Бонус за 5 рефералов
+                    bonus_msg = "\n🎉 Достижение: 5 рефералов! +500 баллов"
+                elif ref_user.referrals == 10:
+                    ref_user.points += 1000  # Бонус за 10 рефералов
+                    bonus_msg = "\n🌟 Достижение: 10 рефералов! +1000 баллов"
+                else:
+                    bonus_msg = ""
+                
+                # Сохраняем изменения
+                session.commit()
+                
+                # Уведомляем обоих пользователей
+                try:
+                    await bot.send_message(ref_id, 
+                        "🎉 Поздравляем! Твой реферал активирован!\n"
+                        f"• +{base_points} баллов{bonus_msg}\n"
+                        "• +1 к счётчику рефералов"
+                    )
+                    await bot.send_message(user_id,
+                        "🎯 Реферальная программа активирована!\n"
+                        "Пригласивший тебя получил награду."
+                    )
+                except Exception as e:
+                    print(f"Ошибка при отправке уведомлений: {e}")
+                
+                return True
     
-    session.close()
     return False
 
 @router.message(Command("checkin"))
@@ -83,55 +91,60 @@ async def checkin_handler(msg: Message):
         return
     
     user_id = msg.from_user.id
-    session = Session()
-    user = session.query(User).filter(User.id == user_id).first()
-    
-    if not user:
-        user = User(id=user_id)
-        session.add(user)
-    
-    now = datetime.utcnow()
-    
-    # Если был чек-ин ранее
-    if user.last_checkin:
-        # Если пропущен день — сбросить дни активности
-        if now - user.last_checkin > timedelta(hours=48):
-            user.active_days = 0
-        # Если чек-ин уже был сегодня
-        if now - user.last_checkin < timedelta(hours=24):
-            phrase = random.choice(PHRASES["checkin"])
-            await msg.answer(f"{phrase}\n\nТы уже чек-инился сегодня! Возвращайся завтра.")
-            session.close()
-            return
-        # Обычный чек-ин
-        points = REGULAR_CHECKIN_POINTS
-    else:
-        # Первый чек-ин
-        points = FIRST_CHECKIN_POINTS
-    
-    # Обновляем данные пользователя
-    user.points += points
-    user.active_days += 1
-    user.last_checkin = now
-    user.rank = points_service.get_rank_by_points(user.points)
-    if msg.from_user.username:
-        user.username = msg.from_user.username
-    if msg.from_user.first_name:
-        user.first_name = msg.from_user.first_name
-    
-    session.commit()
-    
-    # Проверяем и активируем реферала
-    await check_and_activate_referral(user_id, msg.bot)
-    
-    phrase = random.choice(PHRASES["checkin"])
-    builder = InlineKeyboardBuilder()
-    builder.button(text="Чек-ин ☑️", callback_data="checkin_done")
-    await msg.answer(
-        f"{phrase}\n\n"
-        f"+{points} баллов\n"
-        f"Твой ранг: {points_service.RANKS[user.rank]['title']}\n"
-        f"Всего баллов: {user.points}", 
-        reply_markup=builder.as_markup()
-    )
-    session.close() 
+    with Session() as session:
+        user = session.query(User).filter(User.id == user_id).first()
+        
+        if not user:
+            user = User(id=user_id)
+            session.add(user)
+        
+        now = datetime.utcnow()
+        
+        # Если был чек-ин ранее
+        if user.last_checkin:
+            # Если пропущен день — сбросить дни активности
+            if now - user.last_checkin > timedelta(hours=48):
+                user.active_days = 0
+            # Если чек-ин уже был сегодня
+            if now - user.last_checkin < timedelta(hours=24):
+                phrase = random.choice(PHRASES["checkin"])
+                await msg.answer(f"{phrase}\n\nТы уже чек-инился сегодня! Возвращайся завтра.")
+                return
+            # Обычный чек-ин
+            points = REGULAR_CHECKIN_POINTS
+        else:
+            # Первый чек-ин
+            points = FIRST_CHECKIN_POINTS
+        
+        # Обновляем данные пользователя через points_service.add_points
+        points_service.add_points(
+            user_id,
+            points,
+            username=msg.from_user.username,
+            is_checkin=True,
+            chat_id=msg.chat.id # Передаем chat_id
+        )
+        # Принудительно обновляем user, так как points_service.add_points возвращает user, 
+        # но сессия здесь может быть другая (или объект user обновился в points_service)
+        user = session.query(User).filter(User.id == user_id).first()
+        user.last_checkin = now
+        session.commit()
+        
+        # Проверяем и активируем реферала
+        await check_and_activate_referral(user_id, msg.bot)
+        
+        phrase = random.choice(PHRASES["checkin"])
+        builder = InlineKeyboardBuilder()
+        builder.button(text="Чек-ин ☑️", callback_data="checkin_done")
+        await msg.answer(
+            f"{phrase}\n\n"
+            f"+{points} баллов\n"
+            f"Твой ранг: {points_service.RANKS[user.rank]['title']}\n"
+            f"Всего баллов: {user.points}", 
+            reply_markup=builder.as_markup()
+        )
+
+        if msg.from_user.first_name:
+            user.first_name = msg.from_user.first_name
+        
+        session.commit() 

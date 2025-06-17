@@ -1,9 +1,13 @@
-from typing import Dict, Tuple
+from typing import Dict, Tuple, Any
 import time
 from aiogram import BaseMiddleware
 from aiogram.types import Message, CallbackQuery
 from collections import defaultdict
-from core.config import RATE_LIMIT_PER_MINUTE, RATE_LIMIT_PER_HOUR
+from sisu_bot.core.config import RATE_LIMIT_PER_MINUTE, RATE_LIMIT_PER_HOUR
+from sisu_bot.bot.config import is_superadmin, is_any_admin
+import logging
+
+logger = logging.getLogger(__name__)
 
 class RateLimitMiddleware(BaseMiddleware):
     def __init__(self):
@@ -16,9 +20,15 @@ class RateLimitMiddleware(BaseMiddleware):
         handler,
         event: Message | CallbackQuery,
         data: dict
-    ) -> Tuple[bool, str]:
+    ) -> Any:
         user_id = event.from_user.id if hasattr(event, 'from_user') else None
+        
         if not user_id:
+            return await handler(event, data)
+
+        # Исключаем админов и супер-админов из рейтер-лимитинга
+        if is_superadmin(user_id) or is_any_admin(user_id):
+            logger.info(f"RateLimitMiddleware: Bypassing rate limit for admin user {user_id}")
             return await handler(event, data)
 
         current_time = time.time()
@@ -31,10 +41,20 @@ class RateLimitMiddleware(BaseMiddleware):
 
         # Проверка лимитов
         if len(self.minute_limits[user_id]) >= RATE_LIMIT_PER_MINUTE:
-            return False, "Слишком много запросов за минуту. Подождите немного."
+            if isinstance(event, Message):
+                await event.answer("⏳ Слишком много запросов за минуту. Пожалуйста, подождите немного.")
+            elif isinstance(event, CallbackQuery):
+                await event.answer("⏳ Слишком много запросов за минуту. Пожалуйста, подождите немного.", show_alert=True)
+            logger.warning(f"RateLimit Exceeded (Minute) for user {user_id}")
+            return # Останавливаем дальнейшую обработку
         
         if len(self.hour_limits[user_id]) >= RATE_LIMIT_PER_HOUR:
-            return False, "Слишком много запросов за час. Подождите немного."
+            if isinstance(event, Message):
+                await event.answer("⏳ Слишком много запросов за час. Пожалуйста, подождите немного.")
+            elif isinstance(event, CallbackQuery):
+                await event.answer("⏳ Слишком много запросов за час. Пожалуйста, подождите немного.", show_alert=True)
+            logger.warning(f"RateLimit Exceeded (Hour) for user {user_id}")
+            return # Останавливаем дальнейшую обработку
 
         # Добавление новых запросов
         self.minute_limits[user_id].append(current_time)

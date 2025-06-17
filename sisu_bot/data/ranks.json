@@ -47,5 +47,14 @@
   "legendary_shogun": {"title": "Легендарный Сёгун", "min_points": 160000},
   "eternal_dragon": {"title": "Вечный Дракон", "min_points": 175000},
   "supreme_samurai": {"title": "Верховный Самурай", "min_points": 200000},
-  "sisu_legend": {"title": "Легенда Sisu", "min_points": 250000}
+  "sisu_legend": {"title": "Легенда Sisu", "min_points": 250000},
+  
+  "referral_ranks": {
+    "recruit": {"title": "Рекрут", "min_referrals": 1},
+    "recruiter": {"title": "Рекрутер", "min_referrals": 5},
+    "mentor": {"title": "Наставник", "min_referrals": 10},
+    "master_recruiter": {"title": "Мастер Рекрутинга", "min_referrals": 25},
+    "dragon_recruiter": {"title": "Драконий Рекрутер", "min_referrals": 50},
+    "legendary_recruiter": {"title": "Легендарный Рекрутер", "min_referrals": 100}
+  }
 } 

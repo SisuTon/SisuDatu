@@ -30,14 +30,22 @@ from sisu_bot.bot.middlewares.preprocess import PreprocessMiddleware
 from sisu_bot.bot.middlewares.antifraud import AntiFraudMiddleware
 from sisu_bot.bot.middlewares.allowed_chats_middleware import AllowedChatsMiddleware
 from sisu_bot.bot.middlewares.user_sync import UserSyncMiddleware
+from sisu_bot.bot.middlewares.rate_limit import RateLimitMiddleware
 
 # Сервисы
 from sisu_bot.bot.services.command_menu_service import setup_command_menus
 
+# Конфигурация
+from sisu_bot.core.config import LOG_LEVEL, LOG_FILE, SUPERADMIN_IDS
+
 # Настройка логирования
 logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    level=LOG_LEVEL,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.StreamHandler(),
+        logging.FileHandler(LOG_FILE)
+    ]
 )
 logger = logging.getLogger(__name__)
 
@@ -59,6 +67,7 @@ async def main():
     dp.message.middleware(AntiFraudMiddleware())
     dp.message.middleware(AllowedChatsMiddleware())
     dp.message.middleware(UserSyncMiddleware())
+    dp.message.middleware(RateLimitMiddleware())
 
     # Подключаем все роутеры в правильном порядке
     logger.info("Registering routers...")
@@ -86,6 +95,23 @@ async def main():
     # 5. В конце общие обработчики
     dp.include_router(common_router)    # Общие обработчики
     dp.include_router(message_router)   # Универсальный обработчик сообщений
+
+    # Обработчик ошибок на уровне диспетчера
+    @dp.errors()
+    async def errors_handler(exception: Exception, update: Update):
+        logger.exception(f"Unhandled exception in update {update.update_id}: {exception}")
+        # Оповещаем супер-админов об ошибке
+        for admin_id in SUPERADMIN_IDS:
+            try:
+                await bot.send_message(admin_id, f"🚨 Произошла критическая ошибка!\n\nUpdate ID: {update.update_id}\nОшибка: {exception}\n\nПодробности в логах.")
+            except Exception as e:
+                logger.error(f"Не удалось отправить сообщение об ошибке админу {admin_id}: {e}")
+        
+        # Отправляем пользователю общее сообщение об ошибке (если это не CallbackQuery)
+        if update.message:
+            await update.message.answer("Произошла непредвиденная ошибка. Мы уже работаем над её устранением! 😢")
+        elif update.callback_query:
+            await update.callback_query.answer("Произошла непредвиденная ошибка. Мы уже работаем над её устранением! 😢", show_alert=True)
 
     # Устанавливаем меню команд для разных ролей
     logger.info("Setting up command menus...")

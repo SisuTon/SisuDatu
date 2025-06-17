@@ -15,6 +15,7 @@ DEFAULT_COMMANDS = [
     BotCommand(command="top", description="Топ-5 активных участников"),
     BotCommand(command="donate", description="Поддержать проект"),
     BotCommand(command="ref", description="Твоя реферальная ссылка"),
+    BotCommand(command="reftop", description="Топ рефералов"),
     BotCommand(command="market", description="Рынок рангов и NFT"),
 ]
 
@@ -29,6 +30,7 @@ ADMIN_COMMANDS = [
 
 # Команды только для суперадминов (дополнительно к админским)
 SUPERADMIN_COMMANDS = [
+    BotCommand(command="superadmin_help", description="Шпаргалка по супер-админ командам"),
     BotCommand(command="admin_help", description="Шпаргалка по админ-командам"),
     BotCommand(command="addpoints", description="Начислить баллы"),
     BotCommand(command="removepoints", description="Снять баллы"),
@@ -45,6 +47,11 @@ SUPERADMIN_COMMANDS = [
     BotCommand(command="list_chats", description="Список разрешённых чатов"),
     BotCommand(command="auto_add_triggers", description="Автодобавление триггеров"),
     BotCommand(command="remove_trigger", description="Удалить триггер"),
+    BotCommand(command="ai_dialog_on", description="Включить AI-диалог"),
+    BotCommand(command="ai_dialog_off", description="Выключить AI-диалог"),
+    BotCommand(command="enable_private", description="Включить работу бота в личке"),
+    BotCommand(command="disable_private", description="Отключить работу бота в личке"),
+    BotCommand(command="voice_motivation", description="Отправить случайную голосовую мотивашку в чат"),
 ]
 
 async def setup_command_menus(bot):

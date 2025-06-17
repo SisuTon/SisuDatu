@@ -15,6 +15,12 @@ from sqlalchemy import create_engine, func
 from sqlalchemy.orm import sessionmaker
 from sisu_bot.bot.db.models import User
 from sisu_bot.bot.config import SUPERADMIN_IDS, is_superadmin
+from sisu_bot.bot.services.motivation_service import add_motivation, send_voice_motivation, load_motivation_pool
+from sisu_bot.bot.services.excuse_service import add_excuse, add_voice_excuse, list_excuses, list_voice_excuses, remove_excuse, remove_voice_excuse
+from sisu_bot.bot.services.persona_service import add_name_joke, add_name_variant, list_name_jokes, list_name_variants, remove_name_joke, remove_name_variant, add_micro_legend, remove_micro_legend, list_micro_legends, add_easter_egg, remove_easter_egg, list_easter_eggs, add_magic_phrase, remove_magic_phrase, list_magic_phrases
+from sisu_bot.bot.handlers.message_handler import SISU_PATTERN
+import asyncio
+from sisu_bot.bot.services.command_menu_service import setup_command_menus
 
 AI_DIALOG_ENABLED = False
 PRIVATE_ENABLED = False
@@ -45,7 +51,31 @@ SUPERADMIN_COMMANDS = {
     '/auto_add_triggers': 'Добавить новые триггеры',
     '/remove_trigger': 'Удалить триггер',
     '/get_mood': 'Показать текущее настроение Сису',
-    '/set_mood': 'Изменить настроение Сису'
+    '/set_mood': 'Изменить настроение Сису',
+    '/voice_motivation': 'Отправить случайную голосовую мотивашку в чат',
+    '/send_motivation': 'Отправить мотивашку в указанный чат (из лички)',
+    'Сису, запомни мотивацию для озвучки: "текст"': 'Добавить новую голосовую мотивашку (только в личке)',
+    '/add_excuse': 'Добавить текстовую отмазку',
+    '/add_voice_excuse': 'Добавить голосовую отмазку',
+    '/add_name_joke': 'Добавить шутку про имя',
+    '/add_name_variant': 'Добавить вариант обращения',
+    '/list_excuses': 'Показать список текстовых отмазок',
+    '/list_voice_excuses': 'Показать список голосовых отмазок',
+    '/list_name_jokes': 'Показать список шуток про имя',
+    '/list_name_variants': 'Показать список вариантов обращения',
+    '/remove_excuse': 'Удалить текстовую отмазку',
+    '/remove_voice_excuse': 'Удалить голосовую отмазку',
+    '/remove_name_joke': 'Удалить шутку про имя',
+    '/remove_name_variant': 'Удалить вариант обращения',
+    '/add_micro_legend': 'Добавить вайбовую историю',
+    '/remove_micro_legend': 'Удалить вайбовую историю',
+    '/list_micro_legends': 'Показать все вайбовые истории',
+    '/add_easter_egg': 'Добавить пасхалку',
+    '/remove_easter_egg': 'Удалить пасхалку',
+    '/list_easter_eggs': 'Показать все пасхалки',
+    '/add_magic_phrase': 'Добавить магическую фразу',
+    '/remove_magic_phrase': 'Удалить магическую фразу',
+    '/list_magic_phrases': 'Показать все магические фразы'
 }
 
 router = Router()
@@ -72,6 +102,13 @@ def load_admins():
 def save_admins(admins):
     with open(ADMINS_PATH, 'w', encoding='utf-8') as f:
         json.dump({"admins": admins}, f, ensure_ascii=False, indent=2)
+
+def clean_admins():
+    admins = load_admins()
+    cleaned = [a for a in admins if str(a).isdigit()]
+    if cleaned != admins:
+        save_admins(cleaned)
+    return cleaned
 
 async def notify_admins(text: str, bot):
     for admin_id in SUPERADMIN_IDS:
@@ -113,6 +150,27 @@ async def superadmin_help(msg: Message):
     text += "/remove_trigger — удалить триггер\n"
     text += "/get_mood — показать текущее настроение Сису\n"
     text += "/set_mood — изменить настроение Сису\n"
+    text += "/add_excuse [текст] — добавить текстовую отмазку\n"
+    text += "/add_voice_excuse [текст] — добавить голосовую отмазку\n"
+    text += "/add_name_joke [текст] — добавить шутку про имя\n"
+    text += "/add_name_variant [текст] — добавить вариант обращения\n"
+    text += "/list_excuses — показать список текстовых отмазок\n"
+    text += "/list_voice_excuses — показать список голосовых отмазок\n"
+    text += "/list_name_jokes — показать список шуток про имя\n"
+    text += "/list_name_variants — показать список вариантов обращения\n"
+    text += "/remove_excuse [текст] — удалить текстовую отмазку\n"
+    text += "/remove_voice_excuse [текст] — удалить голосовую отмазку\n"
+    text += "/remove_name_joke [текст] — удалить шутку про имя\n"
+    text += "/remove_name_variant [текст] — удалить вариант обращения\n"
+    text += "/add_micro_legend [текст] — добавить вайбовую историю\n"
+    text += "/remove_micro_legend [текст] — удалить вайбовую историю\n"
+    text += "/list_micro_legends — показать все вайбовые истории\n"
+    text += "/add_easter_egg [текст] — добавить пасхалку\n"
+    text += "/remove_easter_egg [текст] — удалить пасхалку\n"
+    text += "/list_easter_eggs — показать все пасхалки\n"
+    text += "/add_magic_phrase [текст] — добавить магическую фразу\n"
+    text += "/remove_magic_phrase [текст] — удалить магическую фразу\n"
+    text += "/list_magic_phrases — показать все магические фразы\n"
     await msg.answer(text)
 
 @router.message(Command("ai_dialog_on"))
@@ -194,16 +252,20 @@ async def addadmin_handler(msg: Message):
         return
     args = msg.text.split()
     if len(args) < 2:
-        await msg.answer("Используй: /addadmin [user_id|@username]")
+        await msg.answer("Используй: /addadmin [user_id]")
         return
     user_id = args[1].lstrip('@')
-    admins = load_admins()
+    if not user_id.isdigit():
+        await msg.answer("Добавлять можно только по числовому user_id!")
+        return
+    admins = clean_admins()
     if user_id in admins:
         await msg.answer(f"Пользователь {user_id} уже админ.")
         return
     admins.append(user_id)
     save_admins(admins)
-    await msg.answer(f"✅ Пользователь {user_id} добавлен в админы.")
+    await setup_command_menus(msg.bot)
+    await msg.answer(f"✅ Пользователь {user_id} добавлен в админы и меню обновлено.")
 
 @router.message(Command("removeadmin"))
 async def removeadmin_handler(msg: Message):
@@ -212,16 +274,20 @@ async def removeadmin_handler(msg: Message):
         return
     args = msg.text.split()
     if len(args) < 2:
-        await msg.answer("Используй: /removeadmin [user_id|@username]")
+        await msg.answer("Используй: /removeadmin [user_id]")
         return
     user_id = args[1].lstrip('@')
-    admins = load_admins()
+    if not user_id.isdigit():
+        await msg.answer("Удалять можно только по числовому user_id!")
+        return
+    admins = clean_admins()
     if user_id not in admins:
         await msg.answer(f"Пользователь {user_id} не админ.")
         return
     admins.remove(user_id)
     save_admins(admins)
-    await msg.answer(f"✅ Пользователь {user_id} удалён из админов.")
+    await setup_command_menus(msg.bot)
+    await msg.answer(f"✅ Пользователь {user_id} удалён из админов и меню обновлено.")
 
 @router.message(Command("sendto"))
 async def sendto_start(msg: Message, state: FSMContext):
@@ -324,8 +390,19 @@ async def adminlog_handler(msg: Message):
     else:
         text = "📝 Последние действия админов:\n\n"
         for log in logs:
-            text += f"{log}\n"
-        await msg.answer(text)
+            # log — это dict
+            t = f"🕒 <b>{log.get('time','')}</b>\n"
+            t += f"👤 <b>{log.get('username','-')}</b> (<code>{log.get('user_id','')}</code>)\n"
+            t += f"💬 <b>{log.get('command','')}</b>\n"
+            params = log.get('params')
+            if params:
+                t += f"📦 <b>Параметры:</b> <code>{params}</code>\n"
+            result = log.get('result')
+            if result:
+                t += f"✅ <b>Результат:</b> <code>{result}</code>\n"
+            t += "\n"
+            text += t
+        await msg.answer(text, parse_mode="HTML")
 
 @router.message(Command("trigger_stats"))
 async def trigger_stats_handler(msg: Message):
@@ -401,4 +478,302 @@ async def set_mood_handler(msg: Message):
         return
     new_mood = args[1].strip()
     set_mood(new_mood)
-    await msg.answer(f"Настроение Сису изменено на: {new_mood}") 
+    await msg.answer(f"Настроение Сису изменено на: {new_mood}")
+
+@router.message(Command("voice_motivation"))
+async def cmd_voice_motivation(msg: Message):
+    if not is_superadmin(msg.from_user.id):
+        await msg.answer("Нет прав!")
+        return
+    
+    await send_voice_motivation(msg.bot, msg.chat.id)
+
+@router.message(Command("send_motivation"))
+async def send_motivation_to_chat(msg: Message):
+    if not is_superadmin(msg.from_user.id):
+        await msg.answer("Нет прав!")
+        return
+    args = msg.text.split(maxsplit=1)
+    if len(args) < 2:
+        await msg.answer("Используй: /send_motivation <chat_id> или /send_motivation <all>")
+        return
+    target_id_raw = args[1].strip()
+    
+    if target_id_raw.lower() == "all":
+        # Рассылка всем разрешенным чатам
+        allowed_chats = list_allowed_chats()
+        for chat_id in allowed_chats:
+            try:
+                await send_voice_motivation(msg.bot, int(chat_id))
+                await asyncio.sleep(0.1) # Небольшая задержка
+            except Exception as e:
+                logging.error(f"Ошибка при отправке мотивации в чат {chat_id}: {e}")
+        await msg.answer("Мотивация отправлена во все разрешенные чаты!")
+    else:
+        try:
+            target_chat_id = int(target_id_raw)
+            await send_voice_motivation(msg.bot, target_chat_id)
+            await msg.answer(f"Мотивация отправлена в чат {target_chat_id}!")
+        except ValueError:
+            await msg.answer("Неверный ID чата.")
+        except Exception as e:
+            await msg.answer(f"Ошибка при отправке мотивации: {e}")
+
+@router.message(lambda msg: msg.chat.type == 'private' and SISU_PATTERN.match(msg.text or "") and "запомни мотивацию для озвучки" in (msg.text or "").lower())
+async def superadmin_add_motivation_tts(msg: Message):
+    if not is_superadmin(msg.from_user.id):
+        await msg.answer("Нет прав!")
+        return
+    
+    text_to_add = msg.text.lower().replace("сису, запомни мотивацию для озвучки:", "").strip().strip('"')
+    if not text_to_add:
+        await msg.answer("Пожалуйста, укажи текст мотивации!")
+        return
+
+    if add_motivation(text_to_add):
+        await msg.answer("Запомнила! Теперь буду иногда озвучивать эту мотивацию!")
+    else:
+        await msg.answer("Ой, я уже знаю эту мотивацию! 🤔")
+
+@router.message(Command("add_excuse"))
+async def superadmin_add_excuse(msg: Message):
+    if not is_superadmin(msg.from_user.id) or msg.chat.type != "private":
+        return
+    text = msg.text.split(maxsplit=1)[1] if len(msg.text.split()) > 1 else ""
+    if not text:
+        await msg.answer("Укажи текст отмазки: /add_excuse [текст]")
+        return
+    if add_excuse(text):
+        await msg.answer("Отмазка добавлена!")
+    else:
+        await msg.answer("Такая отмазка уже есть!")
+
+@router.message(Command("add_voice_excuse"))
+async def superadmin_add_voice_excuse(msg: Message):
+    if not is_superadmin(msg.from_user.id) or msg.chat.type != "private":
+        return
+    text = msg.text.split(maxsplit=1)[1] if len(msg.text.split()) > 1 else ""
+    if not text:
+        await msg.answer("Укажи текст голосовой отмазки: /add_voice_excuse [текст]")
+        return
+    if add_voice_excuse(text):
+        await msg.answer("Голосовая отмазка добавлена!")
+    else:
+        await msg.answer("Такая голосовая отмазка уже есть!")
+
+@router.message(Command("add_name_joke"))
+async def superadmin_add_name_joke(msg: Message):
+    if not is_superadmin(msg.from_user.id) or msg.chat.type != "private":
+        return
+    text = msg.text.split(maxsplit=1)[1] if len(msg.text.split()) > 1 else ""
+    if "{name}" not in text:
+        await msg.answer("Шаблон должен содержать {name}!")
+        return
+    if add_name_joke(text):
+        await msg.answer("Шутка про имя добавлена!")
+    else:
+        await msg.answer("Такая шутка уже есть!")
+
+@router.message(Command("add_name_variant"))
+async def superadmin_add_name_variant(msg: Message):
+    if not is_superadmin(msg.from_user.id) or msg.chat.type != "private":
+        return
+    text = msg.text.split(maxsplit=1)[1] if len(msg.text.split()) > 1 else ""
+    if "{name}" not in text:
+        await msg.answer("Шаблон должен содержать {name}!")
+        return
+    if add_name_variant(text):
+        await msg.answer("Вариант обращения добавлен!")
+    else:
+        await msg.answer("Такой вариант уже есть!")
+
+@router.message(Command("list_excuses"))
+async def superadmin_list_excuses(msg: Message):
+    if not is_superadmin(msg.from_user.id) or msg.chat.type != "private":
+        return
+    excuses = list_excuses()
+    await msg.answer("Текстовые отмазки:\n" + "\n".join(excuses))
+
+@router.message(Command("list_voice_excuses"))
+async def superadmin_list_voice_excuses(msg: Message):
+    if not is_superadmin(msg.from_user.id) or msg.chat.type != "private":
+        return
+    excuses = list_voice_excuses()
+    await msg.answer("Голосовые отмазки:\n" + "\n".join(excuses))
+
+@router.message(Command("list_name_jokes"))
+async def superadmin_list_name_jokes(msg: Message):
+    if not is_superadmin(msg.from_user.id) or msg.chat.type != "private":
+        return
+    jokes = list_name_jokes()
+    await msg.answer("Шутки про имя:\n" + "\n".join(jokes))
+
+@router.message(Command("list_name_variants"))
+async def superadmin_list_name_variants(msg: Message):
+    if not is_superadmin(msg.from_user.id) or msg.chat.type != "private":
+        return
+    variants = list_name_variants()
+    await msg.answer("Варианты обращения:\n" + "\n".join(variants))
+
+@router.message(Command("remove_excuse"))
+async def superadmin_remove_excuse(msg: Message):
+    if not is_superadmin(msg.from_user.id) or msg.chat.type != "private":
+        return
+    text = msg.text.split(maxsplit=1)[1] if len(msg.text.split()) > 1 else ""
+    if not text:
+        await msg.answer("Укажи текст отмазки для удаления: /remove_excuse [текст]")
+        return
+    if remove_excuse(text):
+        await msg.answer("Отмазка удалена!")
+    else:
+        await msg.answer("Такой отмазки нет!")
+
+@router.message(Command("remove_voice_excuse"))
+async def superadmin_remove_voice_excuse(msg: Message):
+    if not is_superadmin(msg.from_user.id) or msg.chat.type != "private":
+        return
+    text = msg.text.split(maxsplit=1)[1] if len(msg.text.split()) > 1 else ""
+    if not text:
+        await msg.answer("Укажи текст голосовой отмазки для удаления: /remove_voice_excuse [текст]")
+        return
+    if remove_voice_excuse(text):
+        await msg.answer("Голосовая отмазка удалена!")
+    else:
+        await msg.answer("Такой голосовой отмазки нет!")
+
+@router.message(Command("remove_name_joke"))
+async def superadmin_remove_name_joke(msg: Message):
+    if not is_superadmin(msg.from_user.id) or msg.chat.type != "private":
+        return
+    text = msg.text.split(maxsplit=1)[1] if len(msg.text.split()) > 1 else ""
+    if not text:
+        await msg.answer("Укажи текст шутки для удаления: /remove_name_joke [текст]")
+        return
+    if remove_name_joke(text):
+        await msg.answer("Шутка про имя удалена!")
+    else:
+        await msg.answer("Такой шутки нет!")
+
+@router.message(Command("remove_name_variant"))
+async def superadmin_remove_name_variant(msg: Message):
+    if not is_superadmin(msg.from_user.id) or msg.chat.type != "private":
+        return
+    text = msg.text.split(maxsplit=1)[1] if len(msg.text.split()) > 1 else ""
+    if not text:
+        await msg.answer("Укажи текст варианта для удаления: /remove_name_variant [текст]")
+        return
+    if remove_name_variant(text):
+        await msg.answer("Вариант обращения удалён!")
+    else:
+        await msg.answer("Такого варианта нет!")
+
+@router.message(Command("add_micro_legend"))
+async def superadmin_add_micro_legend(msg: Message):
+    if not is_superadmin(msg.from_user.id) or msg.chat.type != "private":
+        return
+    text = msg.text.split(maxsplit=1)[1] if len(msg.text.split()) > 1 else ""
+    if not text:
+        await msg.answer("Укажи текст истории: /add_micro_legend [текст]")
+        return
+    if add_micro_legend(text):
+        await msg.answer("Вайбовая история добавлена!")
+    else:
+        await msg.answer("Такая история уже есть!")
+
+@router.message(Command("remove_micro_legend"))
+async def superadmin_remove_micro_legend(msg: Message):
+    if not is_superadmin(msg.from_user.id) or msg.chat.type != "private":
+        return
+    text = msg.text.split(maxsplit=1)[1] if len(msg.text.split()) > 1 else ""
+    if not text:
+        await msg.answer("Укажи текст истории для удаления: /remove_micro_legend [текст]")
+        return
+    if remove_micro_legend(text):
+        await msg.answer("Вайбовая история удалена!")
+    else:
+        await msg.answer("Такой истории нет!")
+
+@router.message(Command("list_micro_legends"))
+async def superadmin_list_micro_legends(msg: Message):
+    if not is_superadmin(msg.from_user.id) or msg.chat.type != "private":
+        return
+    legends = list_micro_legends()
+    await msg.answer("Вайбовые истории:\n" + "\n".join(legends))
+
+@router.message(Command("add_easter_egg"))
+async def superadmin_add_easter_egg(msg: Message):
+    if not is_superadmin(msg.from_user.id) or msg.chat.type != "private":
+        return
+    text = msg.text.split(maxsplit=1)[1] if len(msg.text.split()) > 1 else ""
+    if not text:
+        await msg.answer("Укажи текст пасхалки: /add_easter_egg [текст]")
+        return
+    if add_easter_egg(text):
+        await msg.answer("Пасхалка добавлена!")
+    else:
+        await msg.answer("Такая пасхалка уже есть!")
+
+@router.message(Command("remove_easter_egg"))
+async def superadmin_remove_easter_egg(msg: Message):
+    if not is_superadmin(msg.from_user.id) or msg.chat.type != "private":
+        return
+    text = msg.text.split(maxsplit=1)[1] if len(msg.text.split()) > 1 else ""
+    if not text:
+        await msg.answer("Укажи текст пасхалки для удаления: /remove_easter_egg [текст]")
+        return
+    if remove_easter_egg(text):
+        await msg.answer("Пасхалка удалена!")
+    else:
+        await msg.answer("Такой пасхалки нет!")
+
+@router.message(Command("list_easter_eggs"))
+async def superadmin_list_easter_eggs(msg: Message):
+    if not is_superadmin(msg.from_user.id) or msg.chat.type != "private":
+        return
+    eggs = list_easter_eggs()
+    await msg.answer("Пасхалки:\n" + "\n".join(eggs))
+
+@router.message(Command("add_magic_phrase"))
+async def superadmin_add_magic_phrase(msg: Message):
+    if not is_superadmin(msg.from_user.id) or msg.chat.type != "private":
+        return
+    text = msg.text.split(maxsplit=1)[1] if len(msg.text.split()) > 1 else ""
+    if not text:
+        await msg.answer("Укажи текст магической фразы: /add_magic_phrase [текст]")
+        return
+    if add_magic_phrase(text):
+        await msg.answer("Магическая фраза добавлена!")
+    else:
+        await msg.answer("Такая магическая фраза уже есть!")
+
+@router.message(Command("remove_magic_phrase"))
+async def superadmin_remove_magic_phrase(msg: Message):
+    if not is_superadmin(msg.from_user.id) or msg.chat.type != "private":
+        return
+    text = msg.text.split(maxsplit=1)[1] if len(msg.text.split()) > 1 else ""
+    if not text:
+        await msg.answer("Укажи текст магической фразы для удаления: /remove_magic_phrase [текст]")
+        return
+    if remove_magic_phrase(text):
+        await msg.answer(f"Магическая фраза \'{text}\' удалена.")
+    else:
+        await msg.answer(f"Магическая фраза \'{text}\' не найдена.")
+
+@router.message(Command("list_magic_phrases"))
+async def superadmin_list_magic_phrases(msg: Message):
+    if not is_superadmin(msg.from_user.id) or msg.chat.type != "private":
+        return
+    phrases = list_magic_phrases()
+    await msg.answer("Магические фразы:\n" + "\n".join(phrases))
+
+@router.message(Command("list_admins"))
+async def list_admins_handler(msg: Message):
+    if not is_superadmin(msg.from_user.id) or msg.chat.type != "private":
+        await msg.answer("Нет прав!")
+        return
+    admins = clean_admins()
+    if not admins:
+        await msg.answer("Список админов пуст.")
+    else:
+        text = "👮‍♂️ Список админов:\n" + "\n".join([str(a) for a in admins])
+        await msg.answer(text) 
