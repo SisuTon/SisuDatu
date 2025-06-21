@@ -13,7 +13,8 @@ DATA_DIR = BASE_DIR / 'data'
 DATA_DIR.mkdir(parents=True, exist_ok=True)
 
 # Универсальные пути к данным и базе
-DB_PATH = DATA_DIR / 'bot.sqlite3'
+# Используем корневую БД, которая синхронизирована с Alembic
+DB_PATH = BASE_DIR / 'sisu_bot.db'
 
 # Telegram
 TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
@@ -26,7 +27,7 @@ YANDEXGPT_FOLDER_ID = os.getenv('YANDEXGPT_FOLDER_ID')
 YANDEXGPT_API_URL = "https://llm.api.cloud.yandex.net/foundationModels/v1/completion"
 
 # База данных
-DATABASE_URL = os.getenv('DATABASE_URL', f'sqlite:///{BASE_DIR}/sisu_bot.db')
+DATABASE_URL = os.getenv('DATABASE_URL', f'sqlite:///{DB_PATH}')
 
 # Безопасность
 SUPERADMIN_IDS = [int(id) for id in os.getenv('SUPERADMIN_IDS', '').split(',') if id]
@@ -68,10 +69,19 @@ if PROFILE == 'main':
         "Если вопрос скучный — можешь ответить одной фразой, отшутиться или проигнорировать. "
         "Ты не обязана никому ничего объяснять, можешь быть дерзкой, но не злой. "
     )
+    
+    # ТЕСТОВЫЕ КАНАЛЫ И ЧАТЫ ДЛЯ РАЗРАБОТКИ
+    # Создайте эти каналы/чаты для тестирования
     REQUIRED_SUBSCRIPTIONS = [
-        {"title": "Канал SISU", "url": "https://t.me/SisuDatuTon", "chat_id": "@SisuDatuTon"},
-        {"title": "Чат SISU", "url": "https://t.me/+F_kH9rcBxL02ZWFi", "chat_id": "-1002541438902"}
+        {"title": "Тестовый канал SISU", "url": "https://t.me/test_sisu_channel", "chat_id": "@test_sisu_channel"},
+        {"title": "Тестовый чат SISU", "url": "https://t.me/+test_sisu_chat", "chat_id": "-1001234567890"}
     ]
+    
+    # РЕАЛЬНЫЕ КАНАЛЫ (закомментированы)
+    # REQUIRED_SUBSCRIPTIONS = [
+    #     {"title": "Канал SISU", "url": "https://t.me/SisuDatuTon", "chat_id": "@SisuDatuTon"},
+    #     {"title": "Чат SISU", "url": "https://t.me/+F_kH9rcBxL02ZWFi", "chat_id": "-1002541438902"}
+    # ]
 else:  # mirror/integration profile
     SISU_SYSTEM_PROMPT = (
         "Ты — интеграционный бот. Твоя задача — проверять подписки, банить/разбанивать, и минимально модерировать. "
@@ -151,4 +161,36 @@ DONATION_TIERS = {
         "tts_limit": 100, # 100 сообщений/день для Gold
         "points_multiplier": 2.0
     }
-} 
+}
+
+# Создаем объект конфигурации для импорта
+class Config:
+    def __init__(self):
+        self.TELEGRAM_BOT_TOKEN = TELEGRAM_BOT_TOKEN
+        self.YANDEXGPT_API_KEY = YANDEXGPT_API_KEY
+        self.YANDEXGPT_FOLDER_ID = YANDEXGPT_FOLDER_ID
+        self.YANDEXGPT_API_URL = YANDEXGPT_API_URL
+        self.DATABASE_URL = DATABASE_URL
+        self.SUPERADMIN_IDS = SUPERADMIN_IDS
+        self.ADMIN_IDS = ADMIN_IDS
+        self.ZERO_ADMIN_IDS = ZERO_ADMIN_IDS
+        self.ALLOWED_CHAT_IDS = ALLOWED_CHAT_IDS
+        self.RATE_LIMIT_PER_MINUTE = RATE_LIMIT_PER_MINUTE
+        self.RATE_LIMIT_PER_HOUR = RATE_LIMIT_PER_HOUR
+        self.CACHE_TTL = CACHE_TTL
+        self.LOG_LEVEL = LOG_LEVEL
+        self.LOG_FILE = LOG_FILE
+        self.PHRASES_PATH = PHRASES_PATH
+        self.TROLL_PATH = TROLL_PATH
+        self.LEARNING_PATH = LEARNING_PATH
+        self.SISU_PERSONA_PATH = SISU_PERSONA_PATH
+        self.GAMES_DATA_PATH = GAMES_DATA_PATH
+        self.SISU_SYSTEM_PROMPT = SISU_SYSTEM_PROMPT
+        self.REQUIRED_SUBSCRIPTIONS = REQUIRED_SUBSCRIPTIONS
+        self.SUBSCRIPTION_GREETING = SUBSCRIPTION_GREETING
+        self.SUBSCRIPTION_DENY = SUBSCRIPTION_DENY
+        self.ROLES = ROLES
+        self.DONATION_TIERS = DONATION_TIERS
+
+# Экспортируем объект конфигурации
+config = Config() 

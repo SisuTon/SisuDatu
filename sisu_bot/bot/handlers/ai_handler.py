@@ -44,9 +44,9 @@ from sisu_bot.bot.services.mood_service import (
     update_mood, get_mood, update_user_preferences,
     get_user_style, add_to_memory, get_recent_messages
 )
-from sisu_bot.bot.services.tts_service import (
-    handle_tts_request, send_tts_motivation
-)
+# Импортируем TTS функции из сервиса
+from sisu_bot.bot.services.tts_service import can_use_tts, register_tts_usage, send_tts_fallback_voice, send_tts_motivation
+from sisu_bot.bot.services.ai_limits_service import ai_limits_service
 
 logger = logging.getLogger(__name__)
 
@@ -653,6 +653,13 @@ async def superadmin_voice_motivation(msg: Message):
 @router.message(is_ai_dialog_message)
 async def ai_dialog_handler(msg: Message, state: FSMContext):
     current_state = await state.get_state()
+    
+    # Проверка AI лимитов
+    can_use, reason = ai_limits_service.can_use_ai(msg.from_user.id)
+    if not can_use:
+        await msg.answer(reason)
+        return
+    
     # Allow general AI dialog in private chats by default, regardless of AI_DIALOG_ENABLED for superadmin
     if msg.chat.type == "private":
         # If it's a private chat, and it's not a command or an explicit Sisu mention that's already handled
@@ -704,6 +711,10 @@ async def ai_dialog_handler(msg: Message, state: FSMContext):
             sisu_reply_text = await generate_sisu_reply(prompt=f"{msg.text}{mood_prompt_addition}")
             # Send general AI dialog reply as text
             await msg.answer(sisu_reply_text)
+            
+            # Регистрируем использование AI
+            ai_limits_service.record_ai_usage(msg.from_user.id)
+            
         except Exception as e:
             logger.error(f"Ошибка YandexGPT (ai_dialog): {e}", exc_info=True)
             await msg.answer("Извините, у меня проблемы с ответом 😔")
@@ -822,25 +833,6 @@ SISU_SNOOP_REPLIES = [
     "Snoop Dogg — my hero! 🦸‍♂️",
     "Snoop Dogg — the legend! 🌟"
 ]
-
-# Лимиты на озвучку для обычных пользователей (user_id -> [timestamps])
-TTS_LIMIT_PER_DAY = 3
-user_tts_usage = {}
-
-def can_use_tts(user_id: int) -> bool:
-    now = int(time.time())
-    day = now // 86400
-    usage = user_tts_usage.get(user_id, [])
-    # Оставляем только текущий день
-    usage = [ts for ts in usage if ts // 86400 == day]
-    user_tts_usage[user_id] = usage
-    return len(usage) < TTS_LIMIT_PER_DAY
-
-def register_tts_usage(user_id: int):
-    now = int(time.time())
-    usage = user_tts_usage.get(user_id, [])
-    usage.append(now)
-    user_tts_usage[user_id] = usage
 
 # --- База стихотворений для озвучки ---
 SISU_POEMS = [

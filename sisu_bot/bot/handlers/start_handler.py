@@ -11,6 +11,7 @@ from sisu_bot.core.config import DB_PATH, REQUIRED_SUBSCRIPTIONS, SUBSCRIPTION_G
 from sisu_bot.bot.config import is_superadmin
 from sisu_bot.bot.handlers.donate_handler import get_donate_keyboard, TON_WALLET
 from aiogram.exceptions import TelegramBadRequest
+from sisu_bot.bot.services.antifraud_service import antifraud_service
 
 router = Router()
 
@@ -78,6 +79,20 @@ async def start_handler(msg: Message):
     # Проверяем реферала
     if args and args.startswith("ref"):
         ref_id = int(args[3:])  # Убираем "ref" из начала и конвертируем в int
+        
+        # Проверяем на фрод
+        can_refer, reason = antifraud_service.check_referral_fraud(
+            user_id, ref_id, 
+            username=msg.from_user.username,
+            first_name=msg.from_user.first_name
+        )
+        
+        if not can_refer:
+            antifraud_service.mark_suspicious(user_id, f"Referral fraud attempt: {reason}")
+            await msg.answer(f"❌ Реферальная программа недоступна: {reason}")
+            session.close()
+            return
+        
         if ref_id != user_id:
             if not user.invited_by:
                 user.pending_referral = ref_id  # Сохраняем реферала как ожидающего
@@ -86,7 +101,8 @@ async def start_handler(msg: Message):
                     "🎯 Ты приглашён в SisuDatuBot!\n\n"
                     "Чтобы активировать реферальную программу:\n"
                     "1. Сделай чек-ин в группе (/checkin)\n"
-                    "2. Отправь минимум 5 сообщений\n\n"
+                    "2. Отправь минимум 10 сообщений\n"
+                    "3. Будь активен минимум 2 часа\n\n"
                     "После этого пригласивший тебя получит награду!"
                 )
             else:

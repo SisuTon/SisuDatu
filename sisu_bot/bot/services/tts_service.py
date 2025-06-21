@@ -29,13 +29,13 @@ tts_usage: Dict[int, int] = {}  # user_id -> usage_count
 
 def get_tts_limit(user):
     if getattr(user, 'supporter_tier', None) == 'gold':
-        return 100
+        return 100  # Gold: 100 сообщений/день
     elif getattr(user, 'supporter_tier', None) == 'silver':
-        return 20
+        return 10   # Silver: 10 сообщений/день  
     elif getattr(user, 'supporter_tier', None) == 'bronze':
-        return 10
+        return 5    # Bronze: 5 сообщений/день
     else:
-        return 3  # дефолт для обычных пользователей
+        return 3    # Обычные пользователи: 3 сообщения/день
 
 def can_use_tts(user_id: int) -> bool:
     from sisu_bot.bot.services.user_service import get_user

@@ -36,15 +36,15 @@ from sisu_bot.bot.middlewares.rate_limit import RateLimitMiddleware
 from sisu_bot.bot.services.command_menu_service import setup_command_menus
 
 # Конфигурация
-from sisu_bot.core.config import LOG_LEVEL, LOG_FILE, SUPERADMIN_IDS
+from sisu_bot.core.config import config, SUPERADMIN_IDS
 
 # Настройка логирования
 logging.basicConfig(
-    level=LOG_LEVEL,
+    level=config.LOG_LEVEL,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     handlers=[
         logging.StreamHandler(),
-        logging.FileHandler(LOG_FILE)
+        logging.FileHandler(config.LOG_FILE)
     ]
 )
 logger = logging.getLogger(__name__)

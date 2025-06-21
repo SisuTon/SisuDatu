@@ -11,6 +11,10 @@ from sisu_bot.bot.config import SUPERADMIN_IDS, is_superadmin
 from sisu_bot.bot.services.games_service import bulk_add_emoji_movies, get_random_emoji_movie, check_emoji_movie_answer
 from sisu_bot.bot.services.points_service import add_points
 import asyncio
+from aiogram.fsm.context import FSMContext
+from sisu_bot.bot.keyboards import get_main_keyboard
+from sisu_bot.core.config import DATA_DIR
+import logging
 
 router = Router()
 
@@ -33,7 +37,7 @@ class GameStates(StatesGroup):
     waiting_delete_word = State()
 
 # Путь к файлу с данными игр
-GAMES_DATA_FILE = "data/games_data.json"
+GAMES_DATA_FILE = DATA_DIR / 'static' / "games_data.json"
 
 # Загрузка данных игр
 def load_games_data():

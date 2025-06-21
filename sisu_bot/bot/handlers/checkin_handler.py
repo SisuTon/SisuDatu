@@ -10,6 +10,8 @@ from sisu_bot.core.config import DB_PATH, DATA_DIR
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sisu_bot.bot.db.models import User
+from sisu_bot.bot.services.antifraud_service import antifraud_service
+import logging
 
 router = Router()
 
@@ -36,50 +38,54 @@ async def check_and_activate_referral(user_id: int, bot) -> bool:
         if not user or not user.pending_referral:
             return False
         
-        # Проверяем условия активации
-        if (user.message_count >= 5 and  # Минимум 5 сообщений
-            user.last_checkin):  # Был чек-ин
+        # Проверяем условия активации через антифрод сервис
+        can_activate, reason = antifraud_service.check_activation_fraud(user_id)
+        
+        if not can_activate:
+            antifraud_service.mark_suspicious(user_id, f"Activation fraud attempt: {reason}")
+            logging.warning(f"Referral activation blocked for user {user_id}: {reason}")
+            return False
             
-            ref_id = user.pending_referral
-            ref_user = session.query(User).filter(User.id == ref_id).first()
-            if ref_user:
-                # Активируем реферала
-                user.invited_by = ref_id
-                user.pending_referral = None
-                
-                # Базовые награды
-                base_points = 100
-                ref_user.points += base_points
-                ref_user.referrals += 1
-                
-                # Дополнительные награды за количество рефералов
-                if ref_user.referrals == 5:
-                    ref_user.points += 500  # Бонус за 5 рефералов
-                    bonus_msg = "\n🎉 Достижение: 5 рефералов! +500 баллов"
-                elif ref_user.referrals == 10:
-                    ref_user.points += 1000  # Бонус за 10 рефералов
-                    bonus_msg = "\n🌟 Достижение: 10 рефералов! +1000 баллов"
-                else:
-                    bonus_msg = ""
-                
-                # Сохраняем изменения
-                session.commit()
-                
-                # Уведомляем обоих пользователей
-                try:
-                    await bot.send_message(ref_id, 
-                        "🎉 Поздравляем! Твой реферал активирован!\n"
-                        f"• +{base_points} баллов{bonus_msg}\n"
-                        "• +1 к счётчику рефералов"
-                    )
-                    await bot.send_message(user_id,
-                        "🎯 Реферальная программа активирована!\n"
-                        "Пригласивший тебя получил награду."
-                    )
-                except Exception as e:
-                    print(f"Ошибка при отправке уведомлений: {e}")
-                
-                return True
+        ref_id = user.pending_referral
+        ref_user = session.query(User).filter(User.id == ref_id).first()
+        if ref_user:
+            # Активируем реферала
+            user.invited_by = ref_id
+            user.pending_referral = None
+            
+            # Базовые награды через points_service
+            base_points = 100
+            points_service.add_points(ref_id, base_points, username=ref_user.username)
+            ref_user.referrals += 1
+            
+            # Дополнительные награды за количество рефералов
+            if ref_user.referrals == 5:
+                points_service.add_points(ref_id, 500, username=ref_user.username)  # Бонус за 5 рефералов
+                bonus_msg = "\n🎉 Достижение: 5 рефералов! +500 баллов"
+            elif ref_user.referrals == 10:
+                points_service.add_points(ref_id, 1000, username=ref_user.username)  # Бонус за 10 рефералов
+                bonus_msg = "\n🌟 Достижение: 10 рефералов! +1000 баллов"
+            else:
+                bonus_msg = ""
+            
+            # Сохраняем изменения
+            session.commit()
+            
+            # Уведомляем обоих пользователей
+            try:
+                await bot.send_message(ref_id, 
+                    "🎉 Поздравляем! Твой реферал активирован!\n"
+                    f"• +{base_points} баллов{bonus_msg}\n"
+                    "• +1 к счётчику рефералов"
+                )
+                await bot.send_message(user_id,
+                    "🎯 Реферальная программа активирована!\n"
+                    "Пригласивший тебя получил награду."
+                )
+            except Exception as e:
+                print(f"Ошибка при отправке уведомлений: {e}")
+            
+            return True
     
     return False
 

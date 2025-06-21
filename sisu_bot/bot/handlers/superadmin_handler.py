@@ -10,6 +10,7 @@ from sisu_bot.bot.services import points_service
 from sisu_bot.bot.services.adminlog_service import get_admin_logs
 from sisu_bot.bot.services.trigger_stats_service import get_trigger_stats, suggest_new_triggers, auto_add_suggested_triggers
 from sisu_bot.bot.services.state_service import get_state, update_state, get_mood, set_mood
+from sisu_bot.bot.services.admin_service import add_admin, remove_admin, list_dynamic_admins, get_admin_role
 import logging
 from sqlalchemy import create_engine, func
 from sqlalchemy.orm import sessionmaker
@@ -21,6 +22,9 @@ from sisu_bot.bot.services.persona_service import add_name_joke, add_name_varian
 from sisu_bot.bot.handlers.message_handler import SISU_PATTERN
 import asyncio
 from sisu_bot.bot.services.command_menu_service import setup_command_menus
+from sisu_bot.bot.services import persistence_service
+from sisu_bot.bot.services import ai_limits_service
+from sisu_bot.bot.services import antifraud_service
 
 AI_DIALOG_ENABLED = False
 PRIVATE_ENABLED = False
@@ -75,7 +79,17 @@ SUPERADMIN_COMMANDS = {
     '/list_easter_eggs': 'Показать все пасхалки',
     '/add_magic_phrase': 'Добавить магическую фразу',
     '/remove_magic_phrase': 'Удалить магическую фразу',
-    '/list_magic_phrases': 'Показать все магические фразы'
+    '/list_magic_phrases': 'Показать все магические фразы',
+    '/test_mode': 'Включить/выключить тестовый режим',
+    '/reset_user': 'Полный сброс пользователя',
+    '/bot_status': 'Статус бота и всех сервисов',
+    '/emergency_stop': 'Экстренная остановка бота',
+    '/emergency_resume': 'Возобновление работы бота',
+    '/clear_cache': 'Очистка всех кэшей',
+    '/backup_data': 'Создание резервной копии данных',
+    '/restore_data': 'Восстановление данных из резервной копии',
+    '/debug_mode': 'Включить/выключить режим отладки',
+    '/system_info': 'Информация о системе'
 }
 
 router = Router()
@@ -171,6 +185,16 @@ async def superadmin_help(msg: Message):
     text += "/add_magic_phrase [текст] — добавить магическую фразу\n"
     text += "/remove_magic_phrase [текст] — удалить магическую фразу\n"
     text += "/list_magic_phrases — показать все магические фразы\n"
+    text += "/test_mode [on|off] — включить/выключить тестовый режим\n"
+    text += "/reset_user [user_id] — полный сброс пользователя\n"
+    text += "/bot_status — статус бота и всех сервисов\n"
+    text += "/emergency_stop — экстренная остановка бота\n"
+    text += "/emergency_resume — возобновление работы бота\n"
+    text += "/clear_cache — очистка всех кэшей\n"
+    text += "/backup_data — создание резервной копии данных\n"
+    text += "/restore_data [путь_к_файлу] — восстановление данных из резервной копии\n"
+    text += "/debug_mode [on|off] — включить/выключить режим отладки\n"
+    text += "/system_info — информация о системе\n"
     await msg.answer(text)
 
 @router.message(Command("ai_dialog_on"))
@@ -771,9 +795,371 @@ async def list_admins_handler(msg: Message):
     if not is_superadmin(msg.from_user.id) or msg.chat.type != "private":
         await msg.answer("Нет прав!")
         return
-    admins = clean_admins()
-    if not admins:
-        await msg.answer("Список админов пуст.")
+    
+    # Показываем динамических админов
+    dynamic_admins_text = list_dynamic_admins()
+    
+    # Показываем статичных админов
+    static_text = "📋 <b>Статичные админы (из конфига):</b>\n\n"
+    static_text += f"👑 <b>Супер-админы:</b>\n"
+    for admin_id in SUPERADMIN_IDS:
+        static_text += f"• {admin_id}\n"
+    
+    await msg.answer(f"{dynamic_admins_text}\n\n{static_text}", parse_mode="HTML")
+
+@router.message(Command("add_dynamic_admin"))
+async def add_dynamic_admin_handler(msg: Message):
+    if not is_superadmin(msg.from_user.id) or msg.chat.type != "private":
+        await msg.answer("Нет прав!")
+        return
+    
+    try:
+        parts = msg.text.split()
+        if len(parts) < 3:
+            await msg.answer("Формат: /add_dynamic_admin [user_id] [admin|zero_admin]")
+            return
+        
+        user_id = int(parts[1])
+        admin_type = parts[2]
+        
+        if admin_type not in ["admin", "zero_admin"]:
+            await msg.answer("Тип админа должен быть 'admin' или 'zero_admin'")
+            return
+        
+        if add_admin(user_id, admin_type):
+            await msg.answer(f"✅ Админ {user_id} добавлен как {admin_type}")
+        else:
+            await msg.answer(f"❌ Админ {user_id} уже существует как {admin_type}")
+            
+    except ValueError:
+        await msg.answer("❌ Неверный user_id")
+    except Exception as e:
+        await msg.answer(f"❌ Ошибка: {e}")
+
+@router.message(Command("remove_dynamic_admin"))
+async def remove_dynamic_admin_handler(msg: Message):
+    if not is_superadmin(msg.from_user.id) or msg.chat.type != "private":
+        await msg.answer("Нет прав!")
+        return
+    
+    try:
+        parts = msg.text.split()
+        if len(parts) < 3:
+            await msg.answer("Формат: /remove_dynamic_admin [user_id] [admin|zero_admin]")
+            return
+        
+        user_id = int(parts[1])
+        admin_type = parts[2]
+        
+        if admin_type not in ["admin", "zero_admin"]:
+            await msg.answer("Тип админа должен быть 'admin' или 'zero_admin'")
+            return
+        
+        if remove_admin(user_id, admin_type):
+            await msg.answer(f"✅ Админ {user_id} удален из {admin_type}")
+        else:
+            await msg.answer(f"❌ Админ {user_id} не найден как {admin_type}")
+            
+    except ValueError:
+        await msg.answer("❌ Неверный user_id")
+    except Exception as e:
+        await msg.answer(f"❌ Ошибка: {e}")
+
+@router.message(Command("check_admin_role"))
+async def check_admin_role_handler(msg: Message):
+    if not is_superadmin(msg.from_user.id) or msg.chat.type != "private":
+        await msg.answer("Нет прав!")
+        return
+    
+    try:
+        parts = msg.text.split()
+        if len(parts) < 2:
+            await msg.answer("Формат: /check_admin_role [user_id]")
+            return
+        
+        user_id = int(parts[1])
+        role = get_admin_role(user_id)
+        
+        await msg.answer(f"👤 Пользователь {user_id} имеет роль: <b>{role}</b>", parse_mode="HTML")
+            
+    except ValueError:
+        await msg.answer("❌ Неверный user_id")
+    except Exception as e:
+        await msg.answer(f"❌ Ошибка: {e}") 
+
+# Добавляем новые команды суперадмина
+@router.message(Command("test_mode"))
+async def test_mode_handler(msg: Message):
+    """Включить/выключить тестовый режим"""
+    if not is_superadmin(msg.from_user.id) or msg.chat.type != "private":
+        await msg.answer("Нет прав!")
+        return
+    
+    args = msg.text.split()
+    if len(args) < 2:
+        await msg.answer("Используй: /test_mode [on|off]")
+        return
+    
+    mode = args[1].lower()
+    if mode == "on":
+        # Включаем тестовый режим
+        persistence_service.save_data("test_mode", {"enabled": True})
+        await msg.answer("✅ Тестовый режим включен! Бот будет работать с тестовыми каналами.")
+    elif mode == "off":
+        # Выключаем тестовый режим
+        persistence_service.save_data("test_mode", {"enabled": False})
+        await msg.answer("❌ Тестовый режим выключен! Бот будет работать с реальными каналами.")
     else:
-        text = "👮‍♂️ Список админов:\n" + "\n".join([str(a) for a in admins])
-        await msg.answer(text) 
+        await msg.answer("Неверный режим. Используй: /test_mode [on|off]")
+
+@router.message(Command("reset_user"))
+async def reset_user_handler(msg: Message):
+    """Полный сброс пользователя"""
+    if not is_superadmin(msg.from_user.id) or msg.chat.type != "private":
+        await msg.answer("Нет прав!")
+        return
+    
+    args = msg.text.split()
+    if len(args) < 2:
+        await msg.answer("Используй: /reset_user [user_id]")
+        return
+    
+    try:
+        user_id = int(args[1])
+        session = Session()
+        user = session.query(User).filter(User.id == user_id).first()
+        
+        if not user:
+            await msg.answer("Пользователь не найден!")
+            session.close()
+            return
+        
+        # Полный сброс
+        user.points = 0
+        user.rank = 'novice'
+        user.active_days = 0
+        user.referrals = 0
+        user.message_count = 0
+        user.last_checkin = None
+        user.pending_referral = None
+        user.invited_by = None
+        user.is_supporter = False
+        user.supporter_tier = None
+        user.supporter_until = None
+        
+        session.commit()
+        session.close()
+        
+        # Сбрасываем лимиты
+        ai_limits_service.reset_user_limits(user_id)
+        
+        await msg.answer(f"✅ Пользователь {user_id} полностью сброшен!")
+        
+    except ValueError:
+        await msg.answer("Неверный user_id!")
+
+@router.message(Command("bot_status"))
+async def bot_status_handler(msg: Message):
+    """Статус бота и всех сервисов"""
+    if not is_superadmin(msg.from_user.id) or msg.chat.type != "private":
+        await msg.answer("Нет прав!")
+        return
+    
+    status_text = "🤖 <b>Статус SisuDatuBot</b>\n\n"
+    
+    # Проверяем тестовый режим
+    test_mode = persistence_service.load_data("test_mode")
+    if test_mode and test_mode.get("enabled"):
+        status_text += "🧪 <b>Тестовый режим:</b> ВКЛЮЧЕН\n"
+    else:
+        status_text += "🚀 <b>Продакшн режим:</b> ВКЛЮЧЕН\n"
+    
+    # Статистика пользователей
+    session = Session()
+    total_users = session.query(User).count()
+    supporters = session.query(User).filter(User.is_supporter == True).count()
+    active_users = session.query(User).filter(User.last_checkin != None).count()
+    session.close()
+    
+    status_text += f"👥 <b>Пользователи:</b> {total_users}\n"
+    status_text += f"💎 <b>Донатеры:</b> {supporters}\n"
+    status_text += f"✅ <b>Активные:</b> {active_users}\n"
+    
+    # Статистика антифрода
+    suspicious_count = len(antifraud_service.suspicious_users)
+    status_text += f"🚨 <b>Подозрительных:</b> {suspicious_count}\n"
+    
+    # Статистика AI
+    ai_data = persistence_service.load_data("ai_limits")
+    if ai_data:
+        total_ai_usage = sum(len(usage.get("daily", 0)) for usage in ai_data.get("usage", {}).values())
+        status_text += f"🤖 <b>AI запросов сегодня:</b> {total_ai_usage}\n"
+    
+    await msg.answer(status_text, parse_mode="HTML")
+
+@router.message(Command("emergency_stop"))
+async def emergency_stop_handler(msg: Message):
+    """Экстренная остановка бота"""
+    if not is_superadmin(msg.from_user.id) or msg.chat.type != "private":
+        await msg.answer("Нет прав!")
+        return
+    
+    # Сохраняем флаг экстренной остановки
+    persistence_service.save_data("emergency_stop", {"enabled": True, "stopped_by": msg.from_user.id})
+    
+    await msg.answer("🚨 ЭКСТРЕННАЯ ОСТАНОВКА АКТИВИРОВАНА!\n\nБот будет отвечать только суперадминам.")
+    
+    # Уведомляем всех суперадминов
+    for admin_id in SUPERADMIN_IDS:
+        if admin_id != msg.from_user.id:
+            try:
+                await msg.bot.send_message(admin_id, 
+                    f"🚨 ЭКСТРЕННАЯ ОСТАНОВКА активирована пользователем {msg.from_user.id}!")
+            except:
+                pass
+
+@router.message(Command("emergency_resume"))
+async def emergency_resume_handler(msg: Message):
+    """Возобновление работы бота"""
+    if not is_superadmin(msg.from_user.id) or msg.chat.type != "private":
+        await msg.answer("Нет прав!")
+        return
+    
+    # Убираем флаг экстренной остановки
+    persistence_service.save_data("emergency_stop", {"enabled": False})
+    
+    await msg.answer("✅ Работа бота возобновлена!")
+
+@router.message(Command("clear_cache"))
+async def clear_cache_handler(msg: Message):
+    """Очистка всех кэшей"""
+    if not is_superadmin(msg.from_user.id) or msg.chat.type != "private":
+        await msg.answer("Нет прав!")
+        return
+    
+    # Очищаем кэши
+    persistence_service.delete_data("ai_limits")
+    persistence_service.delete_data("antifraud_data")
+    
+    # Сбрасываем антифрод
+    antifraud_service.suspicious_users.clear()
+    antifraud_service.referral_attempts.clear()
+    antifraud_service.device_fingerprints.clear()
+    
+    await msg.answer("🧹 Все кэши очищены!")
+
+@router.message(Command("backup_data"))
+async def backup_data_handler(msg: Message):
+    """Создание резервной копии данных"""
+    if not is_superadmin(msg.from_user.id) or msg.chat.type != "private":
+        await msg.answer("Нет прав!")
+        return
+    
+    try:
+        import shutil
+        from datetime import datetime
+        
+        # Создаем бэкап БД
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        backup_path = f"backup_sisu_bot_{timestamp}.db"
+        shutil.copy2(DB_PATH, backup_path)
+        
+        # Создаем бэкап конфигов
+        config_backup_path = f"backup_config_{timestamp}.json"
+        config_data = {
+            "test_mode": persistence_service.load_data("test_mode"),
+            "ai_limits": persistence_service.load_data("ai_limits"),
+            "antifraud_data": {
+                "suspicious_users": len(antifraud_service.suspicious_users),
+                "referral_attempts": len(antifraud_service.referral_attempts)
+            }
+        }
+        
+        import json
+        with open(config_backup_path, 'w', encoding='utf-8') as f:
+            json.dump(config_data, f, ensure_ascii=False, indent=2)
+        
+        await msg.answer(f"💾 Резервная копия создана!\n\n📁 БД: {backup_path}\n📁 Конфиг: {config_backup_path}")
+        
+    except Exception as e:
+        await msg.answer(f"❌ Ошибка создания бэкапа: {e}")
+
+@router.message(Command("restore_data"))
+async def restore_data_handler(msg: Message):
+    """Восстановление данных из резервной копии"""
+    if not is_superadmin(msg.from_user.id) or msg.chat.type != "private":
+        await msg.answer("Нет прав!")
+        return
+    
+    args = msg.text.split()
+    if len(args) < 2:
+        await msg.answer("Используй: /restore_data [путь_к_файлу]")
+        return
+    
+    backup_file = args[1]
+    
+    try:
+        import shutil
+        
+        # Восстанавливаем БД
+        shutil.copy2(backup_file, DB_PATH)
+        
+        await msg.answer(f"✅ Данные восстановлены из {backup_file}")
+        
+    except Exception as e:
+        await msg.answer(f"❌ Ошибка восстановления: {e}")
+
+@router.message(Command("debug_mode"))
+async def debug_mode_handler(msg: Message):
+    """Включить/выключить режим отладки"""
+    if not is_superadmin(msg.from_user.id) or msg.chat.type != "private":
+        await msg.answer("Нет прав!")
+        return
+    
+    args = msg.text.split()
+    if len(args) < 2:
+        await msg.answer("Используй: /debug_mode [on|off]")
+        return
+    
+    mode = args[1].lower()
+    if mode == "on":
+        persistence_service.save_data("debug_mode", {"enabled": True})
+        await msg.answer("🔍 Режим отладки включен! Подробные логи будут записываться.")
+    elif mode == "off":
+        persistence_service.save_data("debug_mode", {"enabled": False})
+        await msg.answer("🔍 Режим отладки выключен!")
+    else:
+        await msg.answer("Неверный режим. Используй: /debug_mode [on|off]")
+
+@router.message(Command("system_info"))
+async def system_info_handler(msg: Message):
+    """Информация о системе"""
+    if not is_superadmin(msg.from_user.id) or msg.chat.type != "private":
+        await msg.answer("Нет прав!")
+        return
+    
+    import psutil
+    import platform
+    
+    info_text = "💻 <b>Системная информация</b>\n\n"
+    
+    # CPU
+    cpu_percent = psutil.cpu_percent(interval=1)
+    info_text += f"🖥 <b>CPU:</b> {cpu_percent}%\n"
+    
+    # RAM
+    memory = psutil.virtual_memory()
+    info_text += f"🧠 <b>RAM:</b> {memory.percent}% ({memory.used // 1024 // 1024}MB / {memory.total // 1024 // 1024}MB)\n"
+    
+    # Disk
+    disk = psutil.disk_usage('/')
+    info_text += f"💾 <b>Диск:</b> {disk.percent}% ({disk.used // 1024 // 1024 // 1024}GB / {disk.total // 1024 // 1024 // 1024}GB)\n"
+    
+    # OS
+    info_text += f"🖥 <b>ОС:</b> {platform.system()} {platform.release()}\n"
+    
+    # Python
+    import sys
+    info_text += f"🐍 <b>Python:</b> {sys.version.split()[0]}\n"
+    
+    await msg.answer(info_text, parse_mode="HTML") 

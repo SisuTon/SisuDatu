@@ -1,3 +1,84 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environment
+.venv/
 venv/
-venv/
+ENV/
+env/
+
+# Database
+*.db
+*.sqlite3
+*.sqlite
+sisu_bot.db
+sisu_bot.db.backup
+
+# Logs
+*.log
+bot.log
+logs/
+
+# Environment variables
 .env
+.env.local
+.env.production
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Alembic
+alembic/versions/*.py
+!alembic/versions/__init__.py
+
+# Test coverage
+.coverage
+htmlcov/
+.pytest_cache/
+
+# Temporary files
+*.tmp
+*.temp
+temp/
+tmp/
+
+# Backup files
+*.backup
+*.bak
+
+# Yandex Cloud credentials
+*.json
+credentials/
