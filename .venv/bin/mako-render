@@ -1,4 +1,4 @@
-#!/Users/byorg/Desktop/SisuDatuBot/.venv/bin/python3.11
+#!/Users/byorg/Desktop/SisuDatuBot/.venv/bin/python
 # -*- coding: utf-8 -*-
 import re
 import sys

@@ -1,5 +1,5 @@
 import pytest
-from sisu_bot.bot.services.command_menu_service import DEFAULT_COMMANDS, ADMIN_COMMANDS, SUPERADMIN_COMMANDS
+from app.domain.services.command_menu import DEFAULT_COMMANDS, ADMIN_COMMANDS, SUPERADMIN_COMMANDS
 from aiogram.types import BotCommand
 
 def test_default_commands_exist():

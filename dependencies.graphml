@@ -1,0 +1,705 @@
+<?xml version='1.0' encoding='utf-8'?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
+  <key id="d4" for="edge" attr.name="weight" attr.type="long" />
+  <key id="d3" for="node" attr.name="dependencies" attr.type="long" />
+  <key id="d2" for="node" attr.name="layer" attr.type="string" />
+  <key id="d1" for="node" attr.name="title" attr.type="string" />
+  <key id="d0" for="node" attr.name="size" attr.type="long" />
+  <graph edgedefault="directed">
+    <node id="test_di_system.py">
+      <data key="d0">6577</data>
+      <data key="d1">test_di_system.py
+Size: 6577 bytes</data>
+      <data key="d2">other</data>
+      <data key="d3">1</data>
+    </node>
+    <node id="app/__init__.py" />
+    <node id="app/main.py">
+      <data key="d0">6511</data>
+      <data key="d1">app/main.py
+Size: 6511 bytes</data>
+      <data key="d2">app</data>
+      <data key="d3">1</data>
+    </node>
+    <node id="alembic/env.py">
+      <data key="d0">1321</data>
+      <data key="d1">alembic/env.py
+Size: 1321 bytes</data>
+      <data key="d2">alembic</data>
+      <data key="d3">2</data>
+    </node>
+    <node id="alembic" />
+    <node id="alembic/versions/1f31127581dc_merge_multiple_heads.py">
+      <data key="d0">499</data>
+      <data key="d1">alembic/versions/1f31127581dc_merge_multiple_heads.py
+Size: 499 bytes</data>
+      <data key="d2">alembic</data>
+      <data key="d3">1</data>
+    </node>
+    <node id="alembic/versions/3d3f7ab510fb_add_ai_requests_hour_field.py">
+      <data key="d0">1019</data>
+      <data key="d1">alembic/versions/3d3f7ab510fb_add_ai_requests_hour_field.py
+Size: 1019 bytes</data>
+      <data key="d2">alembic</data>
+      <data key="d3">1</data>
+    </node>
+    <node id="alembic/versions/766b570a8620_initial_clean.py">
+      <data key="d0">2475</data>
+      <data key="d1">alembic/versions/766b570a8620_initial_clean.py
+Size: 2475 bytes</data>
+      <data key="d2">alembic</data>
+      <data key="d3">1</data>
+    </node>
+    <node id="alembic/versions/add_performance_indexes.py">
+      <data key="d0">2428</data>
+      <data key="d1">alembic/versions/add_performance_indexes.py
+Size: 2428 bytes</data>
+      <data key="d2">alembic</data>
+      <data key="d3">1</data>
+    </node>
+    <node id="alembic/versions/cfdbcb98726a_merge_heads.py">
+      <data key="d0">522</data>
+      <data key="d1">alembic/versions/cfdbcb98726a_merge_heads.py
+Size: 522 bytes</data>
+      <data key="d2">alembic</data>
+      <data key="d3">1</data>
+    </node>
+    <node id="alembic/versions/0b58a3d35e45_merge_multiple_heads.py">
+      <data key="d0">499</data>
+      <data key="d1">alembic/versions/0b58a3d35e45_merge_multiple_heads.py
+Size: 499 bytes</data>
+      <data key="d2">alembic</data>
+      <data key="d3">1</data>
+    </node>
+    <node id="tests/unit/test_di_system.py">
+      <data key="d0">365</data>
+      <data key="d1">tests/unit/test_di_system.py
+Size: 365 bytes</data>
+      <data key="d2">tests</data>
+      <data key="d3">1</data>
+    </node>
+    <node id="tests/unit/test_ai_trigger_service.py">
+      <data key="d0">3527</data>
+      <data key="d1">tests/unit/test_ai_trigger_service.py
+Size: 3527 bytes</data>
+      <data key="d2">tests</data>
+      <data key="d3">1</data>
+    </node>
+    <node id="tests/unit/test_motivation_service.py">
+      <data key="d0">612</data>
+      <data key="d1">tests/unit/test_motivation_service.py
+Size: 612 bytes</data>
+      <data key="d2">tests</data>
+      <data key="d3">1</data>
+    </node>
+    <node id="tests/unit/test_persona_service.py">
+      <data key="d0">9681</data>
+      <data key="d1">tests/unit/test_persona_service.py
+Size: 9681 bytes</data>
+      <data key="d2">tests</data>
+      <data key="d3">1</data>
+    </node>
+    <node id="tests/unit/test_ai_memory_service.py">
+      <data key="d0">2098</data>
+      <data key="d1">tests/unit/test_ai_memory_service.py
+Size: 2098 bytes</data>
+      <data key="d2">tests</data>
+      <data key="d3">1</data>
+    </node>
+    <node id="tests/unit/test_adminlog_service.py">
+      <data key="d0">2423</data>
+      <data key="d1">tests/unit/test_adminlog_service.py
+Size: 2423 bytes</data>
+      <data key="d2">tests</data>
+      <data key="d3">1</data>
+    </node>
+    <node id="tests/unit/test_ton_service.py">
+      <data key="d0">641</data>
+      <data key="d1">tests/unit/test_ton_service.py
+Size: 641 bytes</data>
+      <data key="d2">tests</data>
+      <data key="d3">1</data>
+    </node>
+    <node id="tests/unit/test_ai_stats_service.py">
+      <data key="d0">2385</data>
+      <data key="d1">tests/unit/test_ai_stats_service.py
+Size: 2385 bytes</data>
+      <data key="d2">tests</data>
+      <data key="d3">1</data>
+    </node>
+    <node id="tests/unit/test_top_service.py">
+      <data key="d0">946</data>
+      <data key="d1">tests/unit/test_top_service.py
+Size: 946 bytes</data>
+      <data key="d2">tests</data>
+      <data key="d3">1</data>
+    </node>
+    <node id="tests/unit/test_allowed_chats_service.py">
+      <data key="d0">1921</data>
+      <data key="d1">tests/unit/test_allowed_chats_service.py
+Size: 1921 bytes</data>
+      <data key="d2">tests</data>
+      <data key="d3">1</data>
+    </node>
+    <node id="tests/unit/test_points_service.py">
+      <data key="d0">1335</data>
+      <data key="d1">tests/unit/test_points_service.py
+Size: 1335 bytes</data>
+      <data key="d2">tests</data>
+      <data key="d3">1</data>
+    </node>
+    <node id="tests/unit/test_user_service.py">
+      <data key="d0">518</data>
+      <data key="d1">tests/unit/test_user_service.py
+Size: 518 bytes</data>
+      <data key="d2">tests</data>
+      <data key="d3">1</data>
+    </node>
+    <node id="tests/unit/test_excuse_service.py">
+      <data key="d0">1025</data>
+      <data key="d1">tests/unit/test_excuse_service.py
+Size: 1025 bytes</data>
+      <data key="d2">tests</data>
+      <data key="d3">1</data>
+    </node>
+    <node id="tests/unit/test_yandex_speechkit_tts.py">
+      <data key="d0">672</data>
+      <data key="d1">tests/unit/test_yandex_speechkit_tts.py
+Size: 672 bytes</data>
+      <data key="d2">tests</data>
+      <data key="d3">1</data>
+    </node>
+    <node id="tests/unit/test_yandexgpt_service.py">
+      <data key="d0">662</data>
+      <data key="d1">tests/unit/test_yandexgpt_service.py
+Size: 662 bytes</data>
+      <data key="d2">tests</data>
+      <data key="d3">1</data>
+    </node>
+    <node id="tests/unit/test_games_service.py">
+      <data key="d0">4228</data>
+      <data key="d1">tests/unit/test_games_service.py
+Size: 4228 bytes</data>
+      <data key="d2">tests</data>
+      <data key="d3">1</data>
+    </node>
+    <node id="tests/unit/test_state_service.py">
+      <data key="d0">6320</data>
+      <data key="d1">tests/unit/test_state_service.py
+Size: 6320 bytes</data>
+      <data key="d2">tests</data>
+      <data key="d3">1</data>
+    </node>
+    <node id="tests/unit/test_trigger_stats_service.py">
+      <data key="d0">8633</data>
+      <data key="d1">tests/unit/test_trigger_stats_service.py
+Size: 8633 bytes</data>
+      <data key="d2">tests</data>
+      <data key="d3">1</data>
+    </node>
+    <node id="tests/unit/test_command_menu_service.py">
+      <data key="d0">1111</data>
+      <data key="d1">tests/unit/test_command_menu_service.py
+Size: 1111 bytes</data>
+      <data key="d2">tests</data>
+      <data key="d3">1</data>
+    </node>
+    <node id="tests/unit/infrastructure/test_tts_service.py">
+      <data key="d0">3602</data>
+      <data key="d1">tests/unit/infrastructure/test_tts_service.py
+Size: 3602 bytes</data>
+      <data key="d2">tests</data>
+      <data key="d3">1</data>
+    </node>
+    <node id="tests/unit/domain/test_mood_service.py">
+      <data key="d0">2678</data>
+      <data key="d1">tests/unit/domain/test_mood_service.py
+Size: 2678 bytes</data>
+      <data key="d2">tests</data>
+      <data key="d3">1</data>
+    </node>
+    <node id="tests/unit/domain/test_trigger_service.py">
+      <data key="d0">5175</data>
+      <data key="d1">tests/unit/domain/test_trigger_service.py
+Size: 5175 bytes</data>
+      <data key="d2">tests</data>
+      <data key="d3">1</data>
+    </node>
+    <node id="app/core/container.py">
+      <data key="d0">3603</data>
+      <data key="d1">app/core/container.py
+Size: 3603 bytes</data>
+      <data key="d2">core</data>
+      <data key="d3">1</data>
+    </node>
+    <node id="app/presentation/bot/bot.py">
+      <data key="d0">1532</data>
+      <data key="d1">app/presentation/bot/bot.py
+Size: 1532 bytes</data>
+      <data key="d2">presentation</data>
+      <data key="d3">1</data>
+    </node>
+    <node id="app/presentation/bot/middlewares/antifraud.py">
+      <data key="d0">3952</data>
+      <data key="d1">app/presentation/bot/middlewares/antifraud.py
+Size: 3952 bytes</data>
+      <data key="d2">presentation</data>
+      <data key="d3">1</data>
+    </node>
+    <node id="app/presentation/bot/middlewares/user_sync.py">
+      <data key="d0">444</data>
+      <data key="d1">app/presentation/bot/middlewares/user_sync.py
+Size: 444 bytes</data>
+      <data key="d2">presentation</data>
+      <data key="d3">1</data>
+    </node>
+    <node id="app/presentation/bot/middlewares/rate_limiter.py">
+      <data key="d0">3129</data>
+      <data key="d1">app/presentation/bot/middlewares/rate_limiter.py
+Size: 3129 bytes</data>
+      <data key="d2">presentation</data>
+      <data key="d3">1</data>
+    </node>
+    <node id="app/presentation/bot/middlewares/allowed_chats.py">
+      <data key="d0">2224</data>
+      <data key="d1">app/presentation/bot/middlewares/allowed_chats.py
+Size: 2224 bytes</data>
+      <data key="d2">presentation</data>
+      <data key="d3">1</data>
+    </node>
+    <node id="app/presentation/bot/handlers/media.py">
+      <data key="d0">2491</data>
+      <data key="d1">app/presentation/bot/handlers/media.py
+Size: 2491 bytes</data>
+      <data key="d2">presentation</data>
+      <data key="d3">1</data>
+    </node>
+    <node id="app/presentation/bot/handlers/checkin.py">
+      <data key="d0">6697</data>
+      <data key="d1">app/presentation/bot/handlers/checkin.py
+Size: 6697 bytes</data>
+      <data key="d2">presentation</data>
+      <data key="d3">1</data>
+    </node>
+    <node id="app/presentation/bot/handlers/myrank.py">
+      <data key="d0">4239</data>
+      <data key="d1">app/presentation/bot/handlers/myrank.py
+Size: 4239 bytes</data>
+      <data key="d2">presentation</data>
+      <data key="d3">1</data>
+    </node>
+    <node id="app/presentation/bot/handlers/top_handler.py">
+      <data key="d0">2372</data>
+      <data key="d1">app/presentation/bot/handlers/top_handler.py
+Size: 2372 bytes</data>
+      <data key="d2">presentation</data>
+      <data key="d3">1</data>
+    </node>
+    <node id="app/presentation/bot/handlers/ai.py">
+      <data key="d0">53640</data>
+      <data key="d1">app/presentation/bot/handlers/ai.py
+Size: 53640 bytes</data>
+      <data key="d2">presentation</data>
+      <data key="d3">1</data>
+    </node>
+    <node id="app/presentation/bot/handlers/handlers.py">
+      <data key="d0">3921</data>
+      <data key="d1">app/presentation/bot/handlers/handlers.py
+Size: 3921 bytes</data>
+      <data key="d2">presentation</data>
+      <data key="d3">1</data>
+    </node>
+    <node id="app/presentation/bot/handlers/message.py">
+      <data key="d0">5474</data>
+      <data key="d1">app/presentation/bot/handlers/message.py
+Size: 5474 bytes</data>
+      <data key="d2">presentation</data>
+      <data key="d3">1</data>
+    </node>
+    <node id="app/presentation/bot/handlers/games.py">
+      <data key="d0">23266</data>
+      <data key="d1">app/presentation/bot/handlers/games.py
+Size: 23266 bytes</data>
+      <data key="d2">presentation</data>
+      <data key="d3">1</data>
+    </node>
+    <node id="app/presentation/bot/handlers/user_handler.py">
+      <data key="d0">1954</data>
+      <data key="d1">app/presentation/bot/handlers/user_handler.py
+Size: 1954 bytes</data>
+      <data key="d2">presentation</data>
+      <data key="d3">1</data>
+    </node>
+    <node id="app/presentation/bot/handlers/admin.py">
+      <data key="d0">9074</data>
+      <data key="d1">app/presentation/bot/handlers/admin.py
+Size: 9074 bytes</data>
+      <data key="d2">presentation</data>
+      <data key="d3">1</data>
+    </node>
+    <node id="app/presentation/bot/handlers/ref.py">
+      <data key="d0">5550</data>
+      <data key="d1">app/presentation/bot/handlers/ref.py
+Size: 5550 bytes</data>
+      <data key="d2">presentation</data>
+      <data key="d3">1</data>
+    </node>
+    <node id="app/presentation/bot/handlers/superadmin_handler.py">
+      <data key="d0">38285</data>
+      <data key="d1">app/presentation/bot/handlers/superadmin_handler.py
+Size: 38285 bytes</data>
+      <data key="d2">presentation</data>
+      <data key="d3">1</data>
+    </node>
+    <node id="app/presentation/bot/handlers/start_handler.py">
+      <data key="d0">7014</data>
+      <data key="d1">app/presentation/bot/handlers/start_handler.py
+Size: 7014 bytes</data>
+      <data key="d2">presentation</data>
+      <data key="d3">1</data>
+    </node>
+    <node id="app/presentation/bot/handlers/donate.py">
+      <data key="d0">11176</data>
+      <data key="d1">app/presentation/bot/handlers/donate.py
+Size: 11176 bytes</data>
+      <data key="d2">presentation</data>
+      <data key="d3">1</data>
+    </node>
+    <node id="app/presentation/bot/handlers/help.py">
+      <data key="d0">1805</data>
+      <data key="d1">app/presentation/bot/handlers/help.py
+Size: 1805 bytes</data>
+      <data key="d2">presentation</data>
+      <data key="d3">1</data>
+    </node>
+    <node id="app/presentation/bot/handlers/commands.py">
+      <data key="d0">875</data>
+      <data key="d1">app/presentation/bot/handlers/commands.py
+Size: 875 bytes</data>
+      <data key="d2">presentation</data>
+      <data key="d3">1</data>
+    </node>
+    <node id="app/domain/repositories/user_repository.py">
+      <data key="d0">936</data>
+      <data key="d1">app/domain/repositories/user_repository.py
+Size: 936 bytes</data>
+      <data key="d2">domain</data>
+      <data key="d3">1</data>
+    </node>
+    <node id="app/domain/services/motivation.py">
+      <data key="d0">2386</data>
+      <data key="d1">app/domain/services/motivation.py
+Size: 2386 bytes</data>
+      <data key="d2">domain</data>
+      <data key="d3">1</data>
+    </node>
+    <node id="app/domain/services/user.py">
+      <data key="d0">5648</data>
+      <data key="d1">app/domain/services/user.py
+Size: 5648 bytes</data>
+      <data key="d2">domain</data>
+      <data key="d3">1</data>
+    </node>
+    <node id="app/domain/services/command_menu.py">
+      <data key="d0">6003</data>
+      <data key="d1">app/domain/services/command_menu.py
+Size: 6003 bytes</data>
+      <data key="d2">domain</data>
+      <data key="d3">1</data>
+    </node>
+    <node id="app/domain/services/user_service.py">
+      <data key="d0">1006</data>
+      <data key="d1">app/domain/services/user_service.py
+Size: 1006 bytes</data>
+      <data key="d2">domain</data>
+      <data key="d3">1</data>
+    </node>
+    <node id="app/domain/services/state.py">
+      <data key="d0">2417</data>
+      <data key="d1">app/domain/services/state.py
+Size: 2417 bytes</data>
+      <data key="d2">domain</data>
+      <data key="d3">1</data>
+    </node>
+    <node id="app/domain/services/excuse.py">
+      <data key="d0">3617</data>
+      <data key="d1">app/domain/services/excuse.py
+Size: 3617 bytes</data>
+      <data key="d2">domain</data>
+      <data key="d3">1</data>
+    </node>
+    <node id="app/domain/services/gamification/points.py">
+      <data key="d0">4957</data>
+      <data key="d1">app/domain/services/gamification/points.py
+Size: 4957 bytes</data>
+      <data key="d2">domain</data>
+      <data key="d3">1</data>
+    </node>
+    <node id="app/domain/services/gamification/top.py">
+      <data key="d0">2368</data>
+      <data key="d1">app/domain/services/gamification/top.py
+Size: 2368 bytes</data>
+      <data key="d2">domain</data>
+      <data key="d3">1</data>
+    </node>
+    <node id="app/infrastructure/ai/tts.py">
+      <data key="d0">4201</data>
+      <data key="d1">app/infrastructure/ai/tts.py
+Size: 4201 bytes</data>
+      <data key="d2">infrastructure</data>
+      <data key="d3">1</data>
+    </node>
+    <node id="app/infrastructure/ai/trigger.py">
+      <data key="d0">3010</data>
+      <data key="d1">app/infrastructure/ai/trigger.py
+Size: 3010 bytes</data>
+      <data key="d2">infrastructure</data>
+      <data key="d3">1</data>
+    </node>
+    <node id="app/infrastructure/db/session.py">
+      <data key="d0">362</data>
+      <data key="d1">app/infrastructure/db/session.py
+Size: 362 bytes</data>
+      <data key="d2">infrastructure</data>
+      <data key="d3">1</data>
+    </node>
+    <node id="app/infrastructure/db/migrate_users.py">
+      <data key="d0">3068</data>
+      <data key="d1">app/infrastructure/db/migrate_users.py
+Size: 3068 bytes</data>
+      <data key="d2">infrastructure</data>
+      <data key="d3">1</data>
+    </node>
+    <node id="app/infrastructure/db/init_db.py">
+      <data key="d0">526</data>
+      <data key="d1">app/infrastructure/db/init_db.py
+Size: 526 bytes</data>
+      <data key="d2">infrastructure</data>
+      <data key="d3">1</data>
+    </node>
+    <node id="app/infrastructure/ai/providers/yandex_speechkit_tts.py">
+      <data key="d0">3218</data>
+      <data key="d1">app/infrastructure/ai/providers/yandex_speechkit_tts.py
+Size: 3218 bytes</data>
+      <data key="d2">infrastructure</data>
+      <data key="d3">1</data>
+    </node>
+    <node id="app/infrastructure/ai/providers/yandex_gpt.py">
+      <data key="d0">5876</data>
+      <data key="d1">app/infrastructure/ai/providers/yandex_gpt.py
+Size: 5876 bytes</data>
+      <data key="d2">infrastructure</data>
+      <data key="d3">1</data>
+    </node>
+    <edge source="test_di_system.py" target="app/__init__.py">
+      <data key="d4">16</data>
+    </edge>
+    <edge source="app/main.py" target="app/__init__.py">
+      <data key="d4">22</data>
+    </edge>
+    <edge source="alembic/env.py" target="alembic">
+      <data key="d4">1</data>
+    </edge>
+    <edge source="alembic/env.py" target="app/__init__.py">
+      <data key="d4">2</data>
+    </edge>
+    <edge source="alembic/versions/1f31127581dc_merge_multiple_heads.py" target="alembic">
+      <data key="d4">1</data>
+    </edge>
+    <edge source="alembic/versions/3d3f7ab510fb_add_ai_requests_hour_field.py" target="alembic">
+      <data key="d4">1</data>
+    </edge>
+    <edge source="alembic/versions/766b570a8620_initial_clean.py" target="alembic">
+      <data key="d4">1</data>
+    </edge>
+    <edge source="alembic/versions/add_performance_indexes.py" target="alembic">
+      <data key="d4">1</data>
+    </edge>
+    <edge source="alembic/versions/cfdbcb98726a_merge_heads.py" target="alembic">
+      <data key="d4">1</data>
+    </edge>
+    <edge source="alembic/versions/0b58a3d35e45_merge_multiple_heads.py" target="alembic">
+      <data key="d4">1</data>
+    </edge>
+    <edge source="tests/unit/test_di_system.py" target="app/__init__.py">
+      <data key="d4">1</data>
+    </edge>
+    <edge source="tests/unit/test_ai_trigger_service.py" target="app/__init__.py">
+      <data key="d4">1</data>
+    </edge>
+    <edge source="tests/unit/test_motivation_service.py" target="app/__init__.py">
+      <data key="d4">1</data>
+    </edge>
+    <edge source="tests/unit/test_persona_service.py" target="app/__init__.py">
+      <data key="d4">1</data>
+    </edge>
+    <edge source="tests/unit/test_ai_memory_service.py" target="app/__init__.py">
+      <data key="d4">1</data>
+    </edge>
+    <edge source="tests/unit/test_adminlog_service.py" target="app/__init__.py">
+      <data key="d4">1</data>
+    </edge>
+    <edge source="tests/unit/test_ton_service.py" target="app/__init__.py">
+      <data key="d4">1</data>
+    </edge>
+    <edge source="tests/unit/test_ai_stats_service.py" target="app/__init__.py">
+      <data key="d4">1</data>
+    </edge>
+    <edge source="tests/unit/test_top_service.py" target="app/__init__.py">
+      <data key="d4">3</data>
+    </edge>
+    <edge source="tests/unit/test_allowed_chats_service.py" target="app/__init__.py">
+      <data key="d4">1</data>
+    </edge>
+    <edge source="tests/unit/test_points_service.py" target="app/__init__.py">
+      <data key="d4">3</data>
+    </edge>
+    <edge source="tests/unit/test_user_service.py" target="app/__init__.py">
+      <data key="d4">1</data>
+    </edge>
+    <edge source="tests/unit/test_excuse_service.py" target="app/__init__.py">
+      <data key="d4">1</data>
+    </edge>
+    <edge source="tests/unit/test_yandex_speechkit_tts.py" target="app/__init__.py">
+      <data key="d4">1</data>
+    </edge>
+    <edge source="tests/unit/test_yandexgpt_service.py" target="app/__init__.py">
+      <data key="d4">1</data>
+    </edge>
+    <edge source="tests/unit/test_games_service.py" target="app/__init__.py">
+      <data key="d4">2</data>
+    </edge>
+    <edge source="tests/unit/test_state_service.py" target="app/__init__.py">
+      <data key="d4">2</data>
+    </edge>
+    <edge source="tests/unit/test_trigger_stats_service.py" target="app/__init__.py">
+      <data key="d4">1</data>
+    </edge>
+    <edge source="tests/unit/test_command_menu_service.py" target="app/__init__.py">
+      <data key="d4">3</data>
+    </edge>
+    <edge source="tests/unit/infrastructure/test_tts_service.py" target="app/__init__.py">
+      <data key="d4">6</data>
+    </edge>
+    <edge source="tests/unit/domain/test_mood_service.py" target="app/__init__.py">
+      <data key="d4">6</data>
+    </edge>
+    <edge source="tests/unit/domain/test_trigger_service.py" target="app/__init__.py">
+      <data key="d4">10</data>
+    </edge>
+    <edge source="app/core/container.py" target="app/__init__.py">
+      <data key="d4">13</data>
+    </edge>
+    <edge source="app/presentation/bot/bot.py" target="app/__init__.py">
+      <data key="d4">6</data>
+    </edge>
+    <edge source="app/presentation/bot/middlewares/antifraud.py" target="app/__init__.py">
+      <data key="d4">4</data>
+    </edge>
+    <edge source="app/presentation/bot/middlewares/user_sync.py" target="app/__init__.py">
+      <data key="d4">1</data>
+    </edge>
+    <edge source="app/presentation/bot/middlewares/rate_limiter.py" target="app/__init__.py">
+      <data key="d4">4</data>
+    </edge>
+    <edge source="app/presentation/bot/middlewares/allowed_chats.py" target="app/__init__.py">
+      <data key="d4">2</data>
+    </edge>
+    <edge source="app/presentation/bot/handlers/media.py" target="app/__init__.py">
+      <data key="d4">2</data>
+    </edge>
+    <edge source="app/presentation/bot/handlers/checkin.py" target="app/__init__.py">
+      <data key="d4">4</data>
+    </edge>
+    <edge source="app/presentation/bot/handlers/myrank.py" target="app/__init__.py">
+      <data key="d4">1</data>
+    </edge>
+    <edge source="app/presentation/bot/handlers/top_handler.py" target="app/__init__.py">
+      <data key="d4">2</data>
+    </edge>
+    <edge source="app/presentation/bot/handlers/ai.py" target="app/__init__.py">
+      <data key="d4">53</data>
+    </edge>
+    <edge source="app/presentation/bot/handlers/handlers.py" target="app/__init__.py">
+      <data key="d4">2</data>
+    </edge>
+    <edge source="app/presentation/bot/handlers/message.py" target="app/__init__.py">
+      <data key="d4">4</data>
+    </edge>
+    <edge source="app/presentation/bot/handlers/games.py" target="app/__init__.py">
+      <data key="d4">6</data>
+    </edge>
+    <edge source="app/presentation/bot/handlers/user_handler.py" target="app/__init__.py">
+      <data key="d4">3</data>
+    </edge>
+    <edge source="app/presentation/bot/handlers/admin.py" target="app/__init__.py">
+      <data key="d4">6</data>
+    </edge>
+    <edge source="app/presentation/bot/handlers/ref.py" target="app/__init__.py">
+      <data key="d4">4</data>
+    </edge>
+    <edge source="app/presentation/bot/handlers/superadmin_handler.py" target="app/__init__.py">
+      <data key="d4">43</data>
+    </edge>
+    <edge source="app/presentation/bot/handlers/start_handler.py" target="app/__init__.py">
+      <data key="d4">11</data>
+    </edge>
+    <edge source="app/presentation/bot/handlers/donate.py" target="app/__init__.py">
+      <data key="d4">3</data>
+    </edge>
+    <edge source="app/presentation/bot/handlers/help.py" target="app/__init__.py">
+      <data key="d4">2</data>
+    </edge>
+    <edge source="app/presentation/bot/handlers/commands.py" target="app/__init__.py">
+      <data key="d4">1</data>
+    </edge>
+    <edge source="app/domain/repositories/user_repository.py" target="app/__init__.py">
+      <data key="d4">1</data>
+    </edge>
+    <edge source="app/domain/services/motivation.py" target="app/__init__.py">
+      <data key="d4">1</data>
+    </edge>
+    <edge source="app/domain/services/user.py" target="app/__init__.py">
+      <data key="d4">3</data>
+    </edge>
+    <edge source="app/domain/services/command_menu.py" target="app/__init__.py">
+      <data key="d4">2</data>
+    </edge>
+    <edge source="app/domain/services/user_service.py" target="app/__init__.py">
+      <data key="d4">3</data>
+    </edge>
+    <edge source="app/domain/services/state.py" target="app/__init__.py">
+      <data key="d4">3</data>
+    </edge>
+    <edge source="app/domain/services/excuse.py" target="app/__init__.py">
+      <data key="d4">1</data>
+    </edge>
+    <edge source="app/domain/services/gamification/points.py" target="app/__init__.py">
+      <data key="d4">5</data>
+    </edge>
+    <edge source="app/domain/services/gamification/top.py" target="app/__init__.py">
+      <data key="d4">3</data>
+    </edge>
+    <edge source="app/infrastructure/ai/tts.py" target="app/__init__.py">
+      <data key="d4">6</data>
+    </edge>
+    <edge source="app/infrastructure/ai/trigger.py" target="app/__init__.py">
+      <data key="d4">1</data>
+    </edge>
+    <edge source="app/infrastructure/db/session.py" target="app/__init__.py">
+      <data key="d4">1</data>
+    </edge>
+    <edge source="app/infrastructure/db/migrate_users.py" target="app/__init__.py">
+      <data key="d4">6</data>
+    </edge>
+    <edge source="app/infrastructure/db/init_db.py" target="app/__init__.py">
+      <data key="d4">1</data>
+    </edge>
+    <edge source="app/infrastructure/ai/providers/yandex_speechkit_tts.py" target="app/__init__.py">
+      <data key="d4">1</data>
+    </edge>
+    <edge source="app/infrastructure/ai/providers/yandex_gpt.py" target="app/__init__.py">
+      <data key="d4">1</data>
+    </edge>
+  </graph>
+</graphml>

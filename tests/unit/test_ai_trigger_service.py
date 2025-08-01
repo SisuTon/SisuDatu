@@ -1,5 +1,5 @@
 import pytest
-from sisu_bot.bot.services import ai_trigger_service
+from app.domain.services import ai_trigger_service
 import json
 import os
 from pathlib import Path

@@ -1,5 +1,5 @@
 import pytest
-from sisu_bot.bot.services import yandex_speechkit_tts
+from app.domain.services import yandex_speechkit_tts
 
 def test_generate_speech():
     # Этот тест будет требовать настоящие API ключи или мокирование HTTP запросов.

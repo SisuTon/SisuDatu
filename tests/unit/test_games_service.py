@@ -1,7 +1,7 @@
 import pytest
 from unittest.mock import MagicMock
-from sisu_bot.bot.services import games_service
-from sisu_bot.bot.db.models import EmojiMovie
+from app.domain.services import games_service
+from app.infrastructure.db.models import EmojiMovie
 
 # Фикстура для мокирования сессии базы данных
 @pytest.fixture

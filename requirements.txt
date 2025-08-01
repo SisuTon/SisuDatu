@@ -1,15 +1,38 @@
-python-dotenv==1.0.0
-fastapi==0.110.*
-uvicorn==0.29.*
-sqlalchemy==2.0.25
-alembic==1.13.1
-pydantic==2.*
-python-jose==3.3.0
-passlib==1.7.4
-aiohttp==3.9.3
-yandexcloud==0.227.0
-aiogram==3.*
-pytest==8.2.1
+# Core Dependencies
+fastapi>=0.104.0
+aiogram>=3.2.0
+sqlalchemy>=2.0.0
+pydantic>=2.5.0
+pydantic-settings>=2.1.0
+dependency-injector>=4.41.0
+python-dotenv>=1.0.0
 
-# Python version restriction (for pip >= 21.0)
-# Requires Python >=3.10,<3.12 
+# Database
+alembic>=1.13.0
+aiosqlite>=0.19.0
+asyncpg>=0.29.0
+
+# Cache & Storage
+redis>=5.0.0
+aioredis>=2.0.0
+
+# AI & TTS
+aiohttp>=3.9.0
+openai>=1.6.0
+yandex-speechkit==1.5.0
+
+# Testing
+pytest>=7.4.0
+pytest-asyncio>=0.21.0
+pytest-mock>=3.12.0
+httpx>=0.25.0
+
+# Development
+black>=23.11.0
+isort>=5.12.0
+flake8>=6.1.0
+mypy>=1.7.0
+
+# Monitoring
+prometheus-client>=0.19.0
+structlog>=23.2.0

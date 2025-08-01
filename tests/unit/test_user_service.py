@@ -1,5 +1,5 @@
 import pytest
-from sisu_bot.bot.services import user_service
+from app.domain.services import user_service
 
 def test_update_user_info():
     # Пример теста: просто проверяем, что функция вызывается без ошибок

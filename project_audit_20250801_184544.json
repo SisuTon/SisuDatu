@@ -1,0 +1,2994 @@
+{
+  "timestamp": "2025-08-01T18:45:44.655548",
+  "project_structure": {
+    "type": "directory",
+    "path": ".",
+    "exists": true,
+    "files": [
+      {
+        "name": "test_di_system.py",
+        "size": 6567,
+        "extension": ".py",
+        "is_python": true,
+        "is_json": false,
+        "is_config": false
+      },
+      {
+        "name": "project_audit_20250801_171608.json",
+        "size": 93371,
+        "extension": ".json",
+        "is_python": false,
+        "is_json": true,
+        "is_config": false
+      },
+      {
+        "name": "users_table_dump.sql",
+        "size": 1622,
+        "extension": ".sql",
+        "is_python": false,
+        "is_json": false,
+        "is_config": false
+      },
+      {
+        "name": "analyze_problems.py",
+        "size": 11129,
+        "extension": ".py",
+        "is_python": true,
+        "is_json": false,
+        "is_config": false
+      },
+      {
+        "name": "dependency_mapper.py",
+        "size": 4942,
+        "extension": ".py",
+        "is_python": true,
+        "is_json": false,
+        "is_config": false
+      },
+      {
+        "name": "requirements.txt",
+        "size": 544,
+        "extension": ".txt",
+        "is_python": false,
+        "is_json": false,
+        "is_config": false
+      },
+      {
+        "name": "architecture_analyzer.py",
+        "size": 16454,
+        "extension": ".py",
+        "is_python": true,
+        "is_json": false,
+        "is_config": false
+      },
+      {
+        "name": "alembic.ini",
+        "size": 537,
+        "extension": ".ini",
+        "is_python": false,
+        "is_json": false,
+        "is_config": false
+      },
+      {
+        "name": "Dockerfile",
+        "size": 151,
+        "extension": "",
+        "is_python": false,
+        "is_json": false,
+        "is_config": false
+      },
+      {
+        "name": "audit_report.json",
+        "size": 584873,
+        "extension": ".json",
+        "is_python": false,
+        "is_json": true,
+        "is_config": false
+      },
+      {
+        "name": "Makefile",
+        "size": 1578,
+        "extension": "",
+        "is_python": false,
+        "is_json": false,
+        "is_config": false
+      },
+      {
+        "name": "project_audit_20250801_171602.json",
+        "size": 93167,
+        "extension": ".json",
+        "is_python": false,
+        "is_json": true,
+        "is_config": false
+      },
+      {
+        "name": "pyproject.toml",
+        "size": 79,
+        "extension": ".toml",
+        "is_python": false,
+        "is_json": false,
+        "is_config": false
+      },
+      {
+        "name": "requirements_current.txt",
+        "size": 792,
+        "extension": ".txt",
+        "is_python": false,
+        "is_json": false,
+        "is_config": false
+      },
+      {
+        "name": "dev.sh",
+        "size": 1044,
+        "extension": ".sh",
+        "is_python": false,
+        "is_json": false,
+        "is_config": false
+      },
+      {
+        "name": "test_business_logic.py",
+        "size": 14374,
+        "extension": ".py",
+        "is_python": true,
+        "is_json": false,
+        "is_config": false
+      },
+      {
+        "name": "test_report.json",
+        "size": 446,
+        "extension": ".json",
+        "is_python": false,
+        "is_json": true,
+        "is_config": false
+      },
+      {
+        "name": "fix_filenames.py",
+        "size": 358,
+        "extension": ".py",
+        "is_python": true,
+        "is_json": false,
+        "is_config": false
+      },
+      {
+        "name": "full_project_audit.py",
+        "size": 11679,
+        "extension": ".py",
+        "is_python": true,
+        "is_json": false,
+        "is_config": false
+      },
+      {
+        "name": "README.md",
+        "size": 2724,
+        "extension": ".md",
+        "is_python": false,
+        "is_json": false,
+        "is_config": false
+      },
+      {
+        "name": "diagnose.py",
+        "size": 4253,
+        "extension": ".py",
+        "is_python": true,
+        "is_json": false,
+        "is_config": false
+      },
+      {
+        "name": "test_superadmin_commands.py",
+        "size": 8807,
+        "extension": ".py",
+        "is_python": true,
+        "is_json": false,
+        "is_config": false
+      },
+      {
+        "name": "maintainability-before.json",
+        "size": 3973,
+        "extension": ".json",
+        "is_python": false,
+        "is_json": true,
+        "is_config": false
+      },
+      {
+        "name": ".dockerignore",
+        "size": 37,
+        "extension": "",
+        "is_python": false,
+        "is_json": false,
+        "is_config": false
+      },
+      {
+        "name": ".gitignore",
+        "size": 17,
+        "extension": "",
+        "is_python": false,
+        "is_json": false,
+        "is_config": false
+      },
+      {
+        "name": ".env",
+        "size": 455,
+        "extension": "",
+        "is_python": false,
+        "is_json": false,
+        "is_config": true
+      },
+      {
+        "name": "test_critical_functions.py",
+        "size": 10662,
+        "extension": ".py",
+        "is_python": true,
+        "is_json": false,
+        "is_config": false
+      },
+      {
+        "name": "dependencies.graphml",
+        "size": 26637,
+        "extension": ".graphml",
+        "is_python": false,
+        "is_json": false,
+        "is_config": false
+      },
+      {
+        "name": "complexity-before.json",
+        "size": 22556,
+        "extension": ".json",
+        "is_python": false,
+        "is_json": true,
+        "is_config": false
+      },
+      {
+        "name": "docker-compose.yml",
+        "size": 959,
+        "extension": ".yml",
+        "is_python": false,
+        "is_json": false,
+        "is_config": false
+      },
+      {
+        "name": ".env.example",
+        "size": 623,
+        "extension": ".example",
+        "is_python": false,
+        "is_json": false,
+        "is_config": false
+      },
+      {
+        "name": "test_full_business_logic.py",
+        "size": 26583,
+        "extension": ".py",
+        "is_python": true,
+        "is_json": false,
+        "is_config": false
+      },
+      {
+        "name": "bot.log",
+        "size": 420540,
+        "extension": ".log",
+        "is_python": false,
+        "is_json": false,
+        "is_config": false
+      },
+      {
+        "name": "view_logs.sh",
+        "size": 2042,
+        "extension": ".sh",
+        "is_python": false,
+        "is_json": false,
+        "is_config": false
+      },
+      {
+        "name": "full_audit.py",
+        "size": 6817,
+        "extension": ".py",
+        "is_python": true,
+        "is_json": false,
+        "is_config": false
+      },
+      {
+        "name": "project_audit.py",
+        "size": 3313,
+        "extension": ".py",
+        "is_python": true,
+        "is_json": false,
+        "is_config": false
+      },
+      {
+        "name": "integrity_report.json",
+        "size": 6604,
+        "extension": ".json",
+        "is_python": false,
+        "is_json": true,
+        "is_config": false
+      },
+      {
+        "name": "sisu_bot.db",
+        "size": 77824,
+        "extension": ".db",
+        "is_python": false,
+        "is_json": false,
+        "is_config": false
+      }
+    ],
+    "directories": [
+      {
+        "type": "directory",
+        "path": "architecture_audit",
+        "exists": true,
+        "files": [
+          {
+            "name": "dependencies.puml",
+            "size": 4808,
+            "extension": ".puml",
+            "is_python": false,
+            "is_json": false,
+            "is_config": false
+          },
+          {
+            "name": "dependencies.graphml",
+            "size": 26295,
+            "extension": ".graphml",
+            "is_python": false,
+            "is_json": false,
+            "is_config": false
+          },
+          {
+            "name": "dependencies.png",
+            "size": 859148,
+            "extension": ".png",
+            "is_python": false,
+            "is_json": false,
+            "is_config": false
+          },
+          {
+            "name": "architecture_report.txt",
+            "size": 1204,
+            "extension": ".txt",
+            "is_python": false,
+            "is_json": false,
+            "is_config": false
+          }
+        ],
+        "directories": [],
+        "total_files": 4,
+        "total_dirs": 0
+      },
+      {
+        "type": "directory",
+        "path": "migrations",
+        "exists": true,
+        "files": [
+          {
+            "name": "__init__.py",
+            "size": 0,
+            "extension": ".py",
+            "is_python": true,
+            "is_json": false,
+            "is_config": false
+          }
+        ],
+        "directories": [],
+        "total_files": 1,
+        "total_dirs": 0
+      },
+      {
+        "type": "directory",
+        "path": "app",
+        "exists": true,
+        "files": [
+          {
+            "name": "__init__.py",
+            "size": 30,
+            "extension": ".py",
+            "is_python": true,
+            "is_json": false,
+            "is_config": false
+          },
+          {
+            "name": "main.py",
+            "size": 6677,
+            "extension": ".py",
+            "is_python": true,
+            "is_json": false,
+            "is_config": false
+          }
+        ],
+        "directories": [
+          {
+            "type": "directory",
+            "path": "app/core",
+            "exists": true,
+            "files": [
+              {
+                "name": "__init__.py",
+                "size": 25,
+                "extension": ".py",
+                "is_python": true,
+                "is_json": false,
+                "is_config": false
+              },
+              {
+                "name": "container.py",
+                "size": 3585,
+                "extension": ".py",
+                "is_python": true,
+                "is_json": false,
+                "is_config": false
+              }
+            ],
+            "directories": [
+              {
+                "type": "directory",
+                "path": "app/core/exceptions",
+                "exists": true,
+                "files": [
+                  {
+                    "name": "__init__.py",
+                    "size": 30,
+                    "extension": ".py",
+                    "is_python": true,
+                    "is_json": false,
+                    "is_config": false
+                  }
+                ],
+                "directories": [],
+                "total_files": 1,
+                "total_dirs": 0
+              },
+              {
+                "type": "directory",
+                "path": "app/core/lifespan",
+                "exists": true,
+                "files": [
+                  {
+                    "name": "__init__.py",
+                    "size": 30,
+                    "extension": ".py",
+                    "is_python": true,
+                    "is_json": false,
+                    "is_config": false
+                  }
+                ],
+                "directories": [],
+                "total_files": 1,
+                "total_dirs": 0
+              }
+            ],
+            "total_files": 2,
+            "total_dirs": 2
+          },
+          {
+            "type": "directory",
+            "path": "app/shared",
+            "exists": true,
+            "files": [
+              {
+                "name": "interfaces.py",
+                "size": 3472,
+                "extension": ".py",
+                "is_python": true,
+                "is_json": false,
+                "is_config": false
+              },
+              {
+                "name": "__init__.py",
+                "size": 30,
+                "extension": ".py",
+                "is_python": true,
+                "is_json": false,
+                "is_config": false
+              }
+            ],
+            "directories": [
+              {
+                "type": "directory",
+                "path": "app/shared/types",
+                "exists": true,
+                "files": [
+                  {
+                    "name": "__init__.py",
+                    "size": 30,
+                    "extension": ".py",
+                    "is_python": true,
+                    "is_json": false,
+                    "is_config": false
+                  }
+                ],
+                "directories": [],
+                "total_files": 1,
+                "total_dirs": 0
+              },
+              {
+                "type": "directory",
+                "path": "app/shared/config",
+                "exists": true,
+                "files": [
+                  {
+                    "name": "__init__.py",
+                    "size": 398,
+                    "extension": ".py",
+                    "is_python": true,
+                    "is_json": false,
+                    "is_config": false
+                  },
+                  {
+                    "name": "bot_config.py",
+                    "size": 1718,
+                    "extension": ".py",
+                    "is_python": true,
+                    "is_json": false,
+                    "is_config": false
+                  },
+                  {
+                    "name": "settings.py",
+                    "size": 10253,
+                    "extension": ".py",
+                    "is_python": true,
+                    "is_json": false,
+                    "is_config": true
+                  }
+                ],
+                "directories": [],
+                "total_files": 3,
+                "total_dirs": 0
+              },
+              {
+                "type": "directory",
+                "path": "app/shared/utils",
+                "exists": true,
+                "files": [
+                  {
+                    "name": "__init__.py",
+                    "size": 30,
+                    "extension": ".py",
+                    "is_python": true,
+                    "is_json": false,
+                    "is_config": false
+                  },
+                  {
+                    "name": "bot_utils.py",
+                    "size": 848,
+                    "extension": ".py",
+                    "is_python": true,
+                    "is_json": false,
+                    "is_config": false
+                  }
+                ],
+                "directories": [],
+                "total_files": 2,
+                "total_dirs": 0
+              },
+              {
+                "type": "directory",
+                "path": "app/shared/data",
+                "exists": true,
+                "files": [
+                  {
+                    "name": "__init__.py",
+                    "size": 30,
+                    "extension": ".py",
+                    "is_python": true,
+                    "is_json": false,
+                    "is_config": false
+                  }
+                ],
+                "directories": [
+                  {
+                    "type": "directory",
+                    "path": "app/shared/data/voice",
+                    "exists": true,
+                    "files": [
+                      {
+                        "name": "__init__.py",
+                        "size": 30,
+                        "extension": ".py",
+                        "is_python": true,
+                        "is_json": false,
+                        "is_config": false
+                      }
+                    ],
+                    "directories": [],
+                    "total_files": 1,
+                    "total_dirs": 0
+                  },
+                  {
+                    "type": "directory",
+                    "path": "app/shared/data/temp_voice",
+                    "exists": true,
+                    "files": [
+                      {
+                        "name": "__init__.py",
+                        "size": 30,
+                        "extension": ".py",
+                        "is_python": true,
+                        "is_json": false,
+                        "is_config": false
+                      }
+                    ],
+                    "directories": [],
+                    "total_files": 1,
+                    "total_dirs": 0
+                  }
+                ],
+                "total_files": 1,
+                "total_dirs": 2
+              },
+              {
+                "type": "directory",
+                "path": "app/shared/logging",
+                "exists": true,
+                "files": [
+                  {
+                    "name": "__init__.py",
+                    "size": 30,
+                    "extension": ".py",
+                    "is_python": true,
+                    "is_json": false,
+                    "is_config": false
+                  }
+                ],
+                "directories": [],
+                "total_files": 1,
+                "total_dirs": 0
+              }
+            ],
+            "total_files": 2,
+            "total_dirs": 5
+          },
+          {
+            "type": "directory",
+            "path": "app/infrastructure",
+            "exists": true,
+            "files": [
+              {
+                "name": "__init__.py",
+                "size": 30,
+                "extension": ".py",
+                "is_python": true,
+                "is_json": false,
+                "is_config": false
+              }
+            ],
+            "directories": [
+              {
+                "type": "directory",
+                "path": "app/infrastructure/cache",
+                "exists": true,
+                "files": [
+                  {
+                    "name": "__init__.py",
+                    "size": 30,
+                    "extension": ".py",
+                    "is_python": true,
+                    "is_json": false,
+                    "is_config": false
+                  }
+                ],
+                "directories": [],
+                "total_files": 1,
+                "total_dirs": 0
+              },
+              {
+                "type": "directory",
+                "path": "app/infrastructure/storage",
+                "exists": true,
+                "files": [
+                  {
+                    "name": "__init__.py",
+                    "size": 30,
+                    "extension": ".py",
+                    "is_python": true,
+                    "is_json": false,
+                    "is_config": false
+                  }
+                ],
+                "directories": [],
+                "total_files": 1,
+                "total_dirs": 0
+              },
+              {
+                "type": "directory",
+                "path": "app/infrastructure/system",
+                "exists": true,
+                "files": [
+                  {
+                    "name": "adminlog.py",
+                    "size": 1383,
+                    "extension": ".py",
+                    "is_python": true,
+                    "is_json": false,
+                    "is_config": false
+                  },
+                  {
+                    "name": "__init__.py",
+                    "size": 93,
+                    "extension": ".py",
+                    "is_python": true,
+                    "is_json": false,
+                    "is_config": false
+                  },
+                  {
+                    "name": "adminlog_service.py",
+                    "size": 1119,
+                    "extension": ".py",
+                    "is_python": true,
+                    "is_json": false,
+                    "is_config": false
+                  },
+                  {
+                    "name": "allowed_chats.py",
+                    "size": 2113,
+                    "extension": ".py",
+                    "is_python": true,
+                    "is_json": false,
+                    "is_config": false
+                  }
+                ],
+                "directories": [],
+                "total_files": 4,
+                "total_dirs": 0
+              },
+              {
+                "type": "directory",
+                "path": "app/infrastructure/ton",
+                "exists": true,
+                "files": [
+                  {
+                    "name": "__init__.py",
+                    "size": 30,
+                    "extension": ".py",
+                    "is_python": true,
+                    "is_json": false,
+                    "is_config": false
+                  },
+                  {
+                    "name": "utils.py",
+                    "size": 301,
+                    "extension": ".py",
+                    "is_python": true,
+                    "is_json": false,
+                    "is_config": false
+                  }
+                ],
+                "directories": [],
+                "total_files": 2,
+                "total_dirs": 0
+              },
+              {
+                "type": "directory",
+                "path": "app/infrastructure/ai",
+                "exists": true,
+                "files": [
+                  {
+                    "name": "memory.py",
+                    "size": 1332,
+                    "extension": ".py",
+                    "is_python": true,
+                    "is_json": false,
+                    "is_config": false
+                  },
+                  {
+                    "name": "tts.py",
+                    "size": 5054,
+                    "extension": ".py",
+                    "is_python": true,
+                    "is_json": false,
+                    "is_config": false
+                  },
+                  {
+                    "name": "__init__.py",
+                    "size": 19,
+                    "extension": ".py",
+                    "is_python": true,
+                    "is_json": false,
+                    "is_config": false
+                  },
+                  {
+                    "name": "persona.py",
+                    "size": 6458,
+                    "extension": ".py",
+                    "is_python": true,
+                    "is_json": false,
+                    "is_config": false
+                  },
+                  {
+                    "name": "tts.py.bak",
+                    "size": 4192,
+                    "extension": ".bak",
+                    "is_python": false,
+                    "is_json": false,
+                    "is_config": false
+                  },
+                  {
+                    "name": "stats.py",
+                    "size": 1179,
+                    "extension": ".py",
+                    "is_python": true,
+                    "is_json": false,
+                    "is_config": false
+                  },
+                  {
+                    "name": "trigger.py.bak",
+                    "size": 3004,
+                    "extension": ".bak",
+                    "is_python": false,
+                    "is_json": false,
+                    "is_config": false
+                  },
+                  {
+                    "name": "trigger.py",
+                    "size": 3010,
+                    "extension": ".py",
+                    "is_python": true,
+                    "is_json": false,
+                    "is_config": false
+                  }
+                ],
+                "directories": [
+                  {
+                    "type": "directory",
+                    "path": "app/infrastructure/ai/providers",
+                    "exists": true,
+                    "files": [
+                      {
+                        "name": "yandex_speechkit_tts.py",
+                        "size": 3297,
+                        "extension": ".py",
+                        "is_python": true,
+                        "is_json": false,
+                        "is_config": false
+                      },
+                      {
+                        "name": "__init__.py",
+                        "size": 26,
+                        "extension": ".py",
+                        "is_python": true,
+                        "is_json": false,
+                        "is_config": false
+                      },
+                      {
+                        "name": "yandex_gpt.py",
+                        "size": 6441,
+                        "extension": ".py",
+                        "is_python": true,
+                        "is_json": false,
+                        "is_config": false
+                      },
+                      {
+                        "name": "yandex_speechkit_tts.py.bak",
+                        "size": 3209,
+                        "extension": ".bak",
+                        "is_python": false,
+                        "is_json": false,
+                        "is_config": false
+                      }
+                    ],
+                    "directories": [
+                      {
+                        "type": "directory",
+                        "path": "app/infrastructure/ai/providers/memory",
+                        "exists": true,
+                        "files": [
+                          {
+                            "name": "__init__.py",
+                            "size": 30,
+                            "extension": ".py",
+                            "is_python": true,
+                            "is_json": false,
+                            "is_config": false
+                          }
+                        ],
+                        "directories": [],
+                        "total_files": 1,
+                        "total_dirs": 0
+                      },
+                      {
+                        "type": "directory",
+                        "path": "app/infrastructure/ai/providers/learning",
+                        "exists": true,
+                        "files": [
+                          {
+                            "name": "__init__.py",
+                            "size": 30,
+                            "extension": ".py",
+                            "is_python": true,
+                            "is_json": false,
+                            "is_config": false
+                          }
+                        ],
+                        "directories": [],
+                        "total_files": 1,
+                        "total_dirs": 0
+                      }
+                    ],
+                    "total_files": 4,
+                    "total_dirs": 2
+                  },
+                  {
+                    "type": "directory",
+                    "path": "app/infrastructure/ai/prompts",
+                    "exists": true,
+                    "files": [
+                      {
+                        "name": "daily_prompt.txt",
+                        "size": 115,
+                        "extension": ".txt",
+                        "is_python": false,
+                        "is_json": false,
+                        "is_config": false
+                      },
+                      {
+                        "name": "__init__.py",
+                        "size": 30,
+                        "extension": ".py",
+                        "is_python": true,
+                        "is_json": false,
+                        "is_config": false
+                      },
+                      {
+                        "name": "reaction_templates.txt",
+                        "size": 215,
+                        "extension": ".txt",
+                        "is_python": false,
+                        "is_json": false,
+                        "is_config": false
+                      }
+                    ],
+                    "directories": [],
+                    "total_files": 3,
+                    "total_dirs": 0
+                  }
+                ],
+                "total_files": 8,
+                "total_dirs": 2
+              },
+              {
+                "type": "directory",
+                "path": "app/infrastructure/db",
+                "exists": true,
+                "files": [
+                  {
+                    "name": "models.py",
+                    "size": 4793,
+                    "extension": ".py",
+                    "is_python": true,
+                    "is_json": false,
+                    "is_config": false
+                  },
+                  {
+                    "name": "database.py",
+                    "size": 973,
+                    "extension": ".py",
+                    "is_python": true,
+                    "is_json": false,
+                    "is_config": false
+                  },
+                  {
+                    "name": "session.py",
+                    "size": 362,
+                    "extension": ".py",
+                    "is_python": true,
+                    "is_json": false,
+                    "is_config": false
+                  },
+                  {
+                    "name": "__init__.py",
+                    "size": 45,
+                    "extension": ".py",
+                    "is_python": true,
+                    "is_json": false,
+                    "is_config": false
+                  },
+                  {
+                    "name": "migrate_users.py",
+                    "size": 3147,
+                    "extension": ".py",
+                    "is_python": true,
+                    "is_json": false,
+                    "is_config": false
+                  },
+                  {
+                    "name": "migrate_users.py.bak",
+                    "size": 3041,
+                    "extension": ".bak",
+                    "is_python": false,
+                    "is_json": false,
+                    "is_config": false
+                  },
+                  {
+                    "name": "init_db.py",
+                    "size": 526,
+                    "extension": ".py",
+                    "is_python": true,
+                    "is_json": false,
+                    "is_config": false
+                  }
+                ],
+                "directories": [
+                  {
+                    "type": "directory",
+                    "path": "app/infrastructure/db/migrations",
+                    "exists": true,
+                    "files": [
+                      {
+                        "name": "__init__.py",
+                        "size": 30,
+                        "extension": ".py",
+                        "is_python": true,
+                        "is_json": false,
+                        "is_config": false
+                      }
+                    ],
+                    "directories": [],
+                    "total_files": 1,
+                    "total_dirs": 0
+                  },
+                  {
+                    "type": "directory",
+                    "path": "app/infrastructure/db/repositories",
+                    "exists": true,
+                    "files": [
+                      {
+                        "name": "__init__.py",
+                        "size": 30,
+                        "extension": ".py",
+                        "is_python": true,
+                        "is_json": false,
+                        "is_config": false
+                      }
+                    ],
+                    "directories": [],
+                    "total_files": 1,
+                    "total_dirs": 0
+                  }
+                ],
+                "total_files": 7,
+                "total_dirs": 2
+              }
+            ],
+            "total_files": 1,
+            "total_dirs": 6
+          },
+          {
+            "type": "directory",
+            "path": "app/data",
+            "exists": true,
+            "files": [],
+            "directories": [
+              {
+                "type": "directory",
+                "path": "app/data/voice",
+                "exists": true,
+                "files": [],
+                "directories": [],
+                "total_files": 0,
+                "total_dirs": 0
+              }
+            ],
+            "total_files": 0,
+            "total_dirs": 1
+          },
+          {
+            "type": "directory",
+            "path": "app/domain",
+            "exists": true,
+            "files": [
+              {
+                "name": "__init__.py",
+                "size": 30,
+                "extension": ".py",
+                "is_python": true,
+                "is_json": false,
+                "is_config": false
+              }
+            ],
+            "directories": [
+              {
+                "type": "directory",
+                "path": "app/domain/repositories",
+                "exists": true,
+                "files": [
+                  {
+                    "name": "__init__.py",
+                    "size": 30,
+                    "extension": ".py",
+                    "is_python": true,
+                    "is_json": false,
+                    "is_config": false
+                  },
+                  {
+                    "name": "user_repository.py",
+                    "size": 936,
+                    "extension": ".py",
+                    "is_python": true,
+                    "is_json": false,
+                    "is_config": false
+                  }
+                ],
+                "directories": [],
+                "total_files": 2,
+                "total_dirs": 0
+              },
+              {
+                "type": "directory",
+                "path": "app/domain/events",
+                "exists": true,
+                "files": [
+                  {
+                    "name": "__init__.py",
+                    "size": 30,
+                    "extension": ".py",
+                    "is_python": true,
+                    "is_json": false,
+                    "is_config": false
+                  }
+                ],
+                "directories": [],
+                "total_files": 1,
+                "total_dirs": 0
+              },
+              {
+                "type": "directory",
+                "path": "app/domain/services",
+                "exists": true,
+                "files": [
+                  {
+                    "name": "motivation.py",
+                    "size": 2598,
+                    "extension": ".py",
+                    "is_python": true,
+                    "is_json": false,
+                    "is_config": false
+                  },
+                  {
+                    "name": "user.py",
+                    "size": 5663,
+                    "extension": ".py",
+                    "is_python": true,
+                    "is_json": false,
+                    "is_config": false
+                  },
+                  {
+                    "name": "quiz.py",
+                    "size": 480,
+                    "extension": ".py",
+                    "is_python": true,
+                    "is_json": false,
+                    "is_config": false
+                  },
+                  {
+                    "name": "__init__.py",
+                    "size": 890,
+                    "extension": ".py",
+                    "is_python": true,
+                    "is_json": false,
+                    "is_config": false
+                  },
+                  {
+                    "name": "mood.py",
+                    "size": 3501,
+                    "extension": ".py",
+                    "is_python": true,
+                    "is_json": false,
+                    "is_config": false
+                  },
+                  {
+                    "name": "admin_commands.py",
+                    "size": 1241,
+                    "extension": ".py",
+                    "is_python": true,
+                    "is_json": false,
+                    "is_config": false
+                  },
+                  {
+                    "name": "games.py",
+                    "size": 537,
+                    "extension": ".py",
+                    "is_python": true,
+                    "is_json": false,
+                    "is_config": false
+                  },
+                  {
+                    "name": "excuse.py.bak",
+                    "size": 3607,
+                    "extension": ".bak",
+                    "is_python": false,
+                    "is_json": false,
+                    "is_config": false
+                  },
+                  {
+                    "name": "command_menu.py",
+                    "size": 6579,
+                    "extension": ".py",
+                    "is_python": true,
+                    "is_json": false,
+                    "is_config": false
+                  },
+                  {
+                    "name": "command_menu.py.bak",
+                    "size": 5994,
+                    "extension": ".bak",
+                    "is_python": false,
+                    "is_json": false,
+                    "is_config": false
+                  },
+                  {
+                    "name": "games_service.py",
+                    "size": 2028,
+                    "extension": ".py",
+                    "is_python": true,
+                    "is_json": false,
+                    "is_config": false
+                  },
+                  {
+                    "name": "user_service.py",
+                    "size": 1417,
+                    "extension": ".py",
+                    "is_python": true,
+                    "is_json": false,
+                    "is_config": false
+                  },
+                  {
+                    "name": "ton.py",
+                    "size": 431,
+                    "extension": ".py",
+                    "is_python": true,
+                    "is_json": false,
+                    "is_config": false
+                  },
+                  {
+                    "name": "state.py.bak",
+                    "size": 2399,
+                    "extension": ".bak",
+                    "is_python": false,
+                    "is_json": false,
+                    "is_config": false
+                  },
+                  {
+                    "name": "motivation_service.py",
+                    "size": 3520,
+                    "extension": ".py",
+                    "is_python": true,
+                    "is_json": false,
+                    "is_config": false
+                  },
+                  {
+                    "name": "superadmin_commands.py",
+                    "size": 1307,
+                    "extension": ".py",
+                    "is_python": true,
+                    "is_json": false,
+                    "is_config": false
+                  },
+                  {
+                    "name": "default_commands.py",
+                    "size": 1113,
+                    "extension": ".py",
+                    "is_python": true,
+                    "is_json": false,
+                    "is_config": false
+                  },
+                  {
+                    "name": "state.py",
+                    "size": 2503,
+                    "extension": ".py",
+                    "is_python": true,
+                    "is_json": false,
+                    "is_config": false
+                  },
+                  {
+                    "name": "excuse.py",
+                    "size": 3617,
+                    "extension": ".py",
+                    "is_python": true,
+                    "is_json": false,
+                    "is_config": false
+                  }
+                ],
+                "directories": [
+                  {
+                    "type": "directory",
+                    "path": "app/domain/services/triggers",
+                    "exists": true,
+                    "files": [
+                      {
+                        "name": "__init__.py",
+                        "size": 41,
+                        "extension": ".py",
+                        "is_python": true,
+                        "is_json": false,
+                        "is_config": false
+                      },
+                      {
+                        "name": "core.py",
+                        "size": 5300,
+                        "extension": ".py",
+                        "is_python": true,
+                        "is_json": false,
+                        "is_config": false
+                      },
+                      {
+                        "name": "stats.py",
+                        "size": 5584,
+                        "extension": ".py",
+                        "is_python": true,
+                        "is_json": false,
+                        "is_config": false
+                      }
+                    ],
+                    "directories": [],
+                    "total_files": 3,
+                    "total_dirs": 0
+                  },
+                  {
+                    "type": "directory",
+                    "path": "app/domain/services/gamification",
+                    "exists": true,
+                    "files": [
+                      {
+                        "name": "checkin.py",
+                        "size": 305,
+                        "extension": ".py",
+                        "is_python": true,
+                        "is_json": false,
+                        "is_config": false
+                      },
+                      {
+                        "name": "points.py",
+                        "size": 5026,
+                        "extension": ".py",
+                        "is_python": true,
+                        "is_json": false,
+                        "is_config": false
+                      },
+                      {
+                        "name": "__init__.py",
+                        "size": 156,
+                        "extension": ".py",
+                        "is_python": true,
+                        "is_json": false,
+                        "is_config": false
+                      },
+                      {
+                        "name": "top.py",
+                        "size": 2456,
+                        "extension": ".py",
+                        "is_python": true,
+                        "is_json": false,
+                        "is_config": false
+                      },
+                      {
+                        "name": "text.py",
+                        "size": 315,
+                        "extension": ".py",
+                        "is_python": true,
+                        "is_json": false,
+                        "is_config": false
+                      },
+                      {
+                        "name": "photo.py",
+                        "size": 319,
+                        "extension": ".py",
+                        "is_python": true,
+                        "is_json": false,
+                        "is_config": false
+                      },
+                      {
+                        "name": "video.py",
+                        "size": 317,
+                        "extension": ".py",
+                        "is_python": true,
+                        "is_json": false,
+                        "is_config": false
+                      },
+                      {
+                        "name": "ranks.py",
+                        "size": 463,
+                        "extension": ".py",
+                        "is_python": true,
+                        "is_json": false,
+                        "is_config": false
+                      }
+                    ],
+                    "directories": [],
+                    "total_files": 8,
+                    "total_dirs": 0
+                  }
+                ],
+                "total_files": 19,
+                "total_dirs": 2
+              },
+              {
+                "type": "directory",
+                "path": "app/domain/entities",
+                "exists": true,
+                "files": [
+                  {
+                    "name": "user.py",
+                    "size": 1290,
+                    "extension": ".py",
+                    "is_python": true,
+                    "is_json": false,
+                    "is_config": false
+                  },
+                  {
+                    "name": "__init__.py",
+                    "size": 101,
+                    "extension": ".py",
+                    "is_python": true,
+                    "is_json": false,
+                    "is_config": false
+                  },
+                  {
+                    "name": "base.py",
+                    "size": 1778,
+                    "extension": ".py",
+                    "is_python": true,
+                    "is_json": false,
+                    "is_config": false
+                  }
+                ],
+                "directories": [],
+                "total_files": 3,
+                "total_dirs": 0
+              }
+            ],
+            "total_files": 1,
+            "total_dirs": 4
+          },
+          {
+            "type": "directory",
+            "path": "app/presentation",
+            "exists": true,
+            "files": [
+              {
+                "name": "__init__.py",
+                "size": 30,
+                "extension": ".py",
+                "is_python": true,
+                "is_json": false,
+                "is_config": false
+              }
+            ],
+            "directories": [
+              {
+                "type": "directory",
+                "path": "app/presentation/api",
+                "exists": true,
+                "files": [
+                  {
+                    "name": "__init__.py",
+                    "size": 30,
+                    "extension": ".py",
+                    "is_python": true,
+                    "is_json": false,
+                    "is_config": false
+                  }
+                ],
+                "directories": [
+                  {
+                    "type": "directory",
+                    "path": "app/presentation/api/endpoints",
+                    "exists": true,
+                    "files": [
+                      {
+                        "name": "__init__.py",
+                        "size": 30,
+                        "extension": ".py",
+                        "is_python": true,
+                        "is_json": false,
+                        "is_config": false
+                      }
+                    ],
+                    "directories": [],
+                    "total_files": 1,
+                    "total_dirs": 0
+                  },
+                  {
+                    "type": "directory",
+                    "path": "app/presentation/api/middlewares",
+                    "exists": true,
+                    "files": [
+                      {
+                        "name": "__init__.py",
+                        "size": 30,
+                        "extension": ".py",
+                        "is_python": true,
+                        "is_json": false,
+                        "is_config": false
+                      }
+                    ],
+                    "directories": [],
+                    "total_files": 1,
+                    "total_dirs": 0
+                  },
+                  {
+                    "type": "directory",
+                    "path": "app/presentation/api/dependencies",
+                    "exists": true,
+                    "files": [
+                      {
+                        "name": "__init__.py",
+                        "size": 30,
+                        "extension": ".py",
+                        "is_python": true,
+                        "is_json": false,
+                        "is_config": false
+                      }
+                    ],
+                    "directories": [],
+                    "total_files": 1,
+                    "total_dirs": 0
+                  }
+                ],
+                "total_files": 1,
+                "total_dirs": 3
+              },
+              {
+                "type": "directory",
+                "path": "app/presentation/bot",
+                "exists": true,
+                "files": [
+                  {
+                    "name": "bot.py.bak",
+                    "size": 1516,
+                    "extension": ".bak",
+                    "is_python": false,
+                    "is_json": false,
+                    "is_config": false
+                  },
+                  {
+                    "name": "__init__.py",
+                    "size": 30,
+                    "extension": ".py",
+                    "is_python": true,
+                    "is_json": false,
+                    "is_config": false
+                  },
+                  {
+                    "name": "bot.py",
+                    "size": 1532,
+                    "extension": ".py",
+                    "is_python": true,
+                    "is_json": false,
+                    "is_config": false
+                  }
+                ],
+                "directories": [
+                  {
+                    "type": "directory",
+                    "path": "app/presentation/bot/filters",
+                    "exists": true,
+                    "files": [
+                      {
+                        "name": "__init__.py",
+                        "size": 30,
+                        "extension": ".py",
+                        "is_python": true,
+                        "is_json": false,
+                        "is_config": false
+                      }
+                    ],
+                    "directories": [],
+                    "total_files": 1,
+                    "total_dirs": 0
+                  },
+                  {
+                    "type": "directory",
+                    "path": "app/presentation/bot/middlewares",
+                    "exists": true,
+                    "files": [
+                      {
+                        "name": "user_sync.py.bak",
+                        "size": 446,
+                        "extension": ".bak",
+                        "is_python": false,
+                        "is_json": false,
+                        "is_config": false
+                      },
+                      {
+                        "name": "antifraud.py",
+                        "size": 3952,
+                        "extension": ".py",
+                        "is_python": true,
+                        "is_json": false,
+                        "is_config": false
+                      },
+                      {
+                        "name": "antifraud.py.bak",
+                        "size": 3931,
+                        "extension": ".bak",
+                        "is_python": false,
+                        "is_json": false,
+                        "is_config": false
+                      },
+                      {
+                        "name": "allowed_chats.py.bak",
+                        "size": 2228,
+                        "extension": ".bak",
+                        "is_python": false,
+                        "is_json": false,
+                        "is_config": false
+                      },
+                      {
+                        "name": "preprocess.py",
+                        "size": 694,
+                        "extension": ".py",
+                        "is_python": true,
+                        "is_json": false,
+                        "is_config": false
+                      },
+                      {
+                        "name": "user_sync.py",
+                        "size": 559,
+                        "extension": ".py",
+                        "is_python": true,
+                        "is_json": false,
+                        "is_config": false
+                      },
+                      {
+                        "name": "rate_limiter.py",
+                        "size": 3251,
+                        "extension": ".py",
+                        "is_python": true,
+                        "is_json": false,
+                        "is_config": false
+                      },
+                      {
+                        "name": "__init__.py",
+                        "size": 538,
+                        "extension": ".py",
+                        "is_python": true,
+                        "is_json": false,
+                        "is_config": false
+                      },
+                      {
+                        "name": "subscription_check.py",
+                        "size": 4296,
+                        "extension": ".py",
+                        "is_python": true,
+                        "is_json": false,
+                        "is_config": false
+                      },
+                      {
+                        "name": "allowed_chats.py",
+                        "size": 1479,
+                        "extension": ".py",
+                        "is_python": true,
+                        "is_json": false,
+                        "is_config": false
+                      },
+                      {
+                        "name": "rate_limiter_middleware.py",
+                        "size": 3178,
+                        "extension": ".py",
+                        "is_python": true,
+                        "is_json": false,
+                        "is_config": false
+                      }
+                    ],
+                    "directories": [],
+                    "total_files": 11,
+                    "total_dirs": 0
+                  },
+                  {
+                    "type": "directory",
+                    "path": "app/presentation/bot/states",
+                    "exists": true,
+                    "files": [
+                      {
+                        "name": "quiz.py",
+                        "size": 164,
+                        "extension": ".py",
+                        "is_python": true,
+                        "is_json": false,
+                        "is_config": false
+                      },
+                      {
+                        "name": "__init__.py",
+                        "size": 30,
+                        "extension": ".py",
+                        "is_python": true,
+                        "is_json": false,
+                        "is_config": false
+                      }
+                    ],
+                    "directories": [],
+                    "total_files": 2,
+                    "total_dirs": 0
+                  },
+                  {
+                    "type": "directory",
+                    "path": "app/presentation/bot/handlers",
+                    "exists": true,
+                    "files": [
+                      {
+                        "name": "myrank.py.bak",
+                        "size": 4241,
+                        "extension": ".bak",
+                        "is_python": false,
+                        "is_json": false,
+                        "is_config": false
+                      },
+                      {
+                        "name": "donate.py.bak",
+                        "size": 11163,
+                        "extension": ".bak",
+                        "is_python": false,
+                        "is_json": false,
+                        "is_config": false
+                      },
+                      {
+                        "name": "quiz.py",
+                        "size": 396,
+                        "extension": ".py",
+                        "is_python": true,
+                        "is_json": false,
+                        "is_config": false
+                      },
+                      {
+                        "name": "message.py.bak",
+                        "size": 5473,
+                        "extension": ".bak",
+                        "is_python": false,
+                        "is_json": false,
+                        "is_config": false
+                      },
+                      {
+                        "name": "media.py",
+                        "size": 2617,
+                        "extension": ".py",
+                        "is_python": true,
+                        "is_json": false,
+                        "is_config": false
+                      },
+                      {
+                        "name": "checkin.py",
+                        "size": 6836,
+                        "extension": ".py",
+                        "is_python": true,
+                        "is_json": false,
+                        "is_config": false
+                      },
+                      {
+                        "name": "myrank.py",
+                        "size": 4479,
+                        "extension": ".py",
+                        "is_python": true,
+                        "is_json": false,
+                        "is_config": false
+                      },
+                      {
+                        "name": "commands.py.bak",
+                        "size": 869,
+                        "extension": ".bak",
+                        "is_python": false,
+                        "is_json": false,
+                        "is_config": false
+                      },
+                      {
+                        "name": "superadmin_handler.py.bak",
+                        "size": 38331,
+                        "extension": ".bak",
+                        "is_python": false,
+                        "is_json": false,
+                        "is_config": false
+                      },
+                      {
+                        "name": "ai_handler.py",
+                        "size": 3701,
+                        "extension": ".py",
+                        "is_python": true,
+                        "is_json": false,
+                        "is_config": false
+                      },
+                      {
+                        "name": "top_handler.py",
+                        "size": 2777,
+                        "extension": ".py",
+                        "is_python": true,
+                        "is_json": false,
+                        "is_config": false
+                      },
+                      {
+                        "name": "dialog.py",
+                        "size": 433,
+                        "extension": ".py",
+                        "is_python": true,
+                        "is_json": false,
+                        "is_config": false
+                      },
+                      {
+                        "name": "market.py",
+                        "size": 663,
+                        "extension": ".py",
+                        "is_python": true,
+                        "is_json": false,
+                        "is_config": false
+                      },
+                      {
+                        "name": "help.py.bak",
+                        "size": 1797,
+                        "extension": ".bak",
+                        "is_python": false,
+                        "is_json": false,
+                        "is_config": false
+                      },
+                      {
+                        "name": "games.py.bak",
+                        "size": 23264,
+                        "extension": ".bak",
+                        "is_python": false,
+                        "is_json": false,
+                        "is_config": false
+                      },
+                      {
+                        "name": "ai.py",
+                        "size": 54698,
+                        "extension": ".py",
+                        "is_python": true,
+                        "is_json": false,
+                        "is_config": false
+                      },
+                      {
+                        "name": "handlers.py",
+                        "size": 3921,
+                        "extension": ".py",
+                        "is_python": true,
+                        "is_json": false,
+                        "is_config": false
+                      },
+                      {
+                        "name": "__init__.py",
+                        "size": 230,
+                        "extension": ".py",
+                        "is_python": true,
+                        "is_json": false,
+                        "is_config": false
+                      },
+                      {
+                        "name": "message.py",
+                        "size": 5474,
+                        "extension": ".py",
+                        "is_python": true,
+                        "is_json": false,
+                        "is_config": false
+                      },
+                      {
+                        "name": "games.py",
+                        "size": 7414,
+                        "extension": ".py",
+                        "is_python": true,
+                        "is_json": false,
+                        "is_config": false
+                      },
+                      {
+                        "name": "admin.py.bak",
+                        "size": 9059,
+                        "extension": ".bak",
+                        "is_python": false,
+                        "is_json": false,
+                        "is_config": false
+                      },
+                      {
+                        "name": "user_handler.py",
+                        "size": 3022,
+                        "extension": ".py",
+                        "is_python": true,
+                        "is_json": false,
+                        "is_config": false
+                      },
+                      {
+                        "name": "media.py.bak",
+                        "size": 2493,
+                        "extension": ".bak",
+                        "is_python": false,
+                        "is_json": false,
+                        "is_config": false
+                      },
+                      {
+                        "name": "admin.py",
+                        "size": 9097,
+                        "extension": ".py",
+                        "is_python": true,
+                        "is_json": false,
+                        "is_config": false
+                      },
+                      {
+                        "name": "common.py",
+                        "size": 46,
+                        "extension": ".py",
+                        "is_python": true,
+                        "is_json": false,
+                        "is_config": false
+                      },
+                      {
+                        "name": "start_handler.py.bak",
+                        "size": 7005,
+                        "extension": ".bak",
+                        "is_python": false,
+                        "is_json": false,
+                        "is_config": false
+                      },
+                      {
+                        "name": "handlers.py.bak",
+                        "size": 3913,
+                        "extension": ".bak",
+                        "is_python": false,
+                        "is_json": false,
+                        "is_config": false
+                      },
+                      {
+                        "name": "checkin.py.bak",
+                        "size": 6687,
+                        "extension": ".bak",
+                        "is_python": false,
+                        "is_json": false,
+                        "is_config": false
+                      },
+                      {
+                        "name": "ref.py",
+                        "size": 5573,
+                        "extension": ".py",
+                        "is_python": true,
+                        "is_json": false,
+                        "is_config": false
+                      },
+                      {
+                        "name": "ref.py.bak",
+                        "size": 5534,
+                        "extension": ".bak",
+                        "is_python": false,
+                        "is_json": false,
+                        "is_config": false
+                      },
+                      {
+                        "name": "superadmin_handler.py",
+                        "size": 38425,
+                        "extension": ".py",
+                        "is_python": true,
+                        "is_json": false,
+                        "is_config": false
+                      },
+                      {
+                        "name": "start_handler.py",
+                        "size": 10181,
+                        "extension": ".py",
+                        "is_python": true,
+                        "is_json": false,
+                        "is_config": false
+                      },
+                      {
+                        "name": "top_handler.py.bak",
+                        "size": 2374,
+                        "extension": ".bak",
+                        "is_python": false,
+                        "is_json": false,
+                        "is_config": false
+                      },
+                      {
+                        "name": "donate.py",
+                        "size": 11315,
+                        "extension": ".py",
+                        "is_python": true,
+                        "is_json": false,
+                        "is_config": false
+                      },
+                      {
+                        "name": "help.py",
+                        "size": 1805,
+                        "extension": ".py",
+                        "is_python": true,
+                        "is_json": false,
+                        "is_config": false
+                      },
+                      {
+                        "name": "commands.py",
+                        "size": 996,
+                        "extension": ".py",
+                        "is_python": true,
+                        "is_json": false,
+                        "is_config": false
+                      },
+                      {
+                        "name": "base.py",
+                        "size": 602,
+                        "extension": ".py",
+                        "is_python": true,
+                        "is_json": false,
+                        "is_config": false
+                      }
+                    ],
+                    "directories": [],
+                    "total_files": 37,
+                    "total_dirs": 0
+                  }
+                ],
+                "total_files": 3,
+                "total_dirs": 4
+              }
+            ],
+            "total_files": 1,
+            "total_dirs": 2
+          }
+        ],
+        "total_files": 2,
+        "total_dirs": 6
+      },
+      {
+        "type": "directory",
+        "path": "admin_panel",
+        "exists": true,
+        "files": [
+          {
+            "name": "Dockerfile",
+            "size": 429,
+            "extension": "",
+            "is_python": false,
+            "is_json": false,
+            "is_config": false
+          }
+        ],
+        "directories": [],
+        "total_files": 1,
+        "total_dirs": 0
+      },
+      {
+        "type": "directory",
+        "path": "tests",
+        "exists": true,
+        "files": [],
+        "directories": [
+          {
+            "type": "directory",
+            "path": "tests/unit",
+            "exists": true,
+            "files": [
+              {
+                "name": "test_di_system.py",
+                "size": 365,
+                "extension": ".py",
+                "is_python": true,
+                "is_json": false,
+                "is_config": false
+              },
+              {
+                "name": "test_ai_trigger_service.py",
+                "size": 3527,
+                "extension": ".py",
+                "is_python": true,
+                "is_json": false,
+                "is_config": false
+              },
+              {
+                "name": "test_ai_memory_service.py.bak",
+                "size": 2100,
+                "extension": ".bak",
+                "is_python": false,
+                "is_json": false,
+                "is_config": false
+              },
+              {
+                "name": "test_motivation_service.py",
+                "size": 612,
+                "extension": ".py",
+                "is_python": true,
+                "is_json": false,
+                "is_config": false
+              },
+              {
+                "name": "test_games_service.py.bak",
+                "size": 4224,
+                "extension": ".bak",
+                "is_python": false,
+                "is_json": false,
+                "is_config": false
+              },
+              {
+                "name": "test_yandex_speechkit_tts.py.bak",
+                "size": 674,
+                "extension": ".bak",
+                "is_python": false,
+                "is_json": false,
+                "is_config": false
+              },
+              {
+                "name": "test_persona_service.py",
+                "size": 9681,
+                "extension": ".py",
+                "is_python": true,
+                "is_json": false,
+                "is_config": false
+              },
+              {
+                "name": "test_trigger_stats_service.py.bak",
+                "size": 8635,
+                "extension": ".bak",
+                "is_python": false,
+                "is_json": false,
+                "is_config": false
+              },
+              {
+                "name": "test_command_menu_service.py.bak",
+                "size": 1121,
+                "extension": ".bak",
+                "is_python": false,
+                "is_json": false,
+                "is_config": false
+              },
+              {
+                "name": "test_ai_memory_service.py",
+                "size": 2098,
+                "extension": ".py",
+                "is_python": true,
+                "is_json": false,
+                "is_config": false
+              },
+              {
+                "name": "test_adminlog_service.py",
+                "size": 2423,
+                "extension": ".py",
+                "is_python": true,
+                "is_json": false,
+                "is_config": false
+              },
+              {
+                "name": "test_ton_service.py",
+                "size": 641,
+                "extension": ".py",
+                "is_python": true,
+                "is_json": false,
+                "is_config": false
+              },
+              {
+                "name": "test_ai_stats_service.py",
+                "size": 2385,
+                "extension": ".py",
+                "is_python": true,
+                "is_json": false,
+                "is_config": false
+              },
+              {
+                "name": "test_top_service.py",
+                "size": 946,
+                "extension": ".py",
+                "is_python": true,
+                "is_json": false,
+                "is_config": false
+              },
+              {
+                "name": "test_allowed_chats_service.py",
+                "size": 1921,
+                "extension": ".py",
+                "is_python": true,
+                "is_json": false,
+                "is_config": false
+              },
+              {
+                "name": "test_excuse_service.py.bak",
+                "size": 1027,
+                "extension": ".bak",
+                "is_python": false,
+                "is_json": false,
+                "is_config": false
+              },
+              {
+                "name": "test_ton_service.py.bak",
+                "size": 643,
+                "extension": ".bak",
+                "is_python": false,
+                "is_json": false,
+                "is_config": false
+              },
+              {
+                "name": "test_points_service.py",
+                "size": 1335,
+                "extension": ".py",
+                "is_python": true,
+                "is_json": false,
+                "is_config": false
+              },
+              {
+                "name": "test_ai_trigger_service.py.bak",
+                "size": 3529,
+                "extension": ".bak",
+                "is_python": false,
+                "is_json": false,
+                "is_config": false
+              },
+              {
+                "name": "test_user_service.py",
+                "size": 518,
+                "extension": ".py",
+                "is_python": true,
+                "is_json": false,
+                "is_config": false
+              },
+              {
+                "name": "__init__.py",
+                "size": 0,
+                "extension": ".py",
+                "is_python": true,
+                "is_json": false,
+                "is_config": false
+              },
+              {
+                "name": "test_allowed_chats_service.py.bak",
+                "size": 1923,
+                "extension": ".bak",
+                "is_python": false,
+                "is_json": false,
+                "is_config": false
+              },
+              {
+                "name": "test_points_service.py.bak",
+                "size": 1325,
+                "extension": ".bak",
+                "is_python": false,
+                "is_json": false,
+                "is_config": false
+              },
+              {
+                "name": "test_state_service.py.bak",
+                "size": 6316,
+                "extension": ".bak",
+                "is_python": false,
+                "is_json": false,
+                "is_config": false
+              },
+              {
+                "name": "test_yandexgpt_service.py.bak",
+                "size": 664,
+                "extension": ".bak",
+                "is_python": false,
+                "is_json": false,
+                "is_config": false
+              },
+              {
+                "name": "test_excuse_service.py",
+                "size": 1025,
+                "extension": ".py",
+                "is_python": true,
+                "is_json": false,
+                "is_config": false
+              },
+              {
+                "name": "test_yandex_speechkit_tts.py",
+                "size": 672,
+                "extension": ".py",
+                "is_python": true,
+                "is_json": false,
+                "is_config": false
+              },
+              {
+                "name": "test_yandexgpt_service.py",
+                "size": 662,
+                "extension": ".py",
+                "is_python": true,
+                "is_json": false,
+                "is_config": false
+              },
+              {
+                "name": "test_adminlog_service.py.bak",
+                "size": 2425,
+                "extension": ".bak",
+                "is_python": false,
+                "is_json": false,
+                "is_config": false
+              },
+              {
+                "name": "test_games_service.py",
+                "size": 4228,
+                "extension": ".py",
+                "is_python": true,
+                "is_json": false,
+                "is_config": false
+              },
+              {
+                "name": "test_user_service.py.bak",
+                "size": 520,
+                "extension": ".bak",
+                "is_python": false,
+                "is_json": false,
+                "is_config": false
+              },
+              {
+                "name": "test_ai_stats_service.py.bak",
+                "size": 2387,
+                "extension": ".bak",
+                "is_python": false,
+                "is_json": false,
+                "is_config": false
+              },
+              {
+                "name": "test_state_service.py",
+                "size": 6320,
+                "extension": ".py",
+                "is_python": true,
+                "is_json": false,
+                "is_config": false
+              },
+              {
+                "name": "test_trigger_stats_service.py",
+                "size": 8633,
+                "extension": ".py",
+                "is_python": true,
+                "is_json": false,
+                "is_config": false
+              },
+              {
+                "name": "test_top_service.py.bak",
+                "size": 936,
+                "extension": ".bak",
+                "is_python": false,
+                "is_json": false,
+                "is_config": false
+              },
+              {
+                "name": "test_command_menu_service.py",
+                "size": 1111,
+                "extension": ".py",
+                "is_python": true,
+                "is_json": false,
+                "is_config": false
+              },
+              {
+                "name": "test_persona_service.py.bak",
+                "size": 9683,
+                "extension": ".bak",
+                "is_python": false,
+                "is_json": false,
+                "is_config": false
+              },
+              {
+                "name": "test_motivation_service.py.bak",
+                "size": 614,
+                "extension": ".bak",
+                "is_python": false,
+                "is_json": false,
+                "is_config": false
+              }
+            ],
+            "directories": [
+              {
+                "type": "directory",
+                "path": "tests/unit/infrastructure",
+                "exists": true,
+                "files": [
+                  {
+                    "name": "test_tts_service.py",
+                    "size": 3602,
+                    "extension": ".py",
+                    "is_python": true,
+                    "is_json": false,
+                    "is_config": false
+                  },
+                  {
+                    "name": "__init__.py",
+                    "size": 0,
+                    "extension": ".py",
+                    "is_python": true,
+                    "is_json": false,
+                    "is_config": false
+                  },
+                  {
+                    "name": "test_tts_service.py.bak",
+                    "size": 3610,
+                    "extension": ".bak",
+                    "is_python": false,
+                    "is_json": false,
+                    "is_config": false
+                  }
+                ],
+                "directories": [],
+                "total_files": 3,
+                "total_dirs": 0
+              },
+              {
+                "type": "directory",
+                "path": "tests/unit/domain",
+                "exists": true,
+                "files": [
+                  {
+                    "name": "test_trigger_service.py.bak",
+                    "size": 5179,
+                    "extension": ".bak",
+                    "is_python": false,
+                    "is_json": false,
+                    "is_config": false
+                  },
+                  {
+                    "name": "test_mood_service.py.bak",
+                    "size": 2688,
+                    "extension": ".bak",
+                    "is_python": false,
+                    "is_json": false,
+                    "is_config": false
+                  },
+                  {
+                    "name": "__init__.py",
+                    "size": 0,
+                    "extension": ".py",
+                    "is_python": true,
+                    "is_json": false,
+                    "is_config": false
+                  },
+                  {
+                    "name": "test_mood_service.py",
+                    "size": 2678,
+                    "extension": ".py",
+                    "is_python": true,
+                    "is_json": false,
+                    "is_config": false
+                  },
+                  {
+                    "name": "test_trigger_service.py",
+                    "size": 5175,
+                    "extension": ".py",
+                    "is_python": true,
+                    "is_json": false,
+                    "is_config": false
+                  }
+                ],
+                "directories": [],
+                "total_files": 5,
+                "total_dirs": 0
+              }
+            ],
+            "total_files": 38,
+            "total_dirs": 2
+          },
+          {
+            "type": "directory",
+            "path": "tests/integration",
+            "exists": true,
+            "files": [],
+            "directories": [
+              {
+                "type": "directory",
+                "path": "tests/integration/api",
+                "exists": true,
+                "files": [
+                  {
+                    "name": "__init__.py",
+                    "size": 0,
+                    "extension": ".py",
+                    "is_python": true,
+                    "is_json": false,
+                    "is_config": false
+                  }
+                ],
+                "directories": [],
+                "total_files": 1,
+                "total_dirs": 0
+              },
+              {
+                "type": "directory",
+                "path": "tests/integration/bot",
+                "exists": true,
+                "files": [
+                  {
+                    "name": "__init__.py",
+                    "size": 0,
+                    "extension": ".py",
+                    "is_python": true,
+                    "is_json": false,
+                    "is_config": false
+                  }
+                ],
+                "directories": [],
+                "total_files": 1,
+                "total_dirs": 0
+              }
+            ],
+            "total_files": 0,
+            "total_dirs": 2
+          }
+        ],
+        "total_files": 0,
+        "total_dirs": 2
+      },
+      {
+        "type": "directory",
+        "path": "logs",
+        "exists": true,
+        "files": [],
+        "directories": [],
+        "total_files": 0,
+        "total_dirs": 0
+      },
+      {
+        "type": "directory",
+        "path": "scripts",
+        "exists": true,
+        "files": [
+          {
+            "name": "check_migration_consistency.py",
+            "size": 4303,
+            "extension": ".py",
+            "is_python": true,
+            "is_json": false,
+            "is_config": false
+          },
+          {
+            "name": "fix_imports.py",
+            "size": 21399,
+            "extension": ".py",
+            "is_python": true,
+            "is_json": false,
+            "is_config": false
+          },
+          {
+            "name": "__init__.py",
+            "size": 0,
+            "extension": ".py",
+            "is_python": true,
+            "is_json": false,
+            "is_config": false
+          },
+          {
+            "name": "fix_imports.py.bak",
+            "size": 17859,
+            "extension": ".bak",
+            "is_python": false,
+            "is_json": false,
+            "is_config": false
+          },
+          {
+            "name": "replace_imports.py",
+            "size": 2398,
+            "extension": ".py",
+            "is_python": true,
+            "is_json": false,
+            "is_config": false
+          }
+        ],
+        "directories": [],
+        "total_files": 5,
+        "total_dirs": 0
+      },
+      {
+        "type": "directory",
+        "path": "alembic",
+        "exists": true,
+        "files": [
+          {
+            "name": "env.py",
+            "size": 1431,
+            "extension": ".py",
+            "is_python": true,
+            "is_json": false,
+            "is_config": false
+          }
+        ],
+        "directories": [
+          {
+            "type": "directory",
+            "path": "alembic/versions",
+            "exists": true,
+            "files": [
+              {
+                "name": "1f31127581dc_merge_multiple_heads.py",
+                "size": 499,
+                "extension": ".py",
+                "is_python": true,
+                "is_json": false,
+                "is_config": false
+              },
+              {
+                "name": "3d3f7ab510fb_add_ai_requests_hour_field.py",
+                "size": 1019,
+                "extension": ".py",
+                "is_python": true,
+                "is_json": false,
+                "is_config": false
+              },
+              {
+                "name": "766b570a8620_initial_clean.py",
+                "size": 2475,
+                "extension": ".py",
+                "is_python": true,
+                "is_json": false,
+                "is_config": false
+              },
+              {
+                "name": "add_performance_indexes.py",
+                "size": 2428,
+                "extension": ".py",
+                "is_python": true,
+                "is_json": false,
+                "is_config": false
+              },
+              {
+                "name": "__init__.py",
+                "size": 0,
+                "extension": ".py",
+                "is_python": true,
+                "is_json": false,
+                "is_config": false
+              },
+              {
+                "name": "cfdbcb98726a_merge_heads.py",
+                "size": 522,
+                "extension": ".py",
+                "is_python": true,
+                "is_json": false,
+                "is_config": false
+              },
+              {
+                "name": "0b58a3d35e45_merge_multiple_heads.py",
+                "size": 499,
+                "extension": ".py",
+                "is_python": true,
+                "is_json": false,
+                "is_config": false
+              }
+            ],
+            "directories": [],
+            "total_files": 7,
+            "total_dirs": 0
+          }
+        ],
+        "total_files": 1,
+        "total_dirs": 1
+      },
+      {
+        "type": "directory",
+        "path": "data",
+        "exists": true,
+        "files": [
+          {
+            "name": "bot.sqlite3",
+            "size": 65536,
+            "extension": ".sqlite3",
+            "is_python": false,
+            "is_json": false,
+            "is_config": false
+          },
+          {
+            "name": "bans.json",
+            "size": 19,
+            "extension": ".json",
+            "is_python": false,
+            "is_json": true,
+            "is_config": false
+          },
+          {
+            "name": "phrases.json",
+            "size": 2915,
+            "extension": ".json",
+            "is_python": false,
+            "is_json": true,
+            "is_config": false
+          },
+          {
+            "name": "quiz_questions.json",
+            "size": 295,
+            "extension": ".json",
+            "is_python": false,
+            "is_json": true,
+            "is_config": false
+          },
+          {
+            "name": "games_data.json",
+            "size": 1797,
+            "extension": ".json",
+            "is_python": false,
+            "is_json": true,
+            "is_config": false
+          },
+          {
+            "name": "holiday_triggers.json",
+            "size": 810,
+            "extension": ".json",
+            "is_python": false,
+            "is_json": true,
+            "is_config": false
+          },
+          {
+            "name": "nft_triggers.json",
+            "size": 750,
+            "extension": ".json",
+            "is_python": false,
+            "is_json": true,
+            "is_config": false
+          },
+          {
+            "name": "user_preferences.json",
+            "size": 279,
+            "extension": ".json",
+            "is_python": false,
+            "is_json": true,
+            "is_config": false
+          },
+          {
+            "name": "triggers.json",
+            "size": 1056,
+            "extension": ".json",
+            "is_python": false,
+            "is_json": true,
+            "is_config": false
+          },
+          {
+            "name": "ranks.json",
+            "size": 4299,
+            "extension": ".json",
+            "is_python": false,
+            "is_json": true,
+            "is_config": false
+          },
+          {
+            "name": "learning_data.json",
+            "size": 228,
+            "extension": ".json",
+            "is_python": false,
+            "is_json": true,
+            "is_config": false
+          },
+          {
+            "name": "troll_triggers.json",
+            "size": 1178,
+            "extension": ".json",
+            "is_python": false,
+            "is_json": true,
+            "is_config": false
+          },
+          {
+            "name": "admins.json",
+            "size": 38,
+            "extension": ".json",
+            "is_python": false,
+            "is_json": true,
+            "is_config": false
+          },
+          {
+            "name": "signal_triggers.json",
+            "size": 1089,
+            "extension": ".json",
+            "is_python": false,
+            "is_json": true,
+            "is_config": false
+          },
+          {
+            "name": "phrase_stats.json",
+            "size": 2424,
+            "extension": ".json",
+            "is_python": false,
+            "is_json": true,
+            "is_config": false
+          },
+          {
+            "name": "allowed_chats.json",
+            "size": 42,
+            "extension": ".json",
+            "is_python": false,
+            "is_json": true,
+            "is_config": false
+          },
+          {
+            "name": "token_triggers.json",
+            "size": 2175,
+            "extension": ".json",
+            "is_python": false,
+            "is_json": true,
+            "is_config": false
+          },
+          {
+            "name": "adminlog.json",
+            "size": 554,
+            "extension": ".json",
+            "is_python": false,
+            "is_json": true,
+            "is_config": false
+          },
+          {
+            "name": "sisu_micro_legends.json",
+            "size": 7910,
+            "extension": ".json",
+            "is_python": false,
+            "is_json": true,
+            "is_config": false
+          },
+          {
+            "name": "moon_triggers.json",
+            "size": 1033,
+            "extension": ".json",
+            "is_python": false,
+            "is_json": true,
+            "is_config": false
+          },
+          {
+            "name": "trigger_stats.json",
+            "size": 2,
+            "extension": ".json",
+            "is_python": false,
+            "is_json": true,
+            "is_config": false
+          },
+          {
+            "name": "ai_fallback_phrases.json",
+            "size": 4490,
+            "extension": ".json",
+            "is_python": false,
+            "is_json": true,
+            "is_config": false
+          },
+          {
+            "name": "excuses.json",
+            "size": 7788,
+            "extension": ".json",
+            "is_python": false,
+            "is_json": true,
+            "is_config": false
+          },
+          {
+            "name": "positive_triggers.json",
+            "size": 1111,
+            "extension": ".json",
+            "is_python": false,
+            "is_json": true,
+            "is_config": false
+          },
+          {
+            "name": "tasks.json",
+            "size": 112,
+            "extension": ".json",
+            "is_python": false,
+            "is_json": true,
+            "is_config": false
+          },
+          {
+            "name": "sisu_persona.json",
+            "size": 15549,
+            "extension": ".json",
+            "is_python": false,
+            "is_json": true,
+            "is_config": false
+          },
+          {
+            "name": "response_stats.json",
+            "size": 329,
+            "extension": ".json",
+            "is_python": false,
+            "is_json": true,
+            "is_config": false
+          },
+          {
+            "name": "rank_table.json",
+            "size": 263,
+            "extension": ".json",
+            "is_python": false,
+            "is_json": true,
+            "is_config": false
+          }
+        ],
+        "directories": [
+          {
+            "type": "directory",
+            "path": "data/logs",
+            "exists": true,
+            "files": [
+              {
+                "name": "__init__.py",
+                "size": 0,
+                "extension": ".py",
+                "is_python": true,
+                "is_json": false,
+                "is_config": false
+              }
+            ],
+            "directories": [],
+            "total_files": 1,
+            "total_dirs": 0
+          },
+          {
+            "type": "directory",
+            "path": "data/voice",
+            "exists": true,
+            "files": [],
+            "directories": [],
+            "total_files": 0,
+            "total_dirs": 0
+          },
+          {
+            "type": "directory",
+            "path": "data/temp_voice",
+            "exists": true,
+            "files": [],
+            "directories": [],
+            "total_files": 0,
+            "total_dirs": 0
+          },
+          {
+            "type": "directory",
+            "path": "data/tmp",
+            "exists": true,
+            "files": [
+              {
+                "name": "__init__.py",
+                "size": 0,
+                "extension": ".py",
+                "is_python": true,
+                "is_json": false,
+                "is_config": false
+              }
+            ],
+            "directories": [],
+            "total_files": 1,
+            "total_dirs": 0
+          },
+          {
+            "type": "directory",
+            "path": "data/backups",
+            "exists": true,
+            "files": [
+              {
+                "name": "users_backup_20250613_223725.json",
+                "size": 830,
+                "extension": ".json",
+                "is_python": false,
+                "is_json": true,
+                "is_config": false
+              }
+            ],
+            "directories": [],
+            "total_files": 1,
+            "total_dirs": 0
+          }
+        ],
+        "total_files": 28,
+        "total_dirs": 5
+      }
+    ],
+    "total_files": 38,
+    "total_dirs": 9
+  },
+  "file_counts": {
+    "python": 177,
+    "json": 35,
+    "yaml": 1,
+    "markdown": 1,
+    "sql": 1,
+    "log": 1,
+    "other": 69
+  },
+  "migration_status": {
+    "migrated": [
+      "app/domain/services/user.py",
+      "app/domain/services/gamification/points.py",
+      "app/domain/services/gamification/top.py",
+      "app/domain/services/games.py",
+      "app/domain/services/motivation.py",
+      "app/domain/services/triggers/core.py",
+      "app/domain/services/triggers/stats.py",
+      "app/infrastructure/ai/providers/yandex_gpt.py",
+      "app/infrastructure/db/models.py",
+      "app/infrastructure/db/session.py",
+      "app/shared/config/settings.py",
+      "app/presentation/bot/handlers/ai.py",
+      "app/presentation/bot/middlewares/rate_limiter.py"
+    ],
+    "not_migrated": [],
+    "old_files_removed": [
+      "sisu_bot/bot/services/user_service.py",
+      "sisu_bot/bot/services/points_service.py",
+      "sisu_bot/bot/services/top_service.py",
+      "sisu_bot/bot/services/games_service.py",
+      "sisu_bot/bot/services/motivation_service.py",
+      "sisu_bot/bot/services/trigger_service.py",
+      "sisu_bot/bot/services/trigger_stats_service.py",
+      "sisu_bot/bot/db/models.py",
+      "sisu_bot/bot/db/session.py",
+      "sisu_bot/core/config.py"
+    ],
+    "old_files_still_exist": []
+  },
+  "issues": [],
+  "recommendations": [
+    "✅ DI контейнер найден",
+    "✅ Конфигурация найдена",
+    "✅ app/domain/services/user.py",
+    "✅ app/domain/services/gamification/points.py",
+    "✅ app/infrastructure/db/models.py"
+  ]
+}

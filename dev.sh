@@ -1,30 +1,34 @@
 #!/bin/bash
 
-PYTHON_VERSION="3.11"
-VENV_DIR=".venv"
+set -e
 
-echo "🔍 Проверка Python $PYTHON_VERSION..."
+PYTHON_VERSION=3.11
 
-if ! command -v python$PYTHON_VERSION &> /dev/null
-then
-    echo "❌ Python $PYTHON_VERSION не найден. Установи через brew: brew install python@$PYTHON_VERSION"
+# Проверка Python
+if ! command -v python$PYTHON_VERSION &> /dev/null; then
+    echo "❌ Python $PYTHON_VERSION не найден. Установите его и повторите попытку."
+    exit 1
+else
+    echo "🔍 Проверка Python $PYTHON_VERSION..."
+    echo "✅ Python $PYTHON_VERSION найден."
+fi
+
+# Активация виртуального окружения
+if [ -d ".venv" ]; then
+    echo "⚙️ Активация виртуального окружения..."
+    source .venv/bin/activate
+else
+    echo "❌ Виртуальное окружение не найдено. Создайте его с помощью 'python$PYTHON_VERSION -m venv .venv'"
     exit 1
 fi
 
-echo "✅ Python $PYTHON_VERSION найден."
-
-if [ ! -d "$VENV_DIR" ]; then
-    echo "📦 Создание виртуального окружения..."
-    python$PYTHON_VERSION -m venv $VENV_DIR
+# Установка зависимостей
+if [ -f "requirements.txt" ]; then
+    echo "📦 Установка зависимостей..."
+    pip install -r requirements.txt
 fi
 
-echo "⚙️ Активация виртуального окружения..."
-source $VENV_DIR/bin/activate
-
-echo "📦 Установка зависимостей..."
-pip install --upgrade pip
-pip install -r requirements.txt
-
+# Запуск бота
+export PYTHONPATH=.
 echo "🚀 Запуск бота..."
-export PYTHONPATH=sisu_bot
-python -m sisu_bot.main 
+python -m app.main 

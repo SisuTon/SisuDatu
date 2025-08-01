@@ -1,5 +1,5 @@
 import pytest
-from sisu_bot.bot.services import excuse_service
+from app.domain.services import excuse_service
 
 def test_load_excuses():
     # Пример: проверяем, что функция загрузки excuses работает без ошибок

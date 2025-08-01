@@ -1,0 +1,95 @@
+{
+  "timestamp": "2025-07-20 14:25:52",
+  "project_root": ".",
+  "stats": {
+    "total_files": 245,
+    "total_dependencies": 0,
+    "missing_imports": 38,
+    "empty_files_count": 1,
+    "import_errors_count": 18
+  },
+  "missing_files": [
+    "project_doctor.py -> pkg_resources",
+    "sisu_bot/core/database.py -> core.config",
+    "sisu_bot/bot/utils.py -> loguru",
+    "sisu_bot/bot/gamification/service.py -> sisu_bot.bot.services.system",
+    "sisu_bot/bot/gamification/service.py -> sisu_bot.bot.services.system",
+    "sisu_bot/bot/handlers/trigger_handler.py -> fuzzywuzzy",
+    "sisu_bot/bot/handlers/handlers.py -> fuzzywuzzy",
+    "sisu_bot/bot/services/ai/__init__.py -> memory.chat_memory_service",
+    "sisu_bot/bot/services/ai/__init__.py -> responders.contextual_responder",
+    "sisu_bot/bot/services/ai/persona_service.py -> utils.json_loader",
+    "sisu_bot/bot/handlers/gamification/trigger_handler.py -> sisu_bot.bot.services.gamification.trigger_service",
+    "sisu_bot/bot/handlers/gamification/top_handler.py -> sisu_bot.bot.services.gamification.top_service",
+    "sisu_bot/bot/handlers/gamification/__init__.py -> vip_handler",
+    "sisu_bot/bot/handlers/gamification/checkin_handler.py -> sisu_bot.bot.services.gamification.points_service",
+    "sisu_bot/bot/handlers/admin/admin_handler.py -> sisu_bot.bot.services.system.admin_service",
+    "sisu_bot/bot/handlers/gamification/checkin_handler.py -> sisu_bot.bot.services.system.antifraud_service",
+    "sisu_bot/bot/handlers/admin/admin_handler.py -> sisu_bot.core.user_service",
+    "sisu_bot/bot/handlers/gamification/games_handler.py -> sisu_bot.bot.services.gamification.points_service",
+    "sisu_bot/bot/handlers/admin/superadmin_handler.py -> sisu_bot.core.user_service",
+    "sisu_bot/bot/handlers/admin/admin_handler.py -> sisu_bot.bot.services.gamification.points_service",
+    "sisu_bot/bot/handlers/admin/superadmin_handler.py -> sisu_bot.bot.services.gamification.points_service",
+    "sisu_bot/bot/handlers/admin/superadmin_handler.py -> sisu_bot.bot.services.system.admin_service",
+    "sisu_bot/bot/handlers/admin/superadmin_handler.py -> sisu_bot.bot.services.system.subscription_service",
+    "sisu_bot/bot/handlers/user/ref_handler.py -> sisu_bot.bot.services.gamification.points_service",
+    "sisu_bot/bot/handlers/user/vip_handler.py -> sisu_bot.bot.services.gamification.vip_chat_service",
+    "sisu_bot/bot/handlers/common/callback_handler.py -> sisu_bot.bot.services.system.inline_menu_service",
+    "sisu_bot/bot/handlers/common/keyboard_handler.py -> user.myrank_handler",
+    "sisu_bot/bot/handlers/common/keyboard_handler.py -> gamification.top_handler",
+    "sisu_bot/bot/handlers/common/keyboard_handler.py -> gamification.games_handler",
+    "sisu_bot/bot/handlers/common/keyboard_handler.py -> user.ref_handler",
+    "sisu_bot/bot/handlers/common/keyboard_handler.py -> user.help_handler",
+    "sisu_bot/bot/handlers/common/commands.py -> sisu_bot.bot.handlers.ai.ai_handler",
+    "sisu_bot/bot/handlers/common/commands.py -> sisu_bot.bot.services.system.inline_menu_service",
+    "sisu_bot/bot/handlers/ai/ai_handler.py -> sisu_bot.bot.services.system.yandex_monitoring_service",
+    "sisu_bot/bot/handlers/ai/ai_handler.py -> sisu_bot.utils.json_loader",
+    "tests/unit/test_yandex_monitoring_service.py -> sisu_bot.bot.services.system",
+    "tests/unit/test_ranks_config.py -> sisu_bot.bot.models.ranks_config",
+    "tests/integration/test_persistence_integration.py -> sisu_bot.bot.services.persistence"
+  ],
+  "empty_files": [
+    "sisu_bot/core/init.py"
+  ],
+  "import_errors": [
+    "sisu_bot/bot/ai/ai_engine.py -> sisu_bot.bot.services.ai.yandexgpt_service: 'Config' object has no attribute 'DATA_DIR'",
+    "sisu_bot/bot/services/voice/voice_engine.py -> sisu_bot.bot.services.ai.yandex_speechkit_tts: 'Config' object has no attribute 'DATA_DIR'",
+    "sisu_bot/bot/services/ai/tts_service.py -> sisu_bot.bot.services.ai.yandex_speechkit_tts: 'Config' object has no attribute 'DATA_DIR'",
+    "sisu_bot/main.py -> sisu_bot.bot.handlers.checkin_handler: 'Config' object has no attribute 'DATA_DIR'",
+    "sisu_bot/bot/services/ai/responders/contextual_responder.py -> sisu_bot.bot.services.ai.memory.chat_memory_service: 'sisu_bot.bot.services.ai'",
+    "sisu_bot/main.py -> sisu_bot.bot.handlers.dialog_handler: 'Config' object has no attribute 'DATA_DIR'",
+    "sisu_bot/bot/handlers/gamification/games_handler.py -> sisu_bot.bot.services.gamification.games_service: 'sisu_bot.bot.services.gamification'",
+    "sisu_bot/main.py -> sisu_bot.bot.handlers.start_handler: 'Config' object has no attribute 'DATA_DIR'",
+    "sisu_bot/bot/handlers/admin/superadmin_handler.py -> sisu_bot.bot.services.ai.ai_limits_service: 'Config' object has no attribute 'DATA_DIR'",
+    "sisu_bot/bot/handlers/admin/admin_handler.py -> sisu_bot.bot.services.ai.ai_limits_service: 'Config' object has no attribute 'DATA_DIR'",
+    "sisu_bot/main.py -> sisu_bot.bot.handlers.superadmin_handler: 'Config' object has no attribute 'DATA_DIR'",
+    "sisu_bot/bot/handlers/user/start_handler.py -> sisu_bot.bot.handlers.user.donate_handler: 'Config' object has no attribute 'DATA_DIR'",
+    "sisu_bot/bot/handlers/user/media_handler.py -> sisu_bot.bot.handlers.user.donate_handler: 'Config' object has no attribute 'DATA_DIR'",
+    "sisu_bot/bot/handlers/ai/ai_handler.py -> sisu_bot.bot.services.ai.ai_limits_service: 'Config' object has no attribute 'DATA_DIR'",
+    "sisu_bot/bot/handlers/ai/ai_handler.py -> sisu_bot.bot.services.ai.voice_limits_service: 'Config' object has no attribute 'DATA_DIR'",
+    "sisu_bot/bot/handlers/ai/ai_handler.py -> sisu_bot.bot.services.ai.trigger_service: 'Config' object has no attribute 'DATA_DIR'",
+    "sisu_bot/bot/handlers/ai/ai_handler.py -> sisu_bot.bot.services.ai.voice.voice_engine: 'Config' object has no attribute 'DATA_DIR'",
+    "sisu_bot/bot/handlers/ai/ai_handler.py -> sisu_bot.bot.services.ai.responders.contextual_responder: 'Config' object has no attribute 'DATA_DIR'"
+  ],
+  "unused_files": [
+    "sisu_bot/core/init.py",
+    "sisu_bot/bot/handlers/commands.py",
+    "sisu_bot/bot/handlers/user/message_handler.py",
+    "sisu_bot/bot/handlers/common.py",
+    "sisu_bot/bot/db/init_db.py",
+    "check_env.py",
+    "sisu_bot/bot/constants.py",
+    "generate_key.py"
+  ],
+  "cyclic_dependencies": [
+    "Циклический импорт в sisu_bot/bot/db/session.py"
+  ],
+  "architecture_violations": [
+    "Найдено 4 директорий data"
+  ],
+  "summary": {
+    "total_issues": 57,
+    "critical_issues": 38,
+    "warnings": 19
+  }
+}

@@ -1,5 +1,5 @@
 import pytest
-from sisu_bot.bot.services import ai_memory_service
+from app.domain.services import ai_memory_service
 from collections import defaultdict, deque
 
 # Фикстура для очистки состояния ai_memory_service перед каждым тестом

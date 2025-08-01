@@ -2,7 +2,7 @@ import pytest
 import json
 import os
 from pathlib import Path
-from sisu_bot.bot.services import trigger_stats_service
+from app.domain.services import trigger_stats_service
 import datetime
 
 # Фикстура для временного файла статистики триггеров

@@ -1,0 +1,342 @@
+#!/usr/bin/env python3
+"""
+Скрипт для исправления импортов из старой структуры sisu_bot в новую app/
+Улучшенная версия с безопасностью и точной обработкой импортов
+"""
+import os
+import re
+import shutil
+import difflib
+from pathlib import Path
+from typing import Dict, List, Tuple
+from importlib.util import find_spec
+
+# Маппинг старых путей к новым (исправлены дубликаты)
+IMPORT_MAPPING = {
+    # Основные модули
+    'sisu_bot.core.config': 'app.shared.config.settings',
+    'sisu_bot.bot.config': 'app.shared.config.bot_config',
+    
+    # Domain сервисы
+    'sisu_bot.bot.services.user_service': 'app.domain.services.user',
+    'sisu_bot.bot.services.points_service': 'app.domain.services.gamification.points',
+    'sisu_bot.bot.services.top_service': 'app.domain.services.gamification.top',
+    'sisu_bot.bot.services.games_service': 'app.domain.services.games',
+    'sisu_bot.bot.services.motivation_service': 'app.domain.services.motivation',
+    'sisu_bot.bot.services.trigger_service': 'app.domain.services.triggers.core',
+    'sisu_bot.bot.services.trigger_stats_service': 'app.domain.services.triggers.stats',
+    'sisu_bot.bot.services.command_menu_service': 'app.domain.services.command_menu',
+    'sisu_bot.bot.services.excuse_service': 'app.domain.services.excuse',
+    'sisu_bot.bot.services.state_service': 'app.domain.services.state',
+    'sisu_bot.bot.services.mood_service': 'app.domain.services.mood',
+    'sisu_bot.bot.services.ton_service': 'app.domain.services.ton',
+    'sisu_bot.bot.services.quiz_service': 'app.domain.services.quiz',
+    
+    # Infrastructure AI сервисы
+    'sisu_bot.bot.services.yandexgpt_service': 'app.infrastructure.ai.providers.yandex_gpt',
+    'sisu_bot.bot.services.tts_service': 'app.infrastructure.ai.tts',
+    'sisu_bot.bot.services.yandex_speechkit_tts': 'app.infrastructure.ai.providers.yandex_speechkit_tts',
+    'sisu_bot.bot.services.persona_service': 'app.infrastructure.ai.persona',
+    'sisu_bot.bot.services.ai_memory_service': 'app.infrastructure.ai.memory',
+    'sisu_bot.bot.services.ai_stats_service': 'app.infrastructure.ai.stats',
+    'sisu_bot.bot.services.ai_trigger_service': 'app.infrastructure.ai.trigger',
+    
+    # Infrastructure системные сервисы
+    'sisu_bot.bot.services.adminlog_service': 'app.infrastructure.system.adminlog',
+    'sisu_bot.bot.services.allowed_chats_service': 'app.infrastructure.system.allowed_chats',
+    
+    # Infrastructure БД
+    'sisu_bot.bot.db.models': 'app.infrastructure.db.models',
+    'sisu_bot.bot.db.init_db': 'app.infrastructure.db.session',
+    'sisu_bot.bot.db.database': 'app.infrastructure.db.database',
+    
+    # Presentation хендлеры
+    'sisu_bot.bot.handlers.checkin_handler': 'app.presentation.bot.handlers.checkin',
+    'sisu_bot.bot.handlers.donate_handler': 'app.presentation.bot.handlers.donate',
+    'sisu_bot.bot.handlers.media_handler': 'app.presentation.bot.handlers.media',
+    'sisu_bot.bot.handlers.message_handler': 'app.presentation.bot.handlers.message',
+    'sisu_bot.bot.handlers.ref_handler': 'app.presentation.bot.handlers.ref',
+    'sisu_bot.bot.handlers.admin_handler': 'app.presentation.bot.handlers.admin',
+    'sisu_bot.bot.handlers.ai_handler': 'app.presentation.bot.handlers.ai',
+    'sisu_bot.bot.handlers.common': 'app.presentation.bot.handlers.common',
+    'sisu_bot.bot.handlers.help_handler': 'app.presentation.bot.handlers.help',
+    'sisu_bot.bot.handlers.market_handler': 'app.presentation.bot.handlers.market',
+    'sisu_bot.bot.handlers.myrank_handler': 'app.presentation.bot.handlers.myrank',
+    'sisu_bot.bot.handlers.top_handler': 'app.presentation.bot.handlers.top',
+    'sisu_bot.bot.handlers.dialog_handler': 'app.presentation.bot.handlers.dialog',
+    'sisu_bot.bot.handlers.start_handler': 'app.presentation.bot.handlers.start_handler',
+    'sisu_bot.bot.handlers.superadmin_handler': 'app.presentation.bot.handlers.superadmin_handler',
+    'sisu_bot.bot.handlers.commands': 'app.presentation.bot.handlers.commands',
+    'sisu_bot.bot.handlers.handlers': 'app.presentation.bot.handlers.handlers',
+    
+    # Presentation middlewares
+    'sisu_bot.bot.middlewares.preprocess': 'app.presentation.bot.middlewares.preprocess',
+    'sisu_bot.bot.middlewares.antifraud': 'app.presentation.bot.middlewares.antifraud',
+    'sisu_bot.bot.middlewares.allowed_chats_middleware': 'app.presentation.bot.middlewares.allowed_chats',
+    'sisu_bot.bot.middlewares.user_sync': 'app.presentation.bot.middlewares.user_sync',
+    'sisu_bot.bot.middlewares.rate_limit': 'app.presentation.bot.middlewares.rate_limiter',
+    
+    # Shared утилиты
+    'sisu_bot.bot.utils': 'app.shared.utils.bot_utils',
+    
+    # Общие импорты сервисов
+    'sisu_bot.bot.services': 'app.domain.services',
+    'sisu_bot.bot.handlers': 'app.presentation.bot.handlers',
+    'sisu_bot.bot.middlewares': 'app.presentation.bot.middlewares',
+}
+
+def validate_new_paths() -> List[str]:
+    """Проверяет существование новых путей и возвращает предупреждения"""
+    warnings = []
+    
+    # Добавляем корень проекта в sys.path для поиска модулей
+    import sys
+    project_root = Path('.').absolute()
+    if str(project_root) not in sys.path:
+        sys.path.insert(0, str(project_root))
+    
+    for old_path, new_path in IMPORT_MAPPING.items():
+        # Проверяем только корневой модуль
+        root_module = new_path.split('.')[0]
+        if not find_spec(root_module):
+            warnings.append(f"⚠️ Новый путь {new_path} не найден (корневой модуль: {root_module})")
+    return warnings
+
+def fix_imports_in_file(file_path: Path, dry_run: bool = False) -> Tuple[bool, List[str]]:
+    """Исправляет импорты в одном файле с улучшенной обработкой"""
+    try:
+        with open(file_path, 'r', encoding='utf-8') as f:
+            content = f.read()
+        
+        original_content = content
+        changes = []
+        
+        for old_import, new_import in IMPORT_MAPPING.items():
+            # 1. Обработка 'from x import y'
+            pattern = rf'from\s+{re.escape(old_import)}\s+import\s+([^\n]+)'
+            replacement = f'from {new_import} import \\1'
+            if re.search(pattern, content):
+                content, count = re.subn(pattern, replacement, content)
+                if count:
+                    changes.append(f'{old_import} -> {new_import} (from-import)')
+            
+            # 2. Обработка 'import x.y'
+            pattern = rf'import\s+{re.escape(old_import)}(?:\s|,|$)'
+            replacement = f'import {new_import}'
+            if re.search(pattern, content):
+                content, count = re.subn(pattern, replacement, content)
+                if count:
+                    changes.append(f'{old_import} -> {new_import} (direct import)')
+            
+            # 3. Обработка многострочных импортов 'from x import (a, b)'
+            pattern = rf'from\s+{re.escape(old_import)}\s+import\s*\('
+            replacement = f'from {new_import} import ('
+            if re.search(pattern, content):
+                content, count = re.subn(pattern, replacement, content)
+                if count:
+                    changes.append(f'{old_import} -> {new_import} (multiline import)')
+            
+            # 4. Обработка относительных импортов 'from ..x import y'
+            pattern = rf'from\s+\.\.{re.escape(old_import.split(".")[-1])}\s+import'
+            replacement = f'from ..{new_import.split(".")[-1]} import'
+            if re.search(pattern, content):
+                content, count = re.subn(pattern, replacement, content)
+                if count:
+                    changes.append(f'{old_import} -> {new_import} (relative import)')
+            
+            # 5. Обработка импортов с комментариями 'from x import y # comment'
+            pattern = rf'from\s+{re.escape(old_import)}\s+import\s+([^\n#]+)(?:#.*)?'
+            replacement = f'from {new_import} import \\1'
+            if re.search(pattern, content):
+                content, count = re.subn(pattern, replacement, content)
+                if count:
+                    changes.append(f'{old_import} -> {new_import} (commented import)')
+            
+            # 6. Обработка импортов из подмодулей 'from x.y import z'
+            # Это специальная обработка для случаев типа 'from sisu_bot.bot.services import points_service'
+            if old_import == 'sisu_bot.bot.services':
+                # Обрабатываем каждый сервис отдельно
+                service_mappings = {
+                    'points_service': 'app.domain.services.gamification.points',
+                    'top_service': 'app.domain.services.gamification.top',
+                    'user_service': 'app.domain.services.user',
+                    'games_service': 'app.domain.services.games',
+                    'motivation_service': 'app.domain.services.motivation',
+                    'trigger_service': 'app.domain.services.triggers.core',
+                    'trigger_stats_service': 'app.domain.services.triggers.stats',
+                    'command_menu_service': 'app.domain.services.command_menu',
+                    'excuse_service': 'app.domain.services.excuse',
+                    'state_service': 'app.domain.services.state',
+                    'mood_service': 'app.domain.services.mood',
+                    'ton_service': 'app.domain.services.ton',
+                    'quiz_service': 'app.domain.services.quiz',
+                }
+                
+                for service_name, new_service_path in service_mappings.items():
+                    pattern = rf'from\s+{re.escape(old_import)}\s+import\s+([^,\n]+{service_name}[^,\n]*)'
+                    replacement = f'from {new_service_path} import \\1'
+                    if re.search(pattern, content):
+                        content, count = re.subn(pattern, replacement, content)
+                        if count:
+                            changes.append(f'{old_import}.{service_name} -> {new_service_path} (service import)')
+            
+            # 7. Обработка импортов handlers и middlewares
+            if old_import == 'sisu_bot.bot.handlers':
+                handler_mappings = {
+                    'handlers': 'app.presentation.bot.handlers.handlers',
+                }
+                
+                for handler_name, new_handler_path in handler_mappings.items():
+                    pattern = rf'from\s+{re.escape(old_import)}\s+import\s+([^,\n]+{handler_name}[^,\n]*)'
+                    replacement = f'from {new_handler_path} import \\1'
+                    if re.search(pattern, content):
+                        content, count = re.subn(pattern, replacement, content)
+                        if count:
+                            changes.append(f'{old_import}.{handler_name} -> {new_handler_path} (handler import)')
+            
+            if old_import == 'sisu_bot.bot.middlewares':
+                middleware_mappings = {
+                    'LoggingMiddleware': 'app.presentation.bot.middlewares.logging',
+                    'AdminMiddleware': 'app.presentation.bot.middlewares.admin',
+                    'AntiFloodMiddleware': 'app.presentation.bot.middlewares.antifraud',
+                    'ChatMiddleware': 'app.presentation.bot.middlewares.allowed_chats',
+                    'LearningMiddleware': 'app.presentation.bot.middlewares.learning',
+                }
+                
+                for middleware_name, new_middleware_path in middleware_mappings.items():
+                    pattern = rf'from\s+{re.escape(old_import)}\s+import\s+([^,\n]+{middleware_name}[^,\n]*)'
+                    replacement = f'from {new_middleware_path} import \\1'
+                    if re.search(pattern, content):
+                        content, count = re.subn(pattern, replacement, content)
+                        if count:
+                            changes.append(f'{old_import}.{middleware_name} -> {new_middleware_path} (middleware import)')
+        
+        if content != original_content:
+            if not dry_run:
+                # Создаем backup перед изменением
+                backup_path = file_path.with_suffix('.py.bak')
+                if not backup_path.exists():
+                    shutil.copy2(file_path, backup_path)
+                
+                with open(file_path, 'w', encoding='utf-8') as f:
+                    f.write(content)
+            return True, changes
+        
+        return False, []
+        
+    except Exception as e:
+        print(f"🚨 Ошибка при обработке {file_path}: {str(e)}")
+        return False, []
+
+def dry_run_analysis(file_path: Path) -> None:
+    """Показывает изменения без записи файла"""
+    try:
+        with open(file_path, 'r', encoding='utf-8') as f:
+            content = f.read()
+        
+        original_content = content
+        
+        for old_import, new_import in IMPORT_MAPPING.items():
+            # Применяем те же замены что и в fix_imports_in_file
+            pattern = rf'from\s+{re.escape(old_import)}\s+import\s+([^\n]+)'
+            replacement = f'from {new_import} import \\1'
+            content = re.sub(pattern, replacement, content)
+            
+            pattern = rf'import\s+{re.escape(old_import)}(?:\s|,|$)'
+            replacement = f'import {new_import}'
+            content = re.sub(pattern, replacement, content)
+            
+            pattern = rf'from\s+{re.escape(old_import)}\s+import\s*\('
+            replacement = f'from {new_import} import ('
+            content = re.sub(pattern, replacement, content)
+        
+        if content != original_content:
+            print(f"🔍 Изменения в {file_path}:")
+            diff = difflib.unified_diff(
+                original_content.splitlines(keepends=True),
+                content.splitlines(keepends=True),
+                fromfile=str(file_path),
+                tofile=str(file_path),
+                lineterm=''
+            )
+            for line in diff:
+                if line.startswith('+'):
+                    print(f"  + {line[1:].rstrip()}")
+                elif line.startswith('-'):
+                    print(f"  - {line[1:].rstrip()}")
+                elif line.startswith('@@'):
+                    print(f"  {line.rstrip()}")
+    
+    except Exception as e:
+        print(f"🚨 Ошибка при анализе {file_path}: {str(e)}")
+
+def main():
+    """Основная функция"""
+    import argparse
+    
+    parser = argparse.ArgumentParser(description='Исправление импортов в проекте')
+    parser.add_argument('--dry-run', action='store_true', help='Показать изменения без записи')
+    parser.add_argument('--validate', action='store_true', help='Проверить новые пути')
+    args = parser.parse_args()
+    
+    # Проверка новых путей
+    if args.validate:
+        warnings = validate_new_paths()
+        if warnings:
+            print("⚠️ Предупреждения:")
+            for warning in warnings:
+                print(f"  {warning}")
+        else:
+            print("✅ Все новые пути корректны")
+        return
+    
+    project_root = Path('.')
+    python_files = list(project_root.rglob('*.py'))
+    
+    # Исключаем виртуальное окружение, git и backup файлы
+    python_files = [f for f in python_files 
+                   if '.venv' not in str(f) 
+                   and '.git' not in str(f)
+                   and not f.name.endswith('.bak')]
+    
+    print(f"🔍 Найдено {len(python_files)} Python файлов")
+    
+    if args.dry_run:
+        print("🔍 Режим анализа (без записи):")
+        for file_path in python_files:
+            dry_run_analysis(file_path)
+        return
+    
+    total_changed = 0
+    total_changes = 0
+    
+    for file_path in python_files:
+        # Проверяем, есть ли в файле старые импорты
+        with open(file_path, 'r', encoding='utf-8') as f:
+            content = f.read()
+        
+        has_old_imports = any(f'from {old_import}' in content or f'import {old_import}' in content 
+                             for old_import in IMPORT_MAPPING.keys())
+        
+        if has_old_imports:
+            print(f"🔍 Обрабатываю {file_path} (найдены старые импорты)")
+        
+        changed, changes = fix_imports_in_file(file_path, dry_run=False)
+        if changed:
+            total_changed += 1
+            total_changes += len(changes)
+            print(f"✅ {file_path}: {len(changes)} изменений")
+            for change in changes:
+                print(f"   {change}")
+        elif has_old_imports:
+            print(f"⚠️ {file_path}: старые импорты найдены, но не обработаны")
+    
+    print(f"\n📊 Итоги:")
+    print(f"   Изменено файлов: {total_changed}")
+    print(f"   Всего изменений: {total_changes}")
+    
+    if total_changed > 0:
+        print(f"\n💾 Созданы backup файлы (.py.bak) для измененных файлов")
+
+if __name__ == '__main__':
+    main() 

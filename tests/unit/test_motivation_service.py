@@ -1,5 +1,5 @@
 import pytest
-from sisu_bot.bot.services import motivation_service
+from app.domain.services import motivation_service
 
 def test_load_motivation_pool():
     # Пример: проверяем, что функция загрузки мотиваций работает без ошибок

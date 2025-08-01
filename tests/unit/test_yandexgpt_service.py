@@ -1,5 +1,5 @@
 import pytest
-from sisu_bot.bot.services import yandexgpt_service
+from app.domain.services import yandexgpt_service
 
 def test_generate_text():
     # Этот тест будет требовать настоящие API ключи или мокирование HTTP запросов.

@@ -2,7 +2,7 @@ import pytest
 import json
 import os
 from pathlib import Path
-from sisu_bot.bot.services import persona_service
+from app.domain.services import persona_service
 
 # Фикстура для временного файла с шутками про имена
 @pytest.fixture(scope="function")

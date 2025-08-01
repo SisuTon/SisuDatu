@@ -2,8 +2,8 @@ import pytest
 import json
 import os
 from unittest.mock import MagicMock
-from sisu_bot.bot.services import state_service
-from sisu_bot.bot.db.models import BotState
+from app.domain.services import state_service
+from app.infrastructure.db.models import BotState
 from pathlib import Path
 
 # Фикстура для мокирования сессии базы данных для state_service

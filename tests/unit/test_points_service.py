@@ -1,7 +1,7 @@
 import pytest
-from sisu_bot.bot.services import points_service
-from sisu_bot.bot.db.init_db import Session
-from sisu_bot.bot.db.models import User
+from app.domain.services import points_service
+from app.infrastructure.db.session import Session
+from app.infrastructure.db.models import User
 
 # Фикстура для тестовой сессии базы данных
 @pytest.fixture(scope="function")

@@ -1,5 +1,5 @@
 import pytest
-from sisu_bot.bot.services import allowed_chats_service
+from app.domain.services import allowed_chats_service
 import json
 import os
 

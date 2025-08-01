@@ -1,5 +1,5 @@
 import pytest
-from sisu_bot.bot.services import adminlog_service
+from app.domain.services import adminlog_service
 import json
 import os
 import datetime

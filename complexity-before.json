@@ -1,0 +1,428 @@
+sisu_bot/main.py
+    [1m[35mF [0m58:0 main - [32mA[0m
+sisu_bot/core/config.py
+    [1m[35mF [0m102:0 get_user_role - [32mA[0m
+sisu_bot/core/database.py
+    [1m[35mF [0m22:0 get_session - [32mA[0m
+    [1m[35mF [0m30:0 init_db - [32mA[0m
+sisu_bot/core/container.py
+    [1m[37mM [0m34:4 ServiceContainer.get - [32mA[0m
+    [1m[37mM [0m56:4 ServiceContainer.has - [32mA[0m
+    [1m[36mC [0m10:0 ServiceContainer - [32mA[0m
+    [1m[37mM [0m13:4 ServiceContainer.__init__ - [32mA[0m
+    [1m[37mM [0m19:4 ServiceContainer.register_config - [32mA[0m
+    [1m[37mM [0m24:4 ServiceContainer.register_singleton - [32mA[0m
+    [1m[37mM [0m29:4 ServiceContainer.register_factory - [32mA[0m
+    [1m[37mM [0m52:4 ServiceContainer.get_config - [32mA[0m
+    [1m[37mM [0m60:4 ServiceContainer.list_services - [32mA[0m
+sisu_bot/tests/unit/test_tts_service.py
+    [1m[35mF [0m12:0 test_can_use_tts - [32mA[0m
+    [1m[35mF [0m28:0 test_register_tts_usage - [32mA[0m
+    [1m[35mF [0m48:0 test_save_motivation_tts - [32mA[0m
+    [1m[35mF [0m62:0 test_handle_tts_request - [32mA[0m
+    [1m[35mF [0m81:0 test_send_tts_motivation - [32mA[0m
+sisu_bot/tests/unit/test_mood_service.py
+    [1m[35mF [0m69:0 test_memory_functions - [32mB[0m
+    [1m[35mF [0m39:0 test_mood_limits - [32mA[0m
+    [1m[35mF [0m11:0 test_update_mood_positive - [32mA[0m
+    [1m[35mF [0m25:0 test_update_mood_negative - [32mA[0m
+    [1m[35mF [0m53:0 test_user_preferences - [32mA[0m
+sisu_bot/tests/unit/test_trigger_service.py
+    [1m[35mF [0m75:0 test_check_trigger - [32mB[0m
+    [1m[35mF [0m138:0 test_priority_triggers - [32mB[0m
+    [1m[35mF [0m93:0 test_get_smart_answer - [32mA[0m
+    [1m[35mF [0m108:0 test_learn_response - [32mA[0m
+    [1m[35mF [0m124:0 test_make_hash_id - [32mA[0m
+    [1m[35mF [0m34:0 mock_module_globals - [32mA[0m
+sisu_bot/bot/config.py
+    [1m[35mF [0m18:0 is_superadmin - [32mA[0m
+    [1m[35mF [0m21:0 is_any_admin - [32mA[0m
+sisu_bot/bot/bot.py
+    [1m[35mF [0m40:0 get_dispatcher - [32mA[0m
+sisu_bot/bot/utils.py
+    [1m[35mF [0m16:0 load_json_safe - [32mA[0m
+    [1m[35mF [0m24:0 save_json_safe - [32mA[0m
+sisu_bot/bot/middlewares/antifraud.py
+    [1m[36mC [0m16:0 AntiFraudMiddleware - [32mB[0m
+    [1m[37mM [0m17:4 AntiFraudMiddleware.__call__ - [32mA[0m
+sisu_bot/bot/middlewares/preprocess.py
+    [1m[36mC [0m5:0 PreprocessMiddleware - [32mA[0m
+    [1m[37mM [0m6:4 PreprocessMiddleware.__call__ - [32mA[0m
+sisu_bot/bot/middlewares/user_sync.py
+    [1m[36mC [0m5:0 UserSyncMiddleware - [32mA[0m
+    [1m[37mM [0m6:4 UserSyncMiddleware.__call__ - [32mA[0m
+sisu_bot/bot/middlewares/allowed_chats_middleware.py
+    [1m[36mC [0m8:0 AllowedChatsMiddleware - [33mC[0m
+    [1m[37mM [0m9:4 AllowedChatsMiddleware.__call__ - [33mC[0m
+sisu_bot/bot/middlewares/rate_limit.py
+    [1m[37mM [0m18:4 RateLimitMiddleware.__call__ - [33mC[0m
+    [1m[36mC [0m12:0 RateLimitMiddleware - [32mB[0m
+    [1m[37mM [0m13:4 RateLimitMiddleware.__init__ - [32mA[0m
+sisu_bot/bot/quiz/quiz_service.py
+    [1m[35mF [0m9:0 get_random_question - [32mA[0m
+sisu_bot/bot/quiz/quiz_handler.py
+    [1m[35mF [0m11:0 quiz_start_handler - [32mA[0m
+sisu_bot/bot/ton/ton_utils.py
+    [1m[35mF [0m5:0 is_valid_ton_address - [32mA[0m
+sisu_bot/bot/states/quiz.py
+    [1m[36mC [0m6:0 QuizStates - [32mA[0m
+sisu_bot/bot/points/checkin.py
+    [1m[35mF [0m5:0 add_checkin_points - [32mA[0m
+sisu_bot/bot/points/text.py
+    [1m[35mF [0m5:0 add_text_points - [32mA[0m
+sisu_bot/bot/points/photo.py
+    [1m[35mF [0m5:0 add_photo_points - [32mA[0m
+sisu_bot/bot/points/video.py
+    [1m[35mF [0m5:0 add_video_points - [32mA[0m
+sisu_bot/bot/db/models.py
+    [1m[36mC [0m7:0 User - [32mA[0m
+    [1m[36mC [0m27:0 Donation - [32mA[0m
+    [1m[36mC [0m37:0 Channel - [32mA[0m
+    [1m[36mC [0m44:0 BotState - [32mA[0m
+    [1m[36mC [0m50:0 RequiredChannel - [32mA[0m
+    [1m[36mC [0m57:0 EmojiMovie - [32mA[0m
+    [1m[36mC [0m63:0 AdminLog - [32mA[0m
+    [1m[36mC [0m71:0 UserDialogueState - [32mA[0m
+    [1m[36mC [0m78:0 MessageLog - [32mA[0m
+    [1m[36mC [0m87:0 ChatPoints - [32mA[0m
+    [1m[36mC [0m94:0 TriggerStat - [32mA[0m
+sisu_bot/bot/db/session.py
+    [1m[35mF [0m6:0 get_session - [32mA[0m
+sisu_bot/bot/db/migrate_users.py
+    [1m[35mF [0m33:0 migrate_users - [32mB[0m
+    [1m[35mF [0m12:0 migrate_database - [32mA[0m
+sisu_bot/bot/db/init_db.py
+    [1m[35mF [0m9:0 init_database - [32mA[0m
+sisu_bot/bot/ranks/rank_utils.py
+    [1m[35mF [0m9:0 get_rank_for_points - [32mA[0m
+sisu_bot/bot/handlers/message_handler.py
+    [1m[35mF [0m29:0 cmd_start - [32mA[0m
+    [1m[35mF [0m35:0 bot_added_to_chat - [32mA[0m
+    [1m[35mF [0m43:0 is_non_command_and_not_sisu - [32mA[0m
+    [1m[35mF [0m50:0 update_user_info_handler - [32mA[0m
+sisu_bot/bot/handlers/myrank_handler.py
+    [1m[35mF [0m9:0 myrank_handler - [33mC[0m
+sisu_bot/bot/handlers/ai_handler.py
+    [1m[35mF [0m517:0 sisu_explicit_handler - [33mD[0m
+    [1m[35mF [0m654:0 ai_dialog_handler - [33mD[0m
+    [1m[35mF [0m351:0 get_persona_answer - [33mD[0m
+    [1m[35mF [0m255:0 get_smart_answer - [33mC[0m
+    [1m[35mF [0m319:0 check_for_new_triggers - [33mC[0m
+    [1m[35mF [0m226:0 get_user_style - [32mB[0m
+    [1m[35mF [0m737:0 sisu_reply_learning_handler - [32mB[0m
+    [1m[35mF [0m151:0 get_learned_response - [32mB[0m
+    [1m[35mF [0m202:0 update_mood - [32mB[0m
+    [1m[35mF [0m297:0 analyze_phrase - [32mB[0m
+    [1m[35mF [0m857:0 sisu_poem_tts_handler - [32mB[0m
+    [1m[35mF [0m713:0 like_dislike_callback - [32mA[0m
+    [1m[35mF [0m781:0 sisu_learned_handler - [32mA[0m
+    [1m[35mF [0m1001:0 superadmin_add_motivation_tts - [32mA[0m
+    [1m[35mF [0m59:0 json_default - [32mA[0m
+    [1m[35mF [0m68:0 defaultdict_to_dict - [32mA[0m
+    [1m[35mF [0m398:0 is_ai_dialog_message - [32mA[0m
+    [1m[35mF [0m915:0 superadmin_voice - [32mA[0m
+    [1m[35mF [0m162:0 learn_response - [32mA[0m
+    [1m[35mF [0m242:0 update_user_preferences - [32mA[0m
+    [1m[35mF [0m830:0 can_use_tts - [32mA[0m
+    [1m[35mF [0m1019:0 send_tts_motivation - [32mA[0m
+    [1m[35mF [0m215:0 update_response_stats - [32mA[0m
+    [1m[35mF [0m495:0 emoji_movie_check - [32mA[0m
+    [1m[35mF [0m633:0 generate_motivation_phrase - [32mA[0m
+    [1m[35mF [0m644:0 superadmin_voice_motivation - [32mA[0m
+    [1m[35mF [0m964:0 send_tts_fallback_voice - [32mA[0m
+    [1m[36mC [0m22:4 DummyFuzz - [32mA[0m
+    [1m[35mF [0m147:0 save_learning_data - [32mA[0m
+    [1m[35mF [0m176:0 make_hash_id - [32mA[0m
+    [1m[35mF [0m480:0 emoji_movie_start - [32mA[0m
+    [1m[35mF [0m839:0 register_tts_usage - [32mA[0m
+    [1m[35mF [0m995:0 save_motivation_tts - [32mA[0m
+    [1m[37mM [0m24:8 DummyFuzz.ratio - [32mA[0m
+    [1m[36mC [0m476:0 SisuGameStates - [32mA[0m
+sisu_bot/bot/handlers/top_handler.py
+    [1m[35mF [0m10:0 top_handler - [33mC[0m
+sisu_bot/bot/handlers/donate_handler.py
+    [1m[35mF [0m123:0 handle_donate_proof - [32mB[0m
+    [1m[35mF [0m157:0 approve_donate_tier_callback - [32mB[0m
+    [1m[35mF [0m28:0 get_donate_keyboard - [32mA[0m
+    [1m[35mF [0m80:0 donate_handler - [32mA[0m
+    [1m[35mF [0m64:0 copy_wallet_callback - [32mA[0m
+    [1m[35mF [0m69:0 donate_confirm_callback - [32mA[0m
+    [1m[36mC [0m25:0 DonateStates - [32mA[0m
+sisu_bot/bot/handlers/ref_handler.py
+    [1m[35mF [0m80:0 handle_reftop_command - [32mB[0m
+    [1m[35mF [0m23:0 handle_ref_command - [32mA[0m
+sisu_bot/bot/handlers/handlers.py
+    [1m[35mF [0m86:0 get_trigger_response - [32mB[0m
+    [1m[35mF [0m31:0 cmd_help - [32mA[0m
+sisu_bot/bot/handlers/checkin_handler.py
+    [1m[35mF [0m27:0 check_and_activate_referral - [32mB[0m
+    [1m[35mF [0m87:0 checkin_handler - [32mB[0m
+sisu_bot/bot/handlers/market_handler.py
+    [1m[35mF [0m9:0 market_handler - [32mA[0m
+sisu_bot/bot/handlers/games_handler.py
+    [1m[35mF [0m418:0 bulk_riddle_process - [32mB[0m
+    [1m[35mF [0m304:0 word_game_answer - [32mB[0m
+    [1m[35mF [0m524:0 games_stats - [32mB[0m
+    [1m[35mF [0m385:0 bulk_emoji_handler - [32mB[0m
+    [1m[35mF [0m465:0 bulk_word_process - [32mB[0m
+    [1m[35mF [0m139:0 emoji_movie_handler - [32mA[0m
+    [1m[35mF [0m266:0 emoji_movie_answer - [32mA[0m
+    [1m[35mF [0m346:0 riddle_answer - [32mA[0m
+    [1m[35mF [0m487:0 delete_emoji_start - [32mA[0m
+    [1m[35mF [0m504:0 delete_emoji_process - [32mA[0m
+    [1m[35mF [0m284:0 word_game_start - [32mA[0m
+    [1m[35mF [0m326:0 riddle_start - [32mA[0m
+    [1m[35mF [0m39:0 load_games_data - [32mA[0m
+    [1m[35mF [0m235:0 teach_word_word - [32mA[0m
+    [1m[35mF [0m365:0 games_admin_help - [32mA[0m
+    [1m[35mF [0m402:0 bulk_riddle_start - [32mA[0m
+    [1m[35mF [0m450:0 bulk_word_start - [32mA[0m
+    [1m[35mF [0m50:0 save_games_data - [32mA[0m
+    [1m[35mF [0m164:0 teach_emoji_start - [32mA[0m
+    [1m[35mF [0m169:0 teach_emoji_emoji - [32mA[0m
+    [1m[35mF [0m176:0 teach_emoji_answer - [32mA[0m
+    [1m[35mF [0m197:0 teach_riddle_start - [32mA[0m
+    [1m[35mF [0m202:0 teach_riddle_riddle - [32mA[0m
+    [1m[35mF [0m209:0 teach_riddle_answer - [32mA[0m
+    [1m[35mF [0m230:0 teach_word_start - [32mA[0m
+    [1m[35mF [0m253:0 list_games - [32mA[0m
+    [1m[36mC [0m18:0 GameStates - [32mA[0m
+sisu_bot/bot/handlers/admin_handler.py
+    [1m[35mF [0m138:0 broadcast_send - [32mB[0m
+    [1m[35mF [0m170:0 challenge_send - [32mB[0m
+    [1m[35mF [0m103:0 setstreak_handler - [32mB[0m
+    [1m[35mF [0m65:0 addpoints_handler - [32mA[0m
+    [1m[35mF [0m84:0 removepoints_handler - [32mA[0m
+    [1m[35mF [0m38:0 admin_handler - [32mA[0m
+    [1m[35mF [0m52:0 admin_help - [32mA[0m
+    [1m[35mF [0m129:0 broadcast_start - [32mA[0m
+    [1m[35mF [0m161:0 challenge_start - [32mA[0m
+    [1m[35mF [0m23:0 is_any_admin - [32mA[0m
+    [1m[35mF [0m26:0 load_admins - [32mA[0m
+    [1m[35mF [0m20:0 is_superadmin - [32mA[0m
+    [1m[36mC [0m33:0 AdminStates - [32mA[0m
+sisu_bot/bot/handlers/superadmin_handler.py
+    [1m[35mF [0m307:0 sendto_send - [32mB[0m
+    [1m[35mF [0m492:0 send_motivation_to_chat - [32mB[0m
+    [1m[35mF [0m383:0 adminlog_handler - [32mB[0m
+    [1m[35mF [0m249:0 addadmin_handler - [32mB[0m
+    [1m[35mF [0m271:0 removeadmin_handler - [32mB[0m
+    [1m[35mF [0m539:0 superadmin_add_excuse - [32mB[0m
+    [1m[35mF [0m552:0 superadmin_add_voice_excuse - [32mB[0m
+    [1m[35mF [0m565:0 superadmin_add_name_joke - [32mB[0m
+    [1m[35mF [0m578:0 superadmin_add_name_variant - [32mB[0m
+    [1m[35mF [0m619:0 superadmin_remove_excuse - [32mB[0m
+    [1m[35mF [0m632:0 superadmin_remove_voice_excuse - [32mB[0m
+    [1m[35mF [0m645:0 superadmin_remove_name_joke - [32mB[0m
+    [1m[35mF [0m658:0 superadmin_remove_name_variant - [32mB[0m
+    [1m[35mF [0m671:0 superadmin_add_micro_legend - [32mB[0m
+    [1m[35mF [0m684:0 superadmin_remove_micro_legend - [32mB[0m
+    [1m[35mF [0m704:0 superadmin_add_easter_egg - [32mB[0m
+    [1m[35mF [0m717:0 superadmin_remove_easter_egg - [32mB[0m
+    [1m[35mF [0m737:0 superadmin_add_magic_phrase - [32mB[0m
+    [1m[35mF [0m750:0 superadmin_remove_magic_phrase - [32mB[0m
+    [1m[35mF [0m213:0 ban_handler - [32mA[0m
+    [1m[35mF [0m231:0 unban_handler - [32mA[0m
+    [1m[35mF [0m367:0 stats_handler - [32mA[0m
+    [1m[35mF [0m408:0 trigger_stats_handler - [32mA[0m
+    [1m[35mF [0m422:0 suggest_triggers_handler - [32mA[0m
+    [1m[35mF [0m436:0 auto_add_triggers_handler - [32mA[0m
+    [1m[35mF [0m770:0 list_admins_handler - [32mA[0m
+    [1m[35mF [0m106:0 clean_admins - [32mA[0m
+    [1m[35mF [0m293:0 sendto_start - [32mA[0m
+    [1m[35mF [0m329:0 allow_chat_handler - [32mA[0m
+    [1m[35mF [0m342:0 list_chats_handler - [32mA[0m
+    [1m[35mF [0m354:0 disallow_chat_handler - [32mA[0m
+    [1m[35mF [0m450:0 remove_trigger_handler - [32mA[0m
+    [1m[35mF [0m523:0 superadmin_add_motivation_tts - [32mA[0m
+    [1m[35mF [0m113:0 notify_admins - [32mA[0m
+    [1m[35mF [0m124:0 superadmin_help - [32mA[0m
+    [1m[35mF [0m177:0 ai_dialog_on - [32mA[0m
+    [1m[35mF [0m186:0 ai_dialog_off - [32mA[0m
+    [1m[35mF [0m195:0 enable_private - [32mA[0m
+    [1m[35mF [0m204:0 disable_private - [32mA[0m
+    [1m[35mF [0m471:0 set_mood_handler - [32mA[0m
+    [1m[35mF [0m591:0 superadmin_list_excuses - [32mA[0m
+    [1m[35mF [0m598:0 superadmin_list_voice_excuses - [32mA[0m
+    [1m[35mF [0m605:0 superadmin_list_name_jokes - [32mA[0m
+    [1m[35mF [0m612:0 superadmin_list_name_variants - [32mA[0m
+    [1m[35mF [0m697:0 superadmin_list_micro_legends - [32mA[0m
+    [1m[35mF [0m730:0 superadmin_list_easter_eggs - [32mA[0m
+    [1m[35mF [0m763:0 superadmin_list_magic_phrases - [32mA[0m
+    [1m[35mF [0m86:0 load_bans - [32mA[0m
+    [1m[35mF [0m96:0 load_admins - [32mA[0m
+    [1m[35mF [0m463:0 get_mood_handler - [32mA[0m
+    [1m[35mF [0m484:0 cmd_voice_motivation - [32mA[0m
+    [1m[35mF [0m92:0 save_bans - [32mA[0m
+    [1m[35mF [0m102:0 save_admins - [32mA[0m
+    [1m[36mC [0m120:0 SuperAdminStates - [32mA[0m
+sisu_bot/bot/handlers/base_handler.py
+    [1m[36mC [0m9:0 BaseHandler - [32mA[0m
+    [1m[37mM [0m10:4 BaseHandler.__init__ - [32mA[0m
+    [1m[37mM [0m13:4 BaseHandler.send_log - [32mA[0m
+    [1m[37mM [0m17:4 BaseHandler.reply - [32mA[0m
+sisu_bot/bot/handlers/start_handler.py
+    [1m[35mF [0m46:0 start_handler - [32mB[0m
+    [1m[35mF [0m27:0 check_user_subs - [32mB[0m
+    [1m[35mF [0m151:0 remove_required_sub - [32mB[0m
+    [1m[35mF [0m127:0 set_required_subs - [32mA[0m
+    [1m[35mF [0m143:0 list_required_subs - [32mA[0m
+    [1m[35mF [0m102:0 check_subs_callback - [32mA[0m
+    [1m[35mF [0m114:0 load_required_subs - [32mA[0m
+    [1m[35mF [0m121:0 save_required_subs - [32mA[0m
+sisu_bot/bot/handlers/help_handler.py
+    [1m[35mF [0m10:0 help_handler - [32mA[0m
+sisu_bot/bot/handlers/media_handler.py
+    [1m[35mF [0m19:0 is_photo_message - [32mA[0m
+    [1m[35mF [0m33:0 is_video_message - [32mA[0m
+    [1m[35mF [0m48:0 photo_handler - [32mA[0m
+    [1m[35mF [0m57:0 video_handler - [32mA[0m
+sisu_bot/bot/services/ton_service.py
+    [1m[35mF [0m5:0 generate_ton_wallet - [32mA[0m
+    [1m[35mF [0m10:0 check_ton_payment - [32mA[0m
+sisu_bot/bot/services/trigger_service.py
+    [1m[35mF [0m95:0 get_smart_answer - [32mB[0m
+    [1m[35mF [0m76:0 get_learned_response - [32mB[0m
+    [1m[35mF [0m123:0 check_trigger - [32mA[0m
+    [1m[35mF [0m87:0 learn_response - [32mA[0m
+    [1m[35mF [0m71:0 save_learning_data - [32mA[0m
+    [1m[35mF [0m118:0 make_hash_id - [32mA[0m
+sisu_bot/bot/services/trigger_stats_service.py
+    [1m[35mF [0m92:0 get_smart_answer - [33mC[0m
+    [1m[35mF [0m113:0 suggest_new_triggers - [32mA[0m
+    [1m[35mF [0m126:0 auto_add_suggested_triggers - [32mA[0m
+    [1m[35mF [0m9:0 load_stats - [32mA[0m
+    [1m[35mF [0m18:0 save_stats - [32mA[0m
+    [1m[35mF [0m22:0 log_trigger_usage - [32mA[0m
+    [1m[35mF [0m46:0 add_like - [32mA[0m
+    [1m[35mF [0m62:0 add_dislike - [32mA[0m
+    [1m[35mF [0m78:0 get_likes_dislikes - [32mA[0m
+    [1m[35mF [0m85:0 get_trigger_stats - [32mA[0m
+    [1m[35mF [0m89:0 get_all_trigger_stats - [32mA[0m
+sisu_bot/bot/services/top_service.py
+    [1m[35mF [0m28:0 sync_user_data - [32mA[0m
+    [1m[35mF [0m9:0 get_top_users - [32mA[0m
+    [1m[35mF [0m41:0 get_top_referrals - [32mA[0m
+sisu_bot/bot/services/excuse_service.py
+    [1m[35mF [0m82:0 get_random_excuse - [32mA[0m
+    [1m[35mF [0m94:0 get_random_voice_excuse - [32mA[0m
+    [1m[35mF [0m11:0 load_excuses - [32mA[0m
+    [1m[35mF [0m22:0 add_excuse - [32mA[0m
+    [1m[35mF [0m30:0 remove_excuse - [32mA[0m
+    [1m[35mF [0m42:0 load_voice_excuses - [32mA[0m
+    [1m[35mF [0m60:0 add_voice_excuse - [32mA[0m
+    [1m[35mF [0m68:0 remove_voice_excuse - [32mA[0m
+    [1m[35mF [0m108:0 send_voice_excuse - [32mA[0m
+    [1m[35mF [0m18:0 save_excuses - [32mA[0m
+    [1m[35mF [0m38:0 list_excuses - [32mA[0m
+    [1m[35mF [0m56:0 save_voice_excuses - [32mA[0m
+    [1m[35mF [0m76:0 list_voice_excuses - [32mA[0m
+    [1m[35mF [0m104:0 send_text_excuse - [32mA[0m
+sisu_bot/bot/services/command_menu_service.py
+    [1m[35mF [0m57:0 setup_command_menus - [32mB[0m
+sisu_bot/bot/services/tts_service.py
+    [1m[35mF [0m81:0 handle_tts_request - [32mB[0m
+    [1m[35mF [0m30:0 get_tts_limit - [32mA[0m
+    [1m[35mF [0m67:0 send_tts_motivation - [32mA[0m
+    [1m[35mF [0m40:0 can_use_tts - [32mA[0m
+    [1m[35mF [0m48:0 register_tts_usage - [32mA[0m
+    [1m[35mF [0m53:0 send_tts_fallback_voice - [32mA[0m
+    [1m[35mF [0m62:0 save_motivation_tts - [32mA[0m
+sisu_bot/bot/services/mood_service.py
+    [1m[35mF [0m28:0 update_mood - [32mB[0m
+    [1m[35mF [0m60:0 update_user_preferences - [32mA[0m
+    [1m[35mF [0m93:0 get_recent_messages - [32mA[0m
+    [1m[35mF [0m56:0 get_mood - [32mA[0m
+    [1m[35mF [0m85:0 get_user_style - [32mA[0m
+    [1m[35mF [0m89:0 add_to_memory - [32mA[0m
+sisu_bot/bot/services/ai_stats_service.py
+    [1m[35mF [0m20:0 update_response_stats - [32mA[0m
+    [1m[35mF [0m30:0 get_user_style - [32mA[0m
+sisu_bot/bot/services/adminlog_service.py
+    [1m[35mF [0m8:0 log_admin_action - [32mA[0m
+    [1m[35mF [0m31:0 get_admin_logs - [32mA[0m
+sisu_bot/bot/services/points_service.py
+    [1m[35mF [0m20:0 add_points - [32mB[0m
+    [1m[35mF [0m59:0 get_rank_by_points - [32mA[0m
+    [1m[35mF [0m49:0 get_referral_rank - [32mA[0m
+    [1m[35mF [0m77:0 set_supporter - [32mA[0m
+    [1m[35mF [0m90:0 is_supporter - [32mA[0m
+    [1m[35mF [0m15:0 get_user - [32mA[0m
+sisu_bot/bot/services/allowed_chats_service.py
+    [1m[35mF [0m7:0 load_allowed_chats - [32mA[0m
+    [1m[35mF [0m20:0 add_allowed_chat - [32mA[0m
+    [1m[35mF [0m28:0 remove_allowed_chat - [32mA[0m
+    [1m[35mF [0m16:0 save_allowed_chats - [32mA[0m
+    [1m[35mF [0m36:0 list_allowed_chats - [32mA[0m
+sisu_bot/bot/services/games_service.py
+    [1m[35mF [0m6:0 bulk_add_emoji_movies - [32mA[0m
+    [1m[35mF [0m24:0 check_emoji_movie_answer - [32mA[0m
+    [1m[35mF [0m16:0 get_random_emoji_movie - [32mA[0m
+sisu_bot/bot/services/user_service.py
+    [1m[35mF [0m17:0 update_user_info - [32mA[0m
+    [1m[35mF [0m30:0 increment_message_count - [32mA[0m
+    [1m[35mF [0m41:0 get_message_count - [32mA[0m
+    [1m[35mF [0m51:0 get_referral_stats - [32mA[0m
+    [1m[35mF [0m12:0 get_user - [32mA[0m
+    [1m[35mF [0m46:0 get_top_users - [32mA[0m
+sisu_bot/bot/services/ai_memory_service.py
+    [1m[35mF [0m8:0 update_mood - [32mB[0m
+    [1m[35mF [0m24:0 get_mood_local - [32mA[0m
+sisu_bot/bot/services/persona_service.py
+    [1m[35mF [0m92:0 get_name_joke - [32mA[0m
+    [1m[35mF [0m102:0 get_name_variant - [32mA[0m
+    [1m[35mF [0m12:0 load_name_jokes - [32mA[0m
+    [1m[35mF [0m29:0 add_name_joke - [32mA[0m
+    [1m[35mF [0m37:0 remove_name_joke - [32mA[0m
+    [1m[35mF [0m48:0 load_name_variants - [32mA[0m
+    [1m[35mF [0m70:0 add_name_variant - [32mA[0m
+    [1m[35mF [0m78:0 remove_name_variant - [32mA[0m
+    [1m[35mF [0m113:0 load_micro_legends - [32mA[0m
+    [1m[35mF [0m124:0 add_micro_legend - [32mA[0m
+    [1m[35mF [0m132:0 remove_micro_legend - [32mA[0m
+    [1m[35mF [0m144:0 load_easter_eggs - [32mA[0m
+    [1m[35mF [0m155:0 add_easter_egg - [32mA[0m
+    [1m[35mF [0m163:0 remove_easter_egg - [32mA[0m
+    [1m[35mF [0m175:0 load_magic_phrases - [32mA[0m
+    [1m[35mF [0m186:0 add_magic_phrase - [32mA[0m
+    [1m[35mF [0m194:0 remove_magic_phrase - [32mA[0m
+    [1m[35mF [0m205:0 get_random_micro_legend - [32mA[0m
+    [1m[35mF [0m209:0 get_random_easter_egg - [32mA[0m
+    [1m[35mF [0m213:0 get_random_magic_phrase - [32mA[0m
+    [1m[35mF [0m25:0 save_name_jokes - [32mA[0m
+    [1m[35mF [0m45:0 list_name_jokes - [32mA[0m
+    [1m[35mF [0m66:0 save_name_variants - [32mA[0m
+    [1m[35mF [0m86:0 list_name_variants - [32mA[0m
+    [1m[35mF [0m120:0 save_micro_legends - [32mA[0m
+    [1m[35mF [0m140:0 list_micro_legends - [32mA[0m
+    [1m[35mF [0m151:0 save_easter_eggs - [32mA[0m
+    [1m[35mF [0m171:0 list_easter_eggs - [32mA[0m
+    [1m[35mF [0m182:0 save_magic_phrases - [32mA[0m
+    [1m[35mF [0m202:0 list_magic_phrases - [32mA[0m
+sisu_bot/bot/services/motivation_service.py
+    [1m[35mF [0m41:0 send_voice_motivation - [32mA[0m
+    [1m[35mF [0m17:0 load_motivation_pool - [32mA[0m
+    [1m[35mF [0m28:0 add_motivation - [32mA[0m
+    [1m[35mF [0m36:0 get_random_motivation - [32mA[0m
+    [1m[35mF [0m53:0 send_fallback_voice - [32mA[0m
+    [1m[35mF [0m24:0 save_motivation_pool - [32mA[0m
+sisu_bot/bot/services/ai_trigger_service.py
+    [1m[35mF [0m51:0 get_learned_response - [32mB[0m
+    [1m[35mF [0m61:0 learn_response - [32mA[0m
+    [1m[35mF [0m47:0 save_learning_data - [32mA[0m
+sisu_bot/bot/services/state_service.py
+    [1m[35mF [0m11:0 load_state - [32mA[0m
+    [1m[35mF [0m68:0 update_state_db - [32mA[0m
+    [1m[35mF [0m26:0 save_state - [32mA[0m
+    [1m[35mF [0m47:0 get_mood - [32mA[0m
+    [1m[35mF [0m52:0 set_mood - [32mA[0m
+    [1m[35mF [0m63:0 get_state_db - [32mA[0m
+    [1m[35mF [0m36:0 get_state - [32mA[0m
+    [1m[35mF [0m40:0 update_state - [32mA[0m
+sisu_bot/bot/services/ai/yandexgpt_service.py
+    [1m[35mF [0m32:0 generate_sisu_reply - [33mC[0m
+sisu_bot/bot/services/ai/yandex_speechkit_tts.py
+    [1m[35mF [0m21:0 synthesize_sisu_voice - [33mC[0m
+
+360 blocks (classes, functions, methods) analyzed.
+Average complexity: [32mA (3.488888888888889)[0m

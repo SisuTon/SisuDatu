@@ -1,5 +1,5 @@
 import pytest
-from sisu_bot.bot.services import ton_service
+from app.domain.services import ton_service
 
 def test_get_ton_price():
     # Этот тест будет требовать реального доступа к внешнему API или мокирования.
