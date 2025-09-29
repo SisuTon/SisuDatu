@@ -4,7 +4,10 @@ import shutil
 from datetime import datetime
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from app.infrastructure.db.models import User
+# Импорт модели через функцию для соблюдения архитектуры
+def get_user_model():
+    from app.infrastructure.db.models import User
+    return User
 from app.shared.interfaces import AbstractUserService
 
 engine = create_engine(f'sqlite:///{DB_PATH}')
@@ -17,13 +20,13 @@ class UserService(AbstractUserService):
     async def get_user(self, user_id):
         """Получить пользователя"""
         with Session() as session:
-            user = session.query(User).filter(User.id == user_id).first()
+            user = session.query(get_user_model()).filter(get_user_model().id == user_id).first()
             return user
     
     async def create_user(self, user_id, username=None):
         """Создать пользователя"""
         with Session() as session:
-            user = User(id=user_id, username=username)
+            user = get_user_model()(id=user_id, username=username)
             session.add(user)
             session.commit()
             return user
@@ -31,9 +34,9 @@ class UserService(AbstractUserService):
     async def update_user(self, user_id, **kwargs):
         """Обновить пользователя"""
         with Session() as session:
-            user = session.query(User).filter(User.id == user_id).first()
+            user = session.query(get_user_model()).filter(get_user_model().id == user_id).first()
             if not user:
-                user = User(id=user_id)
+                user = get_user_model()(id=user_id)
                 session.add(user)
             
             for key, value in kwargs.items():
@@ -46,10 +49,10 @@ class UserService(AbstractUserService):
     async def checkin_user(self, user_id):
         """Чек-ин пользователя"""
         with Session() as session:
-            user = session.query(User).filter(User.id == user_id).first()
+            user = session.query(get_user_model()).filter(get_user_model().id == user_id).first()
             
             if not user:
-                user = User(id=user_id)
+                user = get_user_model()(id=user_id)
                 session.add(user)
             
             now = datetime.now()
@@ -90,14 +93,14 @@ class UserService(AbstractUserService):
 # Оставляем существующие функции для обратной совместимости
 def get_user(user_id):
     with Session() as session:
-        user = session.query(User).filter(User.id == user_id).first()
+        user = session.query(get_user_model()).filter(get_user_model().id == user_id).first()
         return user
 
 def update_user_info(user_id, username=None, first_name=None):
     with Session() as session:
-        user = session.query(User).filter(User.id == user_id).first()
+        user = session.query(get_user_model()).filter(get_user_model().id == user_id).first()
         if not user:
-            user = User(id=user_id, username=username, first_name=first_name)
+            user = get_user_model()(id=user_id, username=username, first_name=first_name)
             session.add(user)
         else:
             if username:
@@ -108,9 +111,9 @@ def update_user_info(user_id, username=None, first_name=None):
 
 def increment_message_count(user_id):
     with Session() as session:
-        user = session.query(User).filter(User.id == user_id).first()
+        user = session.query(get_user_model()).filter(get_user_model().id == user_id).first()
         if not user:
-            user = User(id=user_id, message_count=1)
+            user = get_user_model()(id=user_id, message_count=1)
             session.add(user)
         else:
             user.message_count += 1
@@ -119,12 +122,12 @@ def increment_message_count(user_id):
 
 def get_message_count(user_id):
     with Session() as session:
-        user = session.query(User).filter(User.id == user_id).first()
+        user = session.query(get_user_model()).filter(get_user_model().id == user_id).first()
         return user.message_count if user else 0
 
 def get_top_users(limit=5):
     with Session() as session:
-        top = session.query(User).order_by(User.points.desc()).limit(limit).all()
+        top = session.query(get_user_model()).order_by(get_user_model().points.desc()).limit(limit).all()
         return top 
 
 def get_referral_stats(user_id):
@@ -132,18 +135,18 @@ def get_referral_stats(user_id):
     Получает подробную статистику рефералов пользователя
     """
     with Session() as session:
-        user = session.query(User).filter(User.id == user_id).first()
+        user = session.query(get_user_model()).filter(get_user_model().id == user_id).first()
         if not user:
             return None
             
         # Получаем список активных рефералов
-        active_referrals = session.query(User).filter(
-            User.invited_by == user_id
+        active_referrals = session.query(get_user_model()).filter(
+            get_user_model().invited_by == user_id
         ).all()
         
         # Получаем список ожидающих рефералов
-        pending_referrals = session.query(User).filter(
-            User.pending_referral == user_id
+        pending_referrals = session.query(get_user_model()).filter(
+            get_user_model().pending_referral == user_id
         ).all()
         
         return {

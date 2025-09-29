@@ -9,48 +9,25 @@ logger = logging.getLogger(__name__)
 DEFAULT_COMMANDS = [
     BotCommand(command="start", description="Начать работу с ботом"),
     BotCommand(command="help", description="Показать список команд"),
-    BotCommand(command="checkin", description="Отметись в строю и получи баллы"),
-    BotCommand(command="myrank", description="Узнать свой ранг и баллы"),
-    BotCommand(command="top", description="Топ-5 активных участников"),
-    BotCommand(command="donate", description="Поддержать проект"),
-    BotCommand(command="ref", description="Твоя реферальная ссылка"),
-    BotCommand(command="reftop", description="Топ рефералов"),
-    BotCommand(command="market", description="Рынок рангов и NFT"),
+    BotCommand(command="checkin", description="Отметись и получи баллы"),
+    BotCommand(command="top", description="Топ-5 активных"),
+    # Временно скрыты: donate, ref, reftop, market
 ]
 
 # Команды для админов (дополнительно к базовым)
 ADMIN_COMMANDS = [
     BotCommand(command="admin", description="Админ-панель"),
-    BotCommand(command="ban", description="Забанить пользователя"),
-    BotCommand(command="unban", description="Разбанить пользователя"),
-    BotCommand(command="trigger_stats", description="Статистика триггеров"),
-    BotCommand(command="suggest_triggers", description="Предложить триггеры"),
+    # BotCommand(command="ban", description="Забанить пользователя"),
+    # BotCommand(command="unban", description="Разбанить пользователя"),
+    # BotCommand(command="trigger_stats", description="Статистика триггеров"),
+    # BotCommand(command="suggest_triggers", description="Предложить триггеры"),
 ]
 
 # Команды только для суперадминов (дополнительно к админским)
 SUPERADMIN_COMMANDS = [
-    BotCommand(command="superadmin_help", description="Шпаргалка по супер-админ командам"),
-    BotCommand(command="admin_help", description="Шпаргалка по админ-командам"),
-    BotCommand(command="addpoints", description="Начислить баллы"),
-    BotCommand(command="removepoints", description="Снять баллы"),
-    BotCommand(command="setstreak", description="Установить серию чек-инов"),
-    BotCommand(command="broadcast", description="Рассылка всем"),
-    BotCommand(command="challenge", description="Челлендж всем"),
-    BotCommand(command="stats", description="Статистика бота"),
-    BotCommand(command="adminlog", description="Лог действий админов"),
-    BotCommand(command="addadmin", description="Добавить админа"),
-    BotCommand(command="removeadmin", description="Убрать админа"),
-    BotCommand(command="list_admins", description="Список админов"),
-    BotCommand(command="allow_chat", description="Разрешить работу в чате"),
-    BotCommand(command="disallow_chat", description="Запретить работу в чате"),
-    BotCommand(command="list_chats", description="Список разрешённых чатов"),
-    BotCommand(command="auto_add_triggers", description="Автодобавление триггеров"),
-    BotCommand(command="remove_trigger", description="Удалить триггер"),
-    BotCommand(command="ai_dialog_on", description="Включить AI-диалог"),
-    BotCommand(command="ai_dialog_off", description="Выключить AI-диалог"),
-    BotCommand(command="enable_private", description="Включить работу бота в личке"),
-    BotCommand(command="disable_private", description="Отключить работу бота в личке"),
-    BotCommand(command="voice_motivation", description="Отправить случайную голосовую мотивашку в чат"),
+    BotCommand(command="superadmin_help", description="Суперадмин команды"),
+    BotCommand(command="admin_help", description="Админ команды"),
+    # Остальные временно скрыть, чтобы не предлагать неготовые действия
 ]
 
 async def setup_command_menus(bot):

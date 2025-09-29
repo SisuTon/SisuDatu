@@ -5,8 +5,8 @@ from pydantic_settings import BaseSettings
 from pydantic import Field, field_validator
 from dotenv import load_dotenv
 
-# Временно отключаем загрузку .env для миграции
-# load_dotenv()
+# Загружаем переменные окружения
+load_dotenv()
 
 def parse_int_list(value: str) -> List[int]:
     """Парсит строку с числами через запятую в список int"""
@@ -38,7 +38,7 @@ class Settings(BaseSettings):
     yandex_speechkit_folder_id: str = Field(default="b1g84sva7hgoe0s7tehp")
     
     # База данных
-    database_url: str = Field(default="sqlite:///sisu_bot.db")
+    database_url: str = Field(default="sqlite:///data/bot_database.db")
     
     # Безопасность
     superadmin_ids: List[int] = Field(default_factory=list)
@@ -138,7 +138,7 @@ DONATION_TIERS = {
 }
 
 # Пути к файлам (для обратной совместимости)
-DB_PATH = "sisu_bot.db"
+DB_PATH = "data/bot_database.db"
 DATA_DIR = "data"
 
 # Текст отказа при отсутствии подписки

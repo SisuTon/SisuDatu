@@ -7,6 +7,78 @@ import logging
 
 router = Router()
 
+@router.message(Command("myrank"))
+async def myrank_handler(msg: Message):
+    try:
+        user = points_service.get_user(str(msg.from_user.id))
+        if not user:
+            points_service.add_points(str(msg.from_user.id), 0)
+            user = points_service.get_user(str(msg.from_user.id))
+        points = user.points or 0
+        referrals = user.referrals or 0
+        rank_info = points_service.get_rank_by_points(points, referrals)
+        main_rank_code = rank_info.get('main_rank', 'novice')
+        referral_rank_code = rank_info.get('referral_rank') or 'recruit'
+        main_rank_title = rank_info.get('main_title', points_service.RANKS.get(main_rank_code, {}).get('title', 'Новичок'))
+        referral_rank_title = rank_info.get('referral_title', points_service.RANKS['referral_ranks'].get(referral_rank_code, {}).get('title', 'Рекрут'))
+
+        rank_emojis = {
+            "dragon_scholar": "🐲📚",
+            "spirit_blade": "🗡️✨",
+            "novice": "🐣",
+            "dragon_lord": "🐉👑",
+            "fire_keeper": "🔥",
+            "crystal_guard": "💎",
+            "samurai_legend": "🥷✨",
+            "dragon_emperor": "👑🐲",
+            "sisu_legend": "🌈🐉",
+        }
+        referral_emojis = {
+            "recruit": "🎯",
+            "recruiter": "🎪",
+            "mentor": "👨‍🏫",
+            "master_recruiter": "🎭",
+            "dragon_recruiter": "🐉",
+            "legendary_recruiter": "🌟",
+        }
+        main_rank_emoji = rank_emojis.get(main_rank_code, "🐉")
+        referral_rank_emoji = referral_emojis.get(referral_rank_code, "🎯")
+
+        next_rank = None
+        min_points_next = None
+        for code, r in points_service.RANKS.items():
+            if code != 'referral_ranks' and r.get("min_points", 10**9) > points:
+                if not min_points_next or r["min_points"] < min_points_next:
+                    next_rank = r["title"]
+                    min_points_next = r["min_points"]
+
+        next_referral_rank = None
+        min_referrals_next = None
+        for code, r in points_service.RANKS['referral_ranks'].items():
+            if r.get("min_referrals", 10**9) > referrals:
+                if not min_referrals_next or r["min_referrals"] < min_referrals_next:
+                    next_referral_rank = r["title"]
+                    min_referrals_next = r["min_referrals"]
+
+        card = "━━━━━━━━━━━━━━━━━━\n"
+        card += f"🔥 Твой путь: <b>{main_rank_title}</b> {main_rank_emoji}\n"
+        card += f"🎯 Ранг рекрутера: <b>{referral_rank_title}</b> {referral_rank_emoji}\n"
+        card += f"⭐ Баллы: {points}\n"
+        card += f"👥 Рефералы: {referrals}\n"
+        if next_rank:
+            card += f"🏅 До следующего ранга: {next_rank} ({min_points_next - points} баллов)\n"
+        else:
+            card += "🏅 Ты достиг максимального ранга!\n"
+        if next_referral_rank:
+            card += f"🎯 До следующего ранга рекрутера: {next_referral_rank} ({min_referrals_next - referrals} рефералов)\n"
+        else:
+            card += "🎯 Ты достиг максимального ранга рекрутера!\n"
+        card += "━━━━━━━━━━━━━━━━━━\nТы вдохновляешь других своим примером!"
+        await msg.answer(card, parse_mode="HTML")
+    except Exception:
+        logging.exception("Ошибка в myrank_handler")
+        await msg.answer("Ошибка при формировании карточки ранга 😢")
+
 @router.message(Command("top"))
 async def top_handler(msg: Message):
     try:

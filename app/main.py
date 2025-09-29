@@ -19,7 +19,6 @@ from app.presentation.bot.handlers.ai import router as ai_router
 from app.presentation.bot.handlers.common import router as common_router
 from app.presentation.bot.handlers.help import router as help_router
 from app.presentation.bot.handlers.market import router as market_router
-from app.presentation.bot.handlers.myrank import router as myrank_router
 from app.presentation.bot.handlers.top_handler import router as top_router
 from app.presentation.bot.handlers.dialog import router as dialog_router
 from app.presentation.bot.handlers.start_handler import router as start_router
@@ -89,7 +88,6 @@ async def main():
     dp_instance.include_router(donate_router)    # Команда /donate
     dp_instance.include_router(ref_router)       # Команда /ref
     dp_instance.include_router(market_router)    # Команда /market
-    dp_instance.include_router(myrank_router)    # Команда /myrank
     dp_instance.include_router(top_router)       # Команда /top
     dp_instance.include_router(games_router)     # Игры
     

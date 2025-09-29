@@ -4,17 +4,15 @@ from aiogram import Router, F
 from aiogram.types import Message
 from aiogram.filters import Command
 import logging
-import os
-import sys
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from app.infrastructure.db.models import User
+# Импорт модели через функцию для соблюдения архитектуры
+def get_user_model():
+    from app.infrastructure.db.models import User
+    return User
 from app.shared.config.settings import DB_PATH
 from app.infrastructure.db.session import Session
 from app.domain.services.gamification import points as points_service
 
-# Добавляем путь к корню проекта
-sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
+# sys.path tweak не требуется в нормальной структуре проекта
 
 # Создаем роутер ОДИН раз
 router = Router()
@@ -27,7 +25,7 @@ async def handle_ref_command(msg: Message):
     try:
         print("!!! REF HANDLER ВЫЗВАН !!!")  # Для отладки
         logging.info("!!! REF HANDLER ВЫЗВАН !!!")
-        logging.info(f"REF HANDLER START: User {msg.from_user.id}")
+        logging.info(f"REF HANDLER START: get_user_model() {msg.from_user.id}")
         
         if msg.chat.type != "private":
             logging.info(f"REF: Command in non-private chat from user {msg.from_user.id}")
@@ -36,13 +34,13 @@ async def handle_ref_command(msg: Message):
         
         session = Session()
         user_id = msg.from_user.id
-        user = session.query(User).filter(User.id == user_id).first()
+        user = session.query(get_user_model()).filter(get_user_model().id == user_id).first()
         
         logging.info(f"REF: Loading users data for {user_id}")
         
         if not user:
             logging.info(f"REF: Creating new user entry for {user_id}")
-            user = User(
+            user = get_user_model()(
                 id=user_id,
                 points=0,
                 active_days=0,
@@ -84,7 +82,7 @@ async def handle_reftop_command(msg: Message):
     try:
         session = Session()
         # Получаем топ-10 пользователей по количеству рефералов
-        top_users = session.query(User).order_by(User.referrals.desc()).limit(10).all()
+        top_users = session.query(get_user_model()).order_by(get_user_model().referrals.desc()).limit(10).all()
         
         if not top_users:
             await msg.answer("Пока нет активных рефералов!")
@@ -99,8 +97,8 @@ async def handle_reftop_command(msg: Message):
             referrals = user.referrals or 0
             
             # Получаем реферальный ранг
-            rank_info = points_service.get_rank_by_points(user.points, referrals)
-            referral_rank = rank_info['referral_title']
+            rank_info = points_service.get_rank_by_points(user.points or 0, referrals)
+            referral_rank = rank_info.get('referral_title') or 'Рекрут'
             
             # Эмодзи для реферальных рангов
             referral_emojis = {

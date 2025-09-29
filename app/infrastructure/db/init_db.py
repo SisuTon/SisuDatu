@@ -3,7 +3,7 @@ from sqlalchemy.orm import sessionmaker
 from app.infrastructure.db.models import Base
 
 # Простая инициализация для миграции
-engine = create_engine('sqlite:///sisu_bot.db')
+engine = create_engine('sqlite:///data/bot_database.db')
 Session = sessionmaker(bind=engine)
 
 def init_database():

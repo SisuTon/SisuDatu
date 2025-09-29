@@ -9,7 +9,7 @@ import logging
 # Infrastructure imports
 from app.infrastructure.db.session import get_async_session
 from app.infrastructure.ai.providers.yandex_gpt import YandexGPTService
-from app.infrastructure.ai.tts import TTSService
+from app.infrastructure.ai.providers.yandex_speechkit_tts import YandexSpeechKitTTS
 from app.infrastructure.system.adminlog_service import AdminLogService
 from app.infrastructure.system.allowed_chats import AllowedChatsService
 
@@ -44,14 +44,10 @@ class Container(containers.DeclarativeContainer):
     # AI Services
     yandex_gpt_service = providers.Singleton(
         YandexGPTService,
-        api_key=config.provided.yandex_api_key,
         base_url=config.provided.yandex_base_url,
     )
-    
-    tts_service = providers.Singleton(
-        TTSService,
-        api_key=config.provided.yandex_api_key,
-    )
+
+    tts_service = providers.Singleton(YandexSpeechKitTTS)
     
     # System Services
     adminlog_service = providers.Singleton(

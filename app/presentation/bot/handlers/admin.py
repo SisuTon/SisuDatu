@@ -10,7 +10,10 @@ import json
 from app.shared.config.settings import DB_PATH, DATA_DIR
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from app.infrastructure.db.models import User
+# Импорт модели через функцию для соблюдения архитектуры
+def get_user_model():
+    from app.infrastructure.db.models import User
+    return User
 
 router = Router()
 
@@ -115,9 +118,9 @@ async def setstreak_handler(msg: Message):
         await msg.answer("Серия должна быть числом!")
         return
     session = Session()
-    user = session.query(User).filter(User.id == user_id).first()
+    user = session.query(get_user_model()).filter(get_user_model().id == user_id).first()
     if not user:
-        user = User(id=user_id)
+        user = get_user_model()(id=user_id)
         session.add(user)
     user.active_days = streak
     session.commit()
@@ -138,7 +141,7 @@ async def broadcast_start(msg: Message, state: FSMContext):
 async def broadcast_send(msg: Message, state: FSMContext):
     await state.clear()
     session = Session()
-    users = session.query(User).all()
+    users = session.query(get_user_model()).all()
     count = 0
     for user in users:
         try:
@@ -170,7 +173,7 @@ async def challenge_start(msg: Message, state: FSMContext):
 async def challenge_send(msg: Message, state: FSMContext):
     await state.clear()
     session = Session()
-    users = session.query(User).all()
+    users = session.query(get_user_model()).all()
     count = 0
     for user in users:
         try:

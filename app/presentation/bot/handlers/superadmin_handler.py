@@ -18,7 +18,10 @@ from app.domain.services.state import get_state, update_state, get_mood, set_moo
 import logging
 from sqlalchemy import create_engine, func
 from sqlalchemy.orm import sessionmaker
-from app.infrastructure.db.models import User
+# Импорт модели через функцию для соблюдения архитектуры
+def get_user_model():
+    from app.infrastructure.db.models import User
+    return User
 from app.shared.config.bot_config import SUPERADMIN_IDS, is_superadmin
 from app.domain.services.motivation import add_motivation, send_voice_motivation, load_motivation_pool
 from app.domain.services.excuse import add_excuse, add_voice_excuse, list_excuses, list_voice_excuses, remove_excuse, remove_voice_excuse
@@ -374,9 +377,9 @@ async def stats_handler(msg: Message):
         await msg.answer("Нет прав!")
         return
     session = Session()
-    total_users = session.query(User).count()
-    total_points = session.query(User).with_entities(func.sum(User.points)).scalar() or 0
-    total_messages = session.query(User).with_entities(func.sum(User.message_count)).scalar() or 0
+    total_users = session.query(get_user_model()).count()
+    total_points = session.query(get_user_model()).with_entities(func.sum(get_user_model().points)).scalar() or 0
+    total_messages = session.query(get_user_model()).with_entities(func.sum(get_user_model().message_count)).scalar() or 0
     session.close()
     text = f"Статистика бота:\n\n"
     text += f"👥 Всего пользователей: {total_users}\n"

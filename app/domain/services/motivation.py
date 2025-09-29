@@ -2,7 +2,7 @@ import json
 import random
 from pathlib import Path
 from aiogram.types import BufferedInputFile
-from app.infrastructure.ai.tts import synthesize_sisu_voice  # заменили импорт на актуальный
+# Импорт перенесен в функцию для избежания циклического импорта
 from app.shared.config.settings import Settings
 
 DATA_DIR = Settings().data_dir
@@ -52,6 +52,8 @@ async def send_voice_motivation(bot, chat_id):
         await bot.send_message(chat_id, "Нет ни одной мотивашки!")
         return
     try:
+        # Импортируем функцию локально для избежания циклического импорта
+        from app.infrastructure.ai.providers.yandex_speechkit_tts import synthesize_sisu_voice
         voice_bytes = await synthesize_sisu_voice(phrase, voice="marina", emotion="good", speed=1.0)
         voice_file = BufferedInputFile(voice_bytes, filename="voice.ogg")
         await bot.send_voice(chat_id=chat_id, voice=voice_file)
@@ -61,6 +63,8 @@ async def send_voice_motivation(bot, chat_id):
 async def send_fallback_voice(bot, chat_id):
     phrase = random.choice(FALLBACK_PHRASES)
     try:
+        # Импортируем функцию локально для избежания циклического импорта
+        from app.infrastructure.ai.providers.yandex_speechkit_tts import synthesize_sisu_voice
         voice_bytes = await synthesize_sisu_voice(phrase, voice="marina", emotion="good", speed=1.0)
         voice_file = BufferedInputFile(voice_bytes, filename="voice.ogg")
         await bot.send_voice(chat_id=chat_id, voice=voice_file)

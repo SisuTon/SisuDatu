@@ -1,3 +1,7 @@
+# ============================================================================
+# IMPORTS AND CONSTANTS
+# ============================================================================
+
 from aiogram import Router, F
 from aiogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery, InputFile, BufferedInputFile
 from aiogram.utils.chat_action import ChatActionSender
@@ -35,7 +39,6 @@ from aiogram.fsm.state import State, StatesGroup
 from app.infrastructure.ai.providers.yandex_gpt import generate_sisu_reply
 from app.shared.config.bot_config import ADMIN_IDS, is_superadmin, SISU_PATTERN, AI_DIALOG_ENABLED, AI_DIALOG_PROBABILITY
 from app.infrastructure.ai.tts import can_use_tts, register_tts_usage
-from app.infrastructure.ai.tts import synthesize_sisu_voice
 import time
 from app.domain.services.motivation import send_voice_motivation
 from app.domain.services.excuse import send_text_excuse, send_voice_excuse
@@ -127,6 +130,25 @@ try:
         SISU_PERSONA = json.load(f)
 except Exception:
     SISU_PERSONA = {}
+
+# ============================================================================
+# HELPER FUNCTIONS
+# ============================================================================
+
+async def _synthesize_voice(text: str, *, voice: str = "marina", emotion: str = "good", speed: float = 1.0) -> bytes:
+    from app.infrastructure.ai.providers.yandex_speechkit_tts import synthesize_sisu_voice
+    return await synthesize_sisu_voice(text, voice=voice, emotion=emotion, speed=speed)
+
+def _build_mood_prompt(chat_mood: int) -> str:
+    if chat_mood > 2:
+        return " Отвечай с очень позитивным, восторженным и энергичным настроением. "
+    if chat_mood > 0:
+        return " Отвечай с позитивным и дружелюбным настроением. "
+    if chat_mood < -2:
+        return " Отвечай с саркастическим, дерзким и тролльским настроением. "
+    if chat_mood < 0:
+        return " Отвечай с немного ироничным или отстраненным настроением. "
+    return ""
 
 def save_learning_data():
     with open(LEARNING_PATH, 'w', encoding='utf-8') as f:
@@ -459,6 +481,10 @@ EMOJI_MOVIES = [
     {"emoji": "🐟🔍", "answer": ["в поисках немо", "finding nemo"]},
 ]
 
+# ============================================================================
+# GAMES
+# ============================================================================
+
 # Состояние для игры
 class SisuGameStates(StatesGroup):
     waiting_emoji_answer = State()
@@ -500,6 +526,42 @@ async def emoji_movie_check(msg: Message, state: FSMContext):
 
     await state.clear()
 
+# ============================================================================
+# MAIN AI HANDLER
+# ============================================================================
+
+# Internal helpers for command processing
+async def _handle_motivation_command(text: str, mood_prompt_addition: str) -> tuple[str, str]:
+    """Handle motivation command and return (response_text, voice_action)"""
+    motivation_prompt = SISU_PROMPTS.get("motivation", "Придумай короткую мотивационную фразу.")
+    response_text = await generate_sisu_reply(prompt=f"{motivation_prompt}{mood_prompt_addition}")
+    return response_text, "record_voice"
+
+async def _handle_poem_command(text: str, mood_prompt_addition: str) -> tuple[str, str]:
+    """Handle poem command and return (response_text, voice_action)"""
+    topic = text.lower().replace("прочитай стих", "").strip()
+    if not topic:
+        topic = "жизни"
+    poem_prompt = SISU_PROMPTS.get("poem", "Сочини короткое стихотворение.").format(topic=topic)
+    response_text = await generate_sisu_reply(prompt=poem_prompt)
+    return response_text, "record_voice"
+
+async def _handle_anecdote_command(text: str, mood_prompt_addition: str) -> tuple[str, str]:
+    """Handle anecdote command and return (response_text, voice_action)"""
+    topic = text.lower().replace("прочитай анекдот", "").replace("расскажи анекдот", "").strip()
+    anecdote_prompt = SISU_PROMPTS.get("anecdote", "Расскажи короткий анекдот.").format(topic=topic)
+    response_text = await generate_sisu_reply(prompt=anecdote_prompt)
+    return response_text, "record_voice"
+
+async def _handle_song_command(text: str, mood_prompt_addition: str) -> tuple[str, str]:
+    """Handle song command and return (response_text, voice_action)"""
+    topic = text.lower().replace("спой песню", "").strip()
+    if not topic:
+        topic = "жизни"
+    song_prompt = SISU_PROMPTS.get("song", "Сочини короткую песню.").format(topic=topic)
+    response_text = await generate_sisu_reply(prompt=song_prompt)
+    return response_text, "record_voice"
+
 @router.message(lambda msg: SISU_PATTERN.match(msg.text or "") or (msg.reply_to_message and msg.reply_to_message.from_user and msg.reply_to_message.from_user.is_bot))
 async def sisu_explicit_handler(msg: Message, state: FSMContext):
     """Handle explicit mentions of Sisu"""
@@ -524,43 +586,23 @@ async def sisu_explicit_handler(msg: Message, state: FSMContext):
 
     # Определяем текущее настроение Сису для чата
     chat_mood = get_mood(msg.chat.id)
-    mood_prompt_addition = ""
-    if chat_mood > 2: # Очень хорошее настроение
-        mood_prompt_addition = " Отвечай с очень позитивным, восторженным и энергичным настроением. "
-    elif chat_mood > 0: # Хорошее настроение
-        mood_prompt_addition = " Отвечай с позитивным и дружелюбным настроением. "
-    elif chat_mood < -2: # Очень плохое настроение (троллинг)
-        mood_prompt_addition = " Отвечай с саркастическим, дерзким и тролльским настроением. "
-    elif chat_mood < 0: # Плохое настроение
-        mood_prompt_addition = " Отвечай с немного ироничным или отстраненным настроением. "
+    mood_prompt_addition = _build_mood_prompt(chat_mood)
 
     # Motivation command
     if any(keyword in text.lower() for keyword in ["мотивацию", "мотивация дня", "скажи мотивацию"]):
-        motivation_prompt = SISU_PROMPTS.get("motivation", "Придумай короткую мотивационную фразу.")
-        response_text = await generate_sisu_reply(prompt=f"{motivation_prompt}{mood_prompt_addition}")
-        voice_action = "record_voice"
+        response_text, voice_action = await _handle_motivation_command(text, mood_prompt_addition)
     
     # Poem command
     elif "прочитай стих" in text.lower():
-        topic = text.lower().replace("прочитай стих", "").strip()
-        if not topic:
-            topic = "жизни"
-        poem_prompt = SISU_PROMPTS.get("poem", "Сочини короткое стихотворение.").format(topic=topic)
-        response_text = await generate_sisu_reply(prompt=poem_prompt)
-        voice_action = "record_voice"
+        response_text, voice_action = await _handle_poem_command(text, mood_prompt_addition)
 
     # Anecdote command
     elif "прочитай анекдот" in text.lower() or "расскажи анекдот" in text.lower():
-        topic = text.lower().replace("прочитай анекдот", "").replace("расскажи анекдот", "").strip()
-        anecdote_prompt = SISU_PROMPTS.get("anecdote", "Расскажи короткий анекдот.").format(topic=topic)
-        response_text = await generate_sisu_reply(prompt=anecdote_prompt)
-        voice_action = "record_voice"
+        response_text, voice_action = await _handle_anecdote_command(text, mood_prompt_addition)
 
     # Song command
     elif "спой песню" in text.lower():
-        song_prompt = SISU_PROMPTS.get("song", "Придумай короткие слова для песни.")
-        response_text = await generate_sisu_reply(prompt=song_prompt)
-        voice_action = "record_voice"
+        response_text, voice_action = await _handle_song_command(text, mood_prompt_addition)
 
     # Voice text command
     elif text.lower().startswith("озвучь текст "):
@@ -574,13 +616,10 @@ async def sisu_explicit_handler(msg: Message, state: FSMContext):
 
     # If it's a voice command, synthesize and send voice
     if voice_action and response_text:
-        try:
-            async with ChatActionSender(bot=msg.bot, chat_id=msg.chat.id, action=voice_action):
-                voice_data = await synthesize_sisu_voice(response_text)
-            await msg.answer_voice(voice=BufferedInputFile(voice_data, filename="voice_response.ogg"))
+        success = await _process_tts_request(msg, response_text, voice_action)
+        if success:
             return # Exit after sending voice response
-        except Exception as e:
-            logger.error(f"Failed to synthesize and send voice response: {e}", exc_info=True)
+        else:
             await msg.answer(response_text) # Fallback to text if voice fails
             return # Exit after fallback
 
@@ -631,6 +670,10 @@ async def sisu_explicit_handler(msg: Message, state: FSMContext):
         fallback_response = random.choice(fallback_responses)
         await msg.answer(fallback_response)
 
+# ============================================================================
+# MOTIVATION
+# ============================================================================
+
 async def generate_motivation_phrase() -> str:
     """Generate a motivational phrase using AI"""
     try:
@@ -649,6 +692,10 @@ async def superadmin_voice_motivation(msg: Message):
         return
     async with ChatActionSender(bot=msg.bot, chat_id=msg.chat.id, action="record_voice"):
         await send_tts_motivation(msg)
+
+# ============================================================================
+# AI DIALOG
+# ============================================================================
 
 # 3. Общий AI-диалог (только если включён и с вероятностью 7% в группе, в личке — только если включено супер-админом)
 @router.message(is_ai_dialog_message)
@@ -702,15 +749,7 @@ async def ai_dialog_handler(msg: Message, state: FSMContext):
     
     async with ChatActionSender(bot=msg.bot, chat_id=msg.chat.id, action="typing"):
         try:
-            mood_prompt_addition = ""
-            if chat_mood > 2: # Очень хорошее настроение
-                mood_prompt_addition = " Отвечай с очень позитивным, восторженным и энергичным настроением. "
-            elif chat_mood > 0: # Хорошее настроение
-                mood_prompt_addition = " Отвечай с позитивным и дружелюбным настроением. "
-            elif chat_mood < -2: # Очень плохое настроение (троллинг)
-                mood_prompt_addition = " Отвечай с саркастическим, дерзким и тролльским настроением. "
-            elif chat_mood < 0: # Плохое настроение
-                mood_prompt_addition = " Отвечай с немного ироничным или отстраненным настроением. "
+            mood_prompt_addition = _build_mood_prompt(chat_mood)
 
             sisu_reply_text = await generate_sisu_reply(prompt=f"{msg.text}{mood_prompt_addition}")
             # Send general AI dialog reply as text
@@ -721,6 +760,43 @@ async def ai_dialog_handler(msg: Message, state: FSMContext):
             # Fallback на существующие фразы
             fallback_response = random.choice(PHRASES)
             await msg.answer(fallback_response)
+
+# ============================================================================
+# LEARNING AND FEEDBACK
+# ============================================================================
+
+# Internal helpers for learning and feedback
+def _is_positive_reaction(text: str) -> bool:
+    """Check if text is a positive reaction"""
+    positive_reacts = ["+", "👍", "🔥", "ахах", "лол", "😂", "класс", "супер", "огонь", "топ", "респект"]
+    return text.strip().lower() in positive_reacts
+
+def _is_negative_reaction(text: str) -> bool:
+    """Check if text is a negative reaction"""
+    negative_reacts = ["-", "👎", "скучно", "фу", "не смешно", "грустно", "плохо", "отстой"]
+    return text.strip().lower() in negative_reacts
+
+async def _send_positive_feedback_response(msg: Message):
+    """Send positive feedback response"""
+    responses = [
+        "Ну, видимо, зашло! ",
+        "Вот это я понимаю — реакция!",
+        "Сису довольна собой 🐉",
+        "Спасибо за фидбек!",
+        "Вижу, что ты на моей волне!"
+    ]
+    await msg.answer(random.choice(responses))
+
+async def _send_negative_feedback_response(msg: Message):
+    """Send negative feedback response"""
+    responses = [
+        "Ой, не понравилось? 😢",
+        "Попробую лучше в следующий раз!",
+        "Сису расстроена...",
+        "Хм, учту твоё мнение!",
+        "Буду стараться больше!"
+    ]
+    await msg.answer(random.choice(responses))
 
 # 4. Callback-обработчик (можно вернуть сразу)
 @router.callback_query()
@@ -754,24 +830,11 @@ async def sisu_reply_learning_handler(msg: Message, state: FSMContext):
     user_text = msg.text or ""
     orig_text = orig.text or ""
     # Короткие реакции (эмодзи, +, ахах, лол и т.д.)
-    positive_reacts = ["+", "👍", "🔥", "ахах", "лол", "😂", "класс", "супер", "огонь", "топ", "респект"]
-    negative_reacts = ["-", "👎", "скучно", "фу", "не смешно", "грустно", "плохо", "отстой"]
-    if user_text.strip().lower() in positive_reacts:
-        await msg.answer(random.choice([
-            "Ну, видимо, зашло! ",
-            "Вот это я понимаю — реакция!",
-            "Сису довольна собой 🐉",
-            "Спасибо за фидбек!",
-            "Вижу, что ты на моей волне!"
-        ]))
+    if _is_positive_reaction(user_text):
+        await _send_positive_feedback_response(msg)
         return
-    if user_text.strip().lower() in negative_reacts:
-        await msg.answer(random.choice([
-            "Ну, не всем заходит мой вайб...",
-            "Белый лист, бывает!",
-            "Сису ушла тусить с Плотвой...",
-            "Окей, но я всё равно топ!"
-        ]))
+    if _is_negative_reaction(user_text):
+        await _send_negative_feedback_response(msg)
         return
     # Если это осмысленный текст — учим Сису
     if len(user_text.strip()) > 2:
@@ -855,6 +918,41 @@ SISU_POEMS = [
 ]
 
 # --- Хендлер для стихотворений ---
+# ============================================================================
+# TTS FUNCTIONS
+# ============================================================================
+
+# Internal helpers for TTS processing
+async def _process_tts_request(msg: Message, text: str, voice_action: str = "record_voice") -> bool:
+    """Process TTS request and send voice message. Returns True if successful."""
+    try:
+        if not can_use_tts(msg.from_user.id):
+            await msg.answer("Ой, кажется, ты уже наговорился на сегодня! Завтра лимит обновится, а если не терпится — поддержи проект и получи суперсилу голосовых! Ну а пока — пиши, не ленись! 😏")
+            return False
+        
+        voice_data = await _synthesize_voice(text)
+        if not voice_data:
+            await send_tts_fallback_voice(msg)
+            return False
+            
+        await msg.answer_voice(voice=BufferedInputFile(voice_data, filename="sisu_voice.ogg"))
+        register_tts_usage(msg.from_user.id)
+        return True
+    except Exception as e:
+        logger.error(f"Failed to process TTS request: {e}")
+        await send_tts_fallback_voice(msg)
+        return False
+
+async def send_tts_fallback_voice(msg: Message):
+    """Send fallback voice message when TTS fails"""
+    fallback_voices = [
+        "Хм, у меня сегодня проблемы с голосом... 😔",
+        "Извини, голосовые не работают! 😅",
+        "Сегодня я больше молчу, чем говорю... 🤐"
+    ]
+    fallback_text = random.choice(fallback_voices)
+    await msg.answer(fallback_text)
+
 @router.message(lambda msg: SISU_PATTERN.match(msg.text or "") and (
     "стих" in (msg.text or "").lower() or "прочти стихотворение" in (msg.text or "").lower()))
 async def sisu_poem_tts_handler(msg: Message, state: FSMContext):
@@ -870,7 +968,7 @@ async def sisu_poem_tts_handler(msg: Message, state: FSMContext):
     tts_text = tts_text[:250]  # Ограничение TTS
     try:
         await msg.bot.send_chat_action(chat_id=msg.chat.id, action="record_voice")
-        voice_bytes = await synthesize_sisu_voice(tts_text, voice="marina", emotion="good", speed=1.0)
+        voice_bytes = await _synthesize_voice(tts_text, voice="marina", emotion="good", speed=1.0)
         voice_file = BufferedInputFile(voice_bytes, filename="voice.ogg")
         await msg.answer_voice(voice=voice_file)
     except Exception as e:
@@ -923,7 +1021,7 @@ async def superadmin_voice(msg: Message):
         await msg.answer("Укажи текст для озвучки!")
         return
     async with ChatActionSender(bot=msg.bot, chat_id=msg.chat.id, action="record_voice"):
-        voice_bytes = await synthesize_sisu_voice(text, voice="marina", emotion="good", speed=1.0)
+        voice_bytes = await _synthesize_voice(text, voice="marina", emotion="good", speed=1.0)
         voice_file = BufferedInputFile(voice_bytes, filename="voice.ogg")
         await msg.answer_voice(voice=voice_file)
 
@@ -968,6 +1066,7 @@ async def send_tts_fallback_voice(msg):
     import random
     phrase = random.choice(SISU_TTS_FALLBACK_VOICES)
     try:
+        from app.infrastructure.ai.providers.yandex_speechkit_tts import synthesize_sisu_voice
         voice_bytes = await synthesize_sisu_voice(phrase, voice="marina", emotion="good", speed=1.0)
         voice_file = BufferedInputFile(voice_bytes, filename="voice.ogg")
         await msg.answer_voice(voice=voice_file)
@@ -1034,6 +1133,7 @@ async def send_tts_motivation(msg: Message):
 
     phrase = random.choice(SISU_MOTIVATION_TTS)
     try:
+        from app.infrastructure.ai.providers.yandex_speechkit_tts import synthesize_sisu_voice
         voice_data = await synthesize_sisu_voice(phrase)
         await msg.answer_voice(voice=BufferedInputFile(voice_data, filename="motivation.ogg"))
     except Exception as e:

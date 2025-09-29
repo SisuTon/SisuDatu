@@ -2,7 +2,10 @@ from typing import Callable, Dict, Any, Awaitable
 from aiogram.dispatcher.middlewares.base import BaseMiddleware
 from aiogram.types import Message
 import logging
-from app.infrastructure.db.models import User
+# Импорт модели через функцию для соблюдения архитектуры
+def get_user_model():
+    from app.infrastructure.db.models import User
+    return User
 from app.shared.config.bot_config import is_superadmin, is_any_admin
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
@@ -32,7 +35,7 @@ class AntiFraudMiddleware(BaseMiddleware):
             return # Блокируем сообщение от ботов
 
         session = Session()
-        user = session.query(User).filter(User.id == user_id).first()
+        user = session.query(get_user_model()).filter(get_user_model().id == user_id).first()
         session.close()
         
         if not user:

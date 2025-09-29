@@ -1,293 +1,288 @@
 #!/usr/bin/env python3
 """
-Полный аудит проекта SisuDatuBot
-Проверяет все папки, файлы и их расположение
+ПОЛНЫЙ АУДИТ ПРОЕКТА SISU BOT - ДЕТАЛЬНЫЙ АНАЛИЗ ВСЕГО
 """
-import os
-import json
-from pathlib import Path
-from typing import Dict, List, Any
-from datetime import datetime
 
-class ProjectAuditor:
-    """Полный аудит проекта"""
-    
+import os
+import sys
+import json
+import ast
+import subprocess
+from pathlib import Path
+from datetime import datetime
+from collections import defaultdict
+import sqlite3
+import sqlalchemy as sa
+from sqlalchemy import inspect as sqlinspect
+
+# Добавляем пути для импорта
+sys.path.insert(0, str(Path(__file__).parent))
+
+class FullProjectAudit:
     def __init__(self):
-        self.base = Path(".")
-        self.audit_results = {
-            "timestamp": datetime.now().isoformat(),
-            "project_structure": {},
-            "file_counts": {},
-            "migration_status": {},
-            "issues": [],
-            "recommendations": []
+        self.audit_results = defaultdict(dict)
+        self.problems = []
+        self.warnings = []
+        self.recommendations = []
+        self.stats = {
+            'files_by_type': defaultdict(int),
+            'lines_by_type': defaultdict(int),
+            'db_tables': [],
+            'db_records': 0
         }
     
-    def scan_directory(self, path: Path, max_depth: int = 5, current_depth: int = 0) -> Dict[str, Any]:
-        """Рекурсивное сканирование директории"""
-        if current_depth > max_depth:
-            return {"type": "max_depth_reached"}
-        
-        result = {
-            "type": "directory",
-            "path": str(path),
-            "exists": path.exists(),
-            "files": [],
-            "directories": [],
-            "total_files": 0,
-            "total_dirs": 0
+    def log_audit(self, category, check_name, status, details=""):
+        self.audit_results[category][check_name] = {
+            'status': status,
+            'details': details,
+            'timestamp': datetime.now().isoformat()
         }
+    
+    def analyze_directory_structure(self):
+        """Анализ структуры директорий"""
+        print("📁 АНАЛИЗ СТРУКТУРЫ ДИРЕКТОРИЙ...")
         
-        if not path.exists():
-            return result
+        # Проверяем существование директорий
+        all_dirs = []
+        for root, dirs, files in os.walk('.'):
+            for dir_name in dirs:
+                if not dir_name.startswith(('.', '__')):
+                    rel_path = os.path.relpath(os.path.join(root, dir_name))
+                    all_dirs.append(rel_path)
+        
+        self.audit_results['structure']['all_directories'] = {
+            'status': 'ℹ️',
+            'details': f"Найдено директорий: {len(all_dirs)}",
+            'list': all_dirs
+        }
+
+    def analyze_file_types(self):
+        """Анализ типов файлов и их размеров"""
+        print("📊 АНАЛИЗ ФАЙЛОВ ПО ТИПАМ...")
+        
+        file_types = defaultdict(list)
+        total_size = 0
+        
+        for root, dirs, files in os.walk('.'):
+            for file in files:
+                if file.startswith(('.', '__')) or 'venv' in root:
+                    continue
+                
+                file_path = Path(root) / file
+                try:
+                    file_size = file_path.stat().st_size
+                    total_size += file_size
+                    
+                    ext = file_path.suffix.lower()
+                    file_types[ext].append({
+                        'path': str(file_path),
+                        'size': file_size,
+                        'lines': self.count_lines(file_path)
+                    })
+                    
+                    self.stats['files_by_type'][ext] += 1
+                    self.stats['lines_by_type'][ext] += file_types[ext][-1]['lines']
+                    
+                except Exception as e:
+                    self.warnings.append(f"Ошибка анализа файла {file_path}: {e}")
+        
+        self.audit_results['files']['stats'] = {
+            'status': 'ℹ️',
+            'details': f"Всего файлов: {sum(len(files) for files in file_types.values())}, Общий размер: {total_size/1024/1024:.2f} MB",
+            'by_type': {ext: len(files) for ext, files in file_types.items()}
+        }
+
+    def count_lines(self, file_path):
+        """Подсчет строк в файле"""
+        try:
+            if file_path.suffix in ['.py', '.json', '.txt', '.md', '.yml', '.yaml']:
+                with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
+                    return len(f.readlines())
+            return 0
+        except:
+            return 0
+
+    def analyze_python_code(self):
+        """Анализ Python кода"""
+        print("🐍 АНАЛИЗ PYTHON КОДА...")
+        
+        python_files = []
+        for root, dirs, files in os.walk('.'):
+            for file in files:
+                if file.endswith('.py') and not any(x in root for x in ['venv', '__pycache__']):
+                    python_files.append(Path(root) / file)
+        
+        # Анализ импортов и зависимостей
+        imports = defaultdict(int)
+        classes = []
+        functions = []
+        
+        for py_file in python_files:
+            try:
+                with open(py_file, 'r', encoding='utf-8') as f:
+                    tree = ast.parse(f.read())
+                
+                for node in ast.walk(tree):
+                    if isinstance(node, ast.Import):
+                        for alias in node.names:
+                            imports[alias.name] += 1
+                    elif isinstance(node, ast.ImportFrom):
+                        if node.module:
+                            imports[node.module] += 1
+                    elif isinstance(node, ast.ClassDef):
+                        classes.append({
+                            'file': str(py_file),
+                            'class': node.name
+                        })
+                    elif isinstance(node, ast.FunctionDef):
+                        functions.append({
+                            'file': str(py_file),
+                            'function': node.name
+                        })
+                        
+            except Exception as e:
+                self.warnings.append(f"Ошибка анализа {py_file}: {e}")
+        
+        self.audit_results['code']['python_analysis'] = {
+            'status': 'ℹ️',
+            'details': f"Python файлов: {len(python_files)}, Классов: {len(classes)}, Функций: {len(functions)}",
+            'top_imports': dict(sorted(imports.items(), key=lambda x: x[1], reverse=True)[:10]),
+            'classes_sample': classes[:5],
+            'functions_sample': functions[:5]
+        }
+
+    def analyze_database(self):
+        """Детальный анализ базы данных"""
+        print("💾 ДЕТАЛЬНЫЙ АНАЛИЗ БАЗЫ ДАННЫХ...")
         
         try:
-            for item in path.iterdir():
-                if item.is_file():
-                    file_info = {
-                        "name": item.name,
-                        "size": item.stat().st_size,
-                        "extension": item.suffix,
-                        "is_python": item.suffix == '.py',
-                        "is_json": item.suffix == '.json',
-                        "is_config": item.name in ['.env', 'config.yml', 'settings.py']
-                    }
-                    result["files"].append(file_info)
-                    result["total_files"] += 1
-                    
-                elif item.is_dir():
-                    if not item.name.startswith('.') and not item.name in ['__pycache__', 'node_modules', '.git']:
-                        sub_dir = self.scan_directory(item, max_depth, current_depth + 1)
-                        result["directories"].append(sub_dir)
-                        result["total_dirs"] += 1
-                        
-        except PermissionError:
-            result["error"] = "Permission denied"
-        except Exception as e:
-            result["error"] = str(e)
-        
-        return result
-    
-    def audit_migration_status(self):
-        """Проверка статуса миграции"""
-        print("🔄 Проверка статуса миграции...")
-        
-        # Проверяем что перенесено
-        migrated_files = [
-            "app/domain/services/user.py",
-            "app/domain/services/gamification/points.py",
-            "app/domain/services/gamification/top.py",
-            "app/domain/services/games.py",
-            "app/domain/services/motivation.py",
-            "app/domain/services/triggers/core.py",
-            "app/domain/services/triggers/stats.py",
-            "app/infrastructure/ai/providers/yandex_gpt.py",
-            "app/infrastructure/db/models.py",
-            "app/infrastructure/db/session.py",
-            "app/shared/config/settings.py",
-            "app/presentation/bot/handlers/ai.py",
-            "app/presentation/bot/middlewares/rate_limiter.py"
-        ]
-        
-        # Проверяем что осталось в старых местах
-        old_files = [
-            "sisu_bot/bot/services/user_service.py",
-            "sisu_bot/bot/services/points_service.py",
-            "sisu_bot/bot/services/top_service.py",
-            "sisu_bot/bot/services/games_service.py",
-            "sisu_bot/bot/services/motivation_service.py",
-            "sisu_bot/bot/services/trigger_service.py",
-            "sisu_bot/bot/services/trigger_stats_service.py",
-            "sisu_bot/bot/db/models.py",
-            "sisu_bot/bot/db/session.py",
-            "sisu_bot/core/config.py"
-        ]
-        
-        migration_status = {
-            "migrated": [],
-            "not_migrated": [],
-            "old_files_removed": [],
-            "old_files_still_exist": []
-        }
-        
-        for file_path in migrated_files:
-            if Path(file_path).exists():
-                migration_status["migrated"].append(file_path)
-                print(f"✅ {file_path}")
-            else:
-                migration_status["not_migrated"].append(file_path)
-                print(f"❌ {file_path}")
-        
-        print("\n📋 Старые файлы:")
-        for file_path in old_files:
-            if Path(file_path).exists():
-                migration_status["old_files_still_exist"].append(file_path)
-                print(f"⚠️ {file_path} (все еще существует)")
-            else:
-                migration_status["old_files_removed"].append(file_path)
-                print(f"✅ {file_path} (удален)")
-        
-        self.audit_results["migration_status"] = migration_status
-        return migration_status
-    
-    def audit_file_types(self):
-        """Аудит типов файлов"""
-        print("\n📊 Аудит типов файлов...")
-        
-        file_types = {
-            "python": 0,
-            "json": 0,
-            "yaml": 0,
-            "markdown": 0,
-            "sql": 0,
-            "log": 0,
-            "other": 0
-        }
-        
-        total_files = 0
-        
-        for root, dirs, files in os.walk(self.base):
-            # Пропускаем системные папки
-            dirs[:] = [d for d in dirs if not d.startswith('.') and d not in ['__pycache__', 'node_modules']]
+            from app.infrastructure.db.session import engine, Base
+            from app.infrastructure.db.models import User, Donation, ChatMessage, UserLimit
             
-            for file in files:
-                total_files += 1
-                file_path = Path(root) / file
-                extension = file_path.suffix.lower()
+            # Проверяем подключение
+            with engine.connect() as conn:
+                inspector = sqlinspect(conn)
+                tables = inspector.get_table_names()
                 
-                if extension == '.py':
-                    file_types["python"] += 1
-                elif extension == '.json':
-                    file_types["json"] += 1
-                elif extension in ['.yml', '.yaml']:
-                    file_types["yaml"] += 1
-                elif extension == '.md':
-                    file_types["markdown"] += 1
-                elif extension == '.sql':
-                    file_types["sql"] += 1
-                elif extension == '.log':
-                    file_types["log"] += 1
-                else:
-                    file_types["other"] += 1
+                table_details = {}
+                for table in tables:
+                    columns = inspector.get_columns(table)
+                    table_details[table] = {
+                        'columns': [{'name': col['name'], 'type': str(col['type'])} for col in columns],
+                        'records': conn.execute(sa.text(f"SELECT COUNT(*) FROM {table}")).scalar()
+                    }
+                    self.stats['db_records'] += table_details[table]['records']
+                
+                self.stats['db_tables'] = tables
+                
+                self.audit_results['database']['details'] = {
+                    'status': '✅' if tables else '❌',
+                    'details': f"Таблиц: {len(tables)}, Записей: {self.stats['db_records']}",
+                    'tables': table_details
+                }
+                
+        except Exception as e:
+            self.audit_results['database']['details'] = {
+                'status': '❌',
+                'details': f"Ошибка анализа БД: {e}"
+            }
+
+    def check_dependencies(self):
+        """Проверка зависимостей"""
+        print("📦 ПРОВЕРКА ЗАВИСИМОСТЕЙ...")
         
-        print(f"📈 Всего файлов: {total_files}")
-        for file_type, count in file_types.items():
-            if count > 0:
-                print(f"   {file_type}: {count}")
-        
-        self.audit_results["file_counts"] = file_types
-        return file_types
-    
-    def audit_key_directories(self):
-        """Аудит ключевых директорий"""
-        print("\n🔍 Аудит ключевых директорий...")
-        
-        key_dirs = [
-            "app",
-            "sisu_bot", 
-            "backup_original",
-            "data",
-            "tests",
-            "migrations",
-            "scripts"
-        ]
-        
-        for dir_name in key_dirs:
-            dir_path = self.base / dir_name
-            if dir_path.exists():
-                files_count = len(list(dir_path.rglob("*")))
-                dirs_count = len([d for d in dir_path.rglob("*") if d.is_dir()])
-                print(f"📁 {dir_name}/: {files_count} файлов, {dirs_count} папок")
-            else:
-                print(f"❌ {dir_name}/: не существует")
-    
-    def generate_recommendations(self):
-        """Генерация рекомендаций"""
-        print("\n💡 Генерация рекомендаций...")
-        
-        recommendations = []
-        
-        # Проверяем DI контейнер
-        if not Path("app/core/container.py").exists():
-            recommendations.append("❌ Отсутствует DI контейнер: app/core/container.py")
-        else:
-            recommendations.append("✅ DI контейнер найден")
-        
-        # Проверяем конфигурацию
-        if not Path("app/shared/config/settings.py").exists():
-            recommendations.append("❌ Отсутствует конфигурация: app/shared/config/settings.py")
-        else:
-            recommendations.append("✅ Конфигурация найдена")
-        
-        # Проверяем основные сервисы
-        core_services = [
-            "app/domain/services/user.py",
-            "app/domain/services/gamification/points.py",
-            "app/infrastructure/db/models.py"
-        ]
-        
-        for service in core_services:
-            if Path(service).exists():
-                recommendations.append(f"✅ {service}")
-            else:
-                recommendations.append(f"❌ Отсутствует: {service}")
-        
-        # Проверяем тесты
-        if not Path("tests").exists():
-            recommendations.append("⚠️ Папка tests не найдена")
-        
-        # Проверяем .env
-        if not Path(".env").exists():
-            recommendations.append("⚠️ Файл .env не найден")
-        
-        self.audit_results["recommendations"] = recommendations
-        return recommendations
-    
+        try:
+            # Читаем requirements.txt
+            requirements = {}
+            if Path('requirements.txt').exists():
+                with open('requirements.txt', 'r') as f:
+                    for line in f:
+                        if '==' in line and not line.strip().startswith('#'):
+                            pkg, version = line.strip().split('==')
+                            requirements[pkg] = version
+            
+            # Проверяем установленные пакеты
+            result = subprocess.run([sys.executable, '-m', 'pip', 'freeze'], 
+                                  capture_output=True, text=True)
+            installed = {}
+            for line in result.stdout.split('\n'):
+                if '==' in line:
+                    pkg, version = line.split('==')
+                    installed[pkg] = version
+            
+            # Сравниваем
+            missing = []
+            for req in requirements:
+                if req not in installed:
+                    missing.append(req)
+            
+            self.audit_results['dependencies']['status'] = {
+                'status': '✅' if not missing else '❌',
+                'details': f"Зависимости: {len(requirements)}, Отсутствуют: {len(missing)}",
+                'missing': missing,
+                'requirements': requirements
+            }
+            
+        except Exception as e:
+            self.audit_results['dependencies']['status'] = {
+                'status': '❌',
+                'details': f"Ошибка проверки зависимостей: {e}"
+            }
+
     def run_full_audit(self):
         """Запуск полного аудита"""
         print("🚀 ЗАПУСК ПОЛНОГО АУДИТА ПРОЕКТА")
         print("=" * 60)
         
-        # 1. Сканируем всю структуру
-        print("📁 Сканирование структуры проекта...")
-        project_structure = self.scan_directory(self.base)
-        self.audit_results["project_structure"] = project_structure
+        # Запускаем все проверки
+        self.analyze_directory_structure()
+        self.analyze_file_types()
+        self.analyze_python_code()
+        self.analyze_database()
+        self.check_dependencies()
         
-        # 2. Аудит миграции
-        migration_status = self.audit_migration_status()
-        
-        # 3. Аудит типов файлов
-        file_types = self.audit_file_types()
-        
-        # 4. Аудит ключевых директорий
-        self.audit_key_directories()
-        
-        # 5. Генерация рекомендаций
-        recommendations = self.generate_recommendations()
-        
-        # 6. Сохраняем результаты
-        audit_file = f"project_audit_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
-        with open(audit_file, 'w', encoding='utf-8') as f:
-            json.dump(self.audit_results, f, indent=2, ensure_ascii=False)
-        
-        print(f"\n📄 Результаты сохранены в: {audit_file}")
-        
-        # 7. Итоговый отчет
-        print("\n" + "=" * 60)
-        print("📊 ИТОГОВЫЙ ОТЧЕТ:")
-        print(f"📁 Всего файлов: {file_types.get('python', 0) + file_types.get('json', 0) + file_types.get('other', 0)}")
-        print(f"🐍 Python файлов: {file_types.get('python', 0)}")
-        print(f"📋 JSON файлов: {file_types.get('json', 0)}")
-        print(f"✅ Перенесено файлов: {len(migration_status.get('migrated', []))}")
-        print(f"❌ Не перенесено: {len(migration_status.get('not_migrated', []))}")
-        print(f"🗑️ Удалено старых: {len(migration_status.get('old_files_removed', []))}")
-        
-        print("\n💡 РЕКОМЕНДАЦИИ:")
-        for rec in recommendations:
-            print(f"   {rec}")
-        
-        return self.audit_results
+        self.generate_report()
 
+    def generate_report(self):
+        """Генерация полного отчета"""
+        report = {
+            'metadata': {
+                'timestamp': datetime.now().isoformat(),
+                'project_path': str(Path.cwd()),
+                'python_version': sys.version
+            },
+            'statistics': self.stats,
+            'audit_results': dict(self.audit_results),
+            'warnings': self.warnings,
+            'problems': self.problems,
+            'recommendations': self.recommendations
+        }
+        
+        # Сохраняем отчет
+        report_file = f'full_project_audit_{datetime.now().strftime("%Y%m%d_%H%M%S")}.json'
+        with open(report_file, 'w', encoding='utf-8') as f:
+            json.dump(report, f, ensure_ascii=False, indent=2)
+        
+        # Вывод в консоль
+        print("\n📊 ПОЛНЫЙ ОТЧЕТ АУДИТА:")
+        print("=" * 60)
+        
+        # Основная статистика
+        print(f"\n📈 СТАТИСТИКА:")
+        print(f"  Файлов: {sum(self.stats['files_by_type'].values())}")
+        print(f"  Типы файлов: {dict(self.stats['files_by_type'])}")
+        print(f"  Таблиц БД: {len(self.stats['db_tables'])}")
+        print(f"  Записей БД: {self.stats['db_records']}")
+        
+        # Проблемы
+        if self.warnings:
+            print(f"\n⚠️  ПРЕДУПРЕЖДЕНИЯ ({len(self.warnings)}):")
+            for warning in self.warnings[:3]:
+                print(f"  • {warning}")
+
+        print(f"\n📋 Полный отчет сохранен в: {report_file}")
+
+# Запуск аудита
 if __name__ == "__main__":
-    auditor = ProjectAuditor()
-    auditor.run_full_audit() 
+    auditor = FullProjectAudit()
+    auditor.run_full_audit()

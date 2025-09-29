@@ -1,4 +1,5 @@
 import os
+from app.domain.services.ai.tts_service import TTSService
 import aiohttp
 import logging
 from dotenv import load_dotenv
@@ -73,3 +74,9 @@ async def synthesize_sisu_voice(text: str, *, voice: str = "marina", emotion: st
     except Exception as e:
         logging.error(f"Unexpected error during TTS synthesis: {e}")
         raise 
+class YandexSpeechKitTTS(TTSService):
+    """Реализация TTSService для Yandex SpeechKit"""
+    
+    async def generate_speech(self, text: str, voice: str = "alena") -> bytes:
+        """Генерирует речь из текста"""
+        return await synthesize_sisu_voice(text, voice=voice)

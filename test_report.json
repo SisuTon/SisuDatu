@@ -1,15 +1,15 @@
 {
-  "timestamp": 1754059083.298162,
-  "execution_time": 1.2725870609283447,
-  "passed_tests": 7,
+  "timestamp": 1757774645.998977,
+  "execution_time": 1.6758267879486084,
+  "passed_tests": 4,
   "total_tests": 9,
   "results": {
     "configuration_validation": true,
     "json_files_validation": true,
     "dependencies_validation": true,
-    "points_workflow": true,
-    "rank_system_parametrized": true,
-    "performance_test": true,
+    "points_workflow": false,
+    "rank_system_parametrized": false,
+    "performance_test": false,
     "database_integrity": true,
     "voice_synthesis_async": false,
     "ai_generation_mocked": false

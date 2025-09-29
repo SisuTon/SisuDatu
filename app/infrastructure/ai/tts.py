@@ -2,12 +2,10 @@ from aiogram.types import Message, BufferedInputFile
 from pathlib import Path
 import json
 import random
-from typing import Optional, Dict, List
+from typing import Dict
 import logging
-from app.infrastructure.ai.providers.yandex_speechkit_tts import synthesize_sisu_voice
-from app.shared.config.bot_config import ADMIN_IDS, is_superadmin, TTS_VOICE_TEMP_DIR, FALLBACK_VOICES
-import os
-import io
+# Импорт перенесен в функцию для избежания циклического импорта
+from app.shared.config.bot_config import is_superadmin, FALLBACK_VOICES
 
 logger = logging.getLogger(__name__)
 
@@ -72,6 +70,8 @@ async def send_tts_motivation(msg: Message):
 
     phrase = random.choice(MOTIVATION_PHRASES)
     try:
+        # Импортируем функцию локально для избежания циклического импорта
+        from app.infrastructure.ai.providers.yandex_speechkit_tts import synthesize_sisu_voice
         voice_data = await synthesize_sisu_voice(phrase)
         await msg.answer_voice(voice=BufferedInputFile(voice_data, filename="motivation.ogg"))
     except Exception as e:
@@ -90,6 +90,8 @@ async def handle_tts_request(msg: Message, text: str):
         return
 
     try:
+        # Импортируем функцию локально для избежания циклического импорта
+        from app.infrastructure.ai.providers.yandex_speechkit_tts import synthesize_sisu_voice
         voice_data = await synthesize_sisu_voice(text)
         if not voice_data:
             logger.error("Empty voice data received from synthesis")

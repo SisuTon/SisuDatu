@@ -1,4 +1,5 @@
 import os
+from app.domain.services.ai.llm_service import LLMService
 import aiohttp
 from dotenv import load_dotenv
 import logging
@@ -103,7 +104,7 @@ async def generate_sisu_reply(prompt: str, recent_messages: List[str] = None, us
         raise
 
 
-class YandexGPTService:
+class YandexGPTService(LLMService):
     """Сервис для работы с YandexGPT API"""
     
     def __init__(self):

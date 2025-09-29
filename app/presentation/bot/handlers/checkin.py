@@ -9,7 +9,10 @@ from app.domain.services.gamification import points as points_service
 from app.shared.config.settings import DB_PATH, Settings
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from app.infrastructure.db.models import User
+# Импорт модели через функцию для соблюдения архитектуры
+def get_user_model():
+    from app.infrastructure.db.models import User
+    return User
 from pathlib import Path
 
 router = Router()
@@ -34,7 +37,7 @@ async def check_and_activate_referral(user_id: int, bot) -> bool:
     Возвращает True, если реферал был активирован
     """
     with Session() as session:
-        user = session.query(User).filter(User.id == user_id).first()
+        user = session.query(get_user_model()).filter(get_user_model().id == user_id).first()
         
         # Проверяем, есть ли ожидающий реферал
         if not user or not user.pending_referral:
@@ -45,7 +48,7 @@ async def check_and_activate_referral(user_id: int, bot) -> bool:
             user.last_checkin):  # Был чек-ин
             
             ref_id = user.pending_referral
-            ref_user = session.query(User).filter(User.id == ref_id).first()
+            ref_user = session.query(get_user_model()).filter(get_user_model().id == ref_id).first()
             if ref_user:
                 # Активируем реферала
                 user.invited_by = ref_id
@@ -96,10 +99,10 @@ async def checkin_handler(msg: Message):
     
     user_id = msg.from_user.id
     with Session() as session:
-        user = session.query(User).filter(User.id == user_id).first()
+        user = session.query(get_user_model()).filter(get_user_model().id == user_id).first()
         
         if not user:
-            user = User(id=user_id)
+            user = get_user_model()(id=user_id)
             session.add(user)
         
         now = datetime.utcnow()
@@ -130,7 +133,7 @@ async def checkin_handler(msg: Message):
         )
         # Принудительно обновляем user, так как points_service.add_points возвращает user, 
         # но сессия здесь может быть другая (или объект user обновился в points_service)
-        user = session.query(User).filter(User.id == user_id).first()
+        user = session.query(get_user_model()).filter(get_user_model().id == user_id).first()
         user.last_checkin = now
         session.commit()
         

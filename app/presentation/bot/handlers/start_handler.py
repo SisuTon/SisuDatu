@@ -4,20 +4,15 @@ from aiogram.filters import Command
 from app.domain.services.user import update_user_info, get_user
 from app.domain.services.gamification import points as points_service
 import logging
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from app.infrastructure.db.models import User
-from app.shared.config.settings import DB_PATH, REQUIRED_SUBSCRIPTIONS, SUBSCRIPTION_GREETING, SUBSCRIPTION_DENY
+from app.shared.config.settings import REQUIRED_SUBSCRIPTIONS, SUBSCRIPTION_GREETING, SUBSCRIPTION_DENY
+from app.domain.services.user_service import UserService
 from app.shared.config.bot_config import is_superadmin
 from app.presentation.bot.handlers.donate import get_donate_keyboard, TON_WALLET
 from aiogram.exceptions import TelegramBadRequest
 
 router = Router()
 
-# Унифицированный путь к БД
-# DB_PATH = Path(__file__).parent.parent.parent.parent / 'data' / 'bot.sqlite3'
-engine = create_engine(f'sqlite:///{DB_PATH}')
-Session = sessionmaker(bind=engine)
+user_service = UserService()
 
 REQUIRED_CHANNELS = [
     {'title': 'Канал SISU', 'url': 'https://t.me/SisuDatuTon'},
@@ -47,8 +42,8 @@ async def start_handler(msg: Message):
     args = msg.text.split(maxsplit=1)[1] if len(msg.text.split(maxsplit=1)) > 1 else ""
     user_id = msg.from_user.id
     logging.info(f"[StartHandler] Command: {msg.text}, Args: '{args}'")
-    session = Session()
-    user = session.query(User).filter(User.id == user_id).first()
+    # Получение/создание пользователя через доменный сервис
+    user_service.update_user_info(user_id, msg.from_user.username, msg.from_user.first_name)
 
     # Проверка подписки для всех пользователей!
     is_subscribed = await check_user_subs(user_id, bot=msg.bot)
@@ -62,19 +57,7 @@ async def start_handler(msg: Message):
         session.close()
         return
 
-    if not user:
-        # Новый пользователь — регистрируем
-        user = User(
-            id=user_id,
-            points=0,
-            rank='novice',
-            active_days=0,
-            referrals=0,
-            message_count=0,
-            last_checkin=None,
-            pending_referral=None
-        )
-        session.add(user)
+    # (создание нового пользователя теперь покрыто user_service.update_user_info)
 
     # Проверяем реферала
     if args and args.startswith("ref"):
@@ -94,8 +77,6 @@ async def start_handler(msg: Message):
                 logging.info(f"Пользователь {user_id} уже был приглашён {user.invited_by}")
 
     update_user_info(user_id, msg.from_user.username, msg.from_user.first_name)
-    session.commit()
-    session.close()
     
     # Обработка специальных аргументов
     logging.info(f"[StartHandler] Processing args: '{args}'")
@@ -106,43 +87,15 @@ async def start_handler(msg: Message):
     else:
         logging.info(f"[StartHandler] Sending welcome message with buttons")
         
-        # Создаем кнопки для личного кабинета
-        from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
-        
-        keyboard = ReplyKeyboardMarkup(
-            keyboard=[
-                [
-                    KeyboardButton(text="📊 Мой ранг"),
-                    KeyboardButton(text="🏆 Топ игроков")
-                ],
-                [
-                    KeyboardButton(text="✅ Чек-ин"),
-                    KeyboardButton(text="🎮 Игры")
-                ],
-                [
-                    KeyboardButton(text="💎 Донат"),
-                    KeyboardButton(text="👥 Рефералы")
-                ],
-                [
-                    KeyboardButton(text="❓ Помощь")
-                ]
-            ],
-            resize_keyboard=True,
-            one_time_keyboard=False
-        )
-        
-        welcome_text = (
-            f"🎉 Добро пожаловать, {msg.from_user.first_name}!\n\n"
-            f"Ты получил стартовые баллы и доступ ко всем фишкам Sisu Datu Bot.\n"
-            f"Жми кнопки меню и лови вайб! 🚀"
-        )
-        
+        from app.shared.utils.bot_utils import build_main_keyboard, build_welcome_text
+        keyboard = build_main_keyboard()
+        welcome_text = build_welcome_text(msg.from_user.first_name)
         await msg.answer(welcome_text, reply_markup=keyboard)
 
 # Обработчики кнопок личного кабинета
 @router.message(lambda msg: msg.text == "📊 Мой ранг")
 async def my_rank_button(msg: Message):
-    from app.presentation.bot.handlers.myrank import myrank_handler
+    from app.presentation.bot.handlers.top_handler import myrank_handler
     await myrank_handler(msg)
 
 @router.message(lambda msg: msg.text == "🏆 Топ игроков")
