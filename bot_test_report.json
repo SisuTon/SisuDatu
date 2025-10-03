@@ -1,0 +1,26 @@
+{
+  "timestamp": "2025-10-02T19:50:37.290948",
+  "duration_seconds": 0.36,
+  "test_results": {
+    "file_system": {
+      "data_dir_exists": true,
+      "db_file_exists": true,
+      "data_dir_writable": true
+    }
+  },
+  "errors": [
+    "❌ Ошибка конфигурации: cannot import name 'YANDEX_SPEECHKIT_FOLDER_ID' from 'sisu_bot.core.config' (/Users/byorg/Desktop/SisuDatuBot/sisu_bot/core/config.py)",
+    "❌ Ошибка тестирования БД: cannot import name 'get_session' from 'sisu_bot.bot.db.database' (/Users/byorg/Desktop/SisuDatuBot/sisu_bot/bot/db/database.py)",
+    "❌ Ошибка тестирования AI сервисов: No module named 'aiohttp'",
+    "❌ Ошибка тестирования TTS сервисов: No module named 'aiohttp'",
+    "❌ Ошибка тестирования обработчиков команд: No module named 'aiogram'",
+    "❌ Ошибка тестирования middleware: cannot import name 'rate_limit_middleware' from 'sisu_bot.bot.middlewares' (/Users/byorg/Desktop/SisuDatuBot/sisu_bot/bot/middlewares/__init__.py)"
+  ],
+  "warnings": [],
+  "summary": {
+    "total_tests": 3,
+    "passed_tests": 3,
+    "failed_tests": 6,
+    "warnings_count": 0
+  }
+}
