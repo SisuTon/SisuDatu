@@ -165,8 +165,10 @@ async def approve_donate_tier_callback(call: CallbackQuery):
         return
 
     tier_info = DONATION_TIERS[tier_code]
-    # Фиксированные баллы за донат
-    fixed_points = {"bronze": 1000, "silver": 3000, "gold": 7000}.get(tier_code, 1000)
+    # Используем множители из конфигурации
+    base_points = 1000  # Базовые баллы за донат
+    multiplier = tier_info.get("points_multiplier", 1.0)
+    calculated_points = int(base_points * multiplier)
     duration_days = tier_info["duration_days"]
 
     # Устанавливаем статус Supporter и баллы
@@ -181,7 +183,7 @@ async def approve_donate_tier_callback(call: CallbackQuery):
     user.supporter_tier = tier_code
     user.supporter_until = datetime.utcnow() + timedelta(days=duration_days)
     # Начисляем фиксированные баллы
-    points_service.add_points(user_id, fixed_points)
+    points_service.add_points(user_id, calculated_points)
     # Важно: ChatPoints баллы не должны зависеть от доната, это баллы за активность
 
     # Сохраняем данные до закрытия сессии
@@ -196,8 +198,8 @@ async def approve_donate_tier_callback(call: CallbackQuery):
     try:
         await call.bot.send_message(user_id, 
             f"🎉 Твой донат подтвержден!\n\n"\
-            f"Ты получил статус <b>{tier_info['title']}</b> до {supporter_until_str}!\n"\
-            f"Начислено {fixed_points} баллов.\n"\
+            f"Ты получил статус <b>{tier_info['title']}</b> до {user.supporter_until.strftime('%d.%m.%Y')}!\n"\
+            f"Начислено {calculated_points} баллов.\n"\
             f"<b>Плюшки:</b> {', '.join(tier_info['benefits'])}"
             , parse_mode="HTML"
         )

@@ -1,0 +1,42 @@
+[
+  {
+    "name": "draw",
+    "file": "/Users/byorg/Desktop/SisuDatuBot/sisu_bot/data/troll_triggers.json",
+    "priority": 100
+  },
+  {
+    "name": "troll",
+    "file": "/Users/byorg/Desktop/SisuDatuBot/sisu_bot/data/troll_triggers.json",
+    "priority": 90
+  },
+  {
+    "name": "token",
+    "file": "/Users/byorg/Desktop/SisuDatuBot/sisu_bot/data/token_triggers.json",
+    "priority": 85
+  },
+  {
+    "name": "nft",
+    "file": "/Users/byorg/Desktop/SisuDatuBot/sisu_bot/data/nft_triggers.json",
+    "priority": 80
+  },
+  {
+    "name": "moon",
+    "file": "/Users/byorg/Desktop/SisuDatuBot/sisu_bot/data/moon_triggers.json",
+    "priority": 70
+  },
+  {
+    "name": "signal",
+    "file": "/Users/byorg/Desktop/SisuDatuBot/sisu_bot/data/signal_triggers.json",
+    "priority": 60
+  },
+  {
+    "name": "holiday",
+    "file": "/Users/byorg/Desktop/SisuDatuBot/sisu_bot/data/holiday_triggers.json",
+    "priority": 50
+  },
+  {
+    "name": "positive",
+    "file": "/Users/byorg/Desktop/SisuDatuBot/sisu_bot/data/positive_triggers.json",
+    "priority": 40
+  }
+]

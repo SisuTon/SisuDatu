@@ -9,10 +9,9 @@ from app.domain.services.gamification import points as points_service
 from app.shared.config.settings import DB_PATH, Settings
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-# Импорт модели через функцию для соблюдения архитектуры
-def get_user_model():
-    from app.infrastructure.db.models import User
-    return User
+from sisu_bot.bot.db.models import User
+from sisu_bot.bot.services.antifraud_service import antifraud_service
+import logging
 from pathlib import Path
 
 router = Router()
@@ -37,18 +36,23 @@ async def check_and_activate_referral(user_id: int, bot) -> bool:
     Возвращает True, если реферал был активирован
     """
     with Session() as session:
-        user = session.query(get_user_model()).filter(get_user_model().id == user_id).first()
+        user = session.query(User).filter(User.id == user_id).first()
         
         # Проверяем, есть ли ожидающий реферал
         if not user or not user.pending_referral:
             return False
         
-        # Проверяем условия активации
-        if (user.message_count >= 5 and  # Минимум 5 сообщений
-            user.last_checkin):  # Был чек-ин
+        # Проверяем условия активации через антифрод сервис
+        can_activate, reason = antifraud_service.check_activation_fraud(user_id)
+        
+        if not can_activate:
+            antifraud_service.mark_suspicious(user_id, f"Activation fraud attempt: {reason}")
+            logging.warning(f"Referral activation blocked for user {user_id}: {reason}")
+            return False
             
+<<<<<<< HEAD:app/presentation/bot/handlers/checkin.py
             ref_id = user.pending_referral
-            ref_user = session.query(get_user_model()).filter(get_user_model().id == ref_id).first()
+            ref_user = session.query(User).filter(User.id == ref_id).first()
             if ref_user:
                 # Активируем реферала
                 user.invited_by = ref_id
@@ -87,6 +91,48 @@ async def check_and_activate_referral(user_id: int, bot) -> bool:
                     print(f"Ошибка при отправке уведомлений: {e}")
                 
                 return True
+=======
+        ref_id = user.pending_referral
+        ref_user = session.query(User).filter(User.id == ref_id).first()
+        if ref_user:
+            # Активируем реферала
+            user.invited_by = ref_id
+            user.pending_referral = None
+            
+            # Базовые награды через points_service
+            base_points = 100
+            points_service.add_points(ref_id, base_points, username=ref_user.username)
+            ref_user.referrals += 1
+            
+            # Дополнительные награды за количество рефералов
+            if ref_user.referrals == 5:
+                points_service.add_points(ref_id, 500, username=ref_user.username)  # Бонус за 5 рефералов
+                bonus_msg = "\n🎉 Достижение: 5 рефералов! +500 баллов"
+            elif ref_user.referrals == 10:
+                points_service.add_points(ref_id, 1000, username=ref_user.username)  # Бонус за 10 рефералов
+                bonus_msg = "\n🌟 Достижение: 10 рефералов! +1000 баллов"
+            else:
+                bonus_msg = ""
+            
+            # Сохраняем изменения
+            session.commit()
+            
+            # Уведомляем обоих пользователей
+            try:
+                await bot.send_message(ref_id, 
+                    "🎉 Поздравляем! Твой реферал активирован!\n"
+                    f"• +{base_points} баллов{bonus_msg}\n"
+                    "• +1 к счётчику рефералов"
+                )
+                await bot.send_message(user_id,
+                    "🎯 Реферальная программа активирована!\n"
+                    "Пригласивший тебя получил награду."
+                )
+            except Exception as e:
+                print(f"Ошибка при отправке уведомлений: {e}")
+            
+            return True
+>>>>>>> 781e983158d91d17dc46f5c930afa024b4951335:sisu_bot/bot/handlers/checkin_handler.py
     
     return False
 
@@ -99,10 +145,10 @@ async def checkin_handler(msg: Message):
     
     user_id = msg.from_user.id
     with Session() as session:
-        user = session.query(get_user_model()).filter(get_user_model().id == user_id).first()
+        user = session.query(User).filter(User.id == user_id).first()
         
         if not user:
-            user = get_user_model()(id=user_id)
+            user = User(id=user_id)
             session.add(user)
         
         now = datetime.utcnow()
@@ -133,7 +179,7 @@ async def checkin_handler(msg: Message):
         )
         # Принудительно обновляем user, так как points_service.add_points возвращает user, 
         # но сессия здесь может быть другая (или объект user обновился в points_service)
-        user = session.query(get_user_model()).filter(get_user_model().id == user_id).first()
+        user = session.query(User).filter(User.id == user_id).first()
         user.last_checkin = now
         session.commit()
         

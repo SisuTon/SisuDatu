@@ -2,11 +2,9 @@ from typing import Callable, Dict, Any, Awaitable
 from aiogram.dispatcher.middlewares.base import BaseMiddleware
 from aiogram.types import Message
 import logging
-# Импорт модели через функцию для соблюдения архитектуры
-def get_user_model():
-    from app.infrastructure.db.models import User
-    return User
-from app.shared.config.bot_config import is_superadmin, is_any_admin
+from datetime import datetime, timedelta
+from sisu_bot.bot.db.models import User
+from sisu_bot.bot.config import is_superadmin, is_any_admin
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
 from app.shared.config.settings import DB_PATH
@@ -15,6 +13,9 @@ logger = logging.getLogger(__name__)
 
 engine = create_engine(f'sqlite:///{DB_PATH}')
 Session = sessionmaker(bind=engine)
+
+# Хранение активности пользователей для антифрода
+user_activity: Dict[int, Dict] = {}  # user_id -> {"messages": [], "last_checkin": timestamp, "suspicious_count": 0}
 
 class AntiFraudMiddleware(BaseMiddleware):
     async def __call__(
@@ -34,35 +35,78 @@ class AntiFraudMiddleware(BaseMiddleware):
             logger.warning(f"AntiFraud: Blocking message from bot user {user_id}")
             return # Блокируем сообщение от ботов
 
+        # Проверка на подозрительную активность
+        if await self._is_suspicious_activity(user_id, event):
+            logger.warning(f"AntiFraud: Blocking suspicious activity from user {user_id}")
+            await event.answer("🚫 Ваша активность кажется подозрительной. Если это ошибка, свяжитесь с администратором.")
+            return # Блокируем сообщение
+
+        return await handler(event, data)
+    
+    async def _is_suspicious_activity(self, user_id: int, event: Message) -> bool:
+        """Проверяет подозрительную активность пользователя"""
+        current_time = datetime.utcnow()
+        
+        # Инициализация активности
+        if user_id not in user_activity:
+            user_activity[user_id] = {
+                "messages": [],
+                "last_checkin": None,
+                "suspicious_count": 0,
+                "created_at": current_time
+            }
+        
+        activity = user_activity[user_id]
+        
+        # Очистка старых сообщений (оставляем только за последний час)
+        activity["messages"] = [
+            msg_time for msg_time in activity["messages"] 
+            if current_time - msg_time < timedelta(hours=1)
+        ]
+        
+        # Добавляем текущее сообщение
+        activity["messages"].append(current_time)
+        
+        # Проверки на подозрительную активность
+        
+        # 1. Слишком много сообщений за короткое время
+        if len(activity["messages"]) > 30:  # Больше 30 сообщений в час
+            activity["suspicious_count"] += 1
+            logger.warning(f"AntiFraud: User {user_id} sent too many messages ({len(activity['messages'])} in 1 hour)")
+        
+        # 2. Слишком частые сообщения (меньше 2 секунд между сообщениями)
+        if len(activity["messages"]) >= 2:
+            time_diff = (activity["messages"][-1] - activity["messages"][-2]).total_seconds()
+            if time_diff < 2:
+                activity["suspicious_count"] += 1
+                logger.warning(f"AntiFraud: User {user_id} sending messages too fast ({time_diff:.1f}s between messages)")
+        
+        # 3. Новый пользователь с высокой активностью
+        user_age = current_time - activity["created_at"]
+        if user_age < timedelta(hours=1) and len(activity["messages"]) > 20:
+            activity["suspicious_count"] += 1
+            logger.warning(f"AntiFraud: New user {user_id} with high activity ({len(activity['messages'])} messages in {user_age})")
+        
+        # 4. Проверка в БД
         session = Session()
-        user = session.query(get_user_model()).filter(get_user_model().id == user_id).first()
-        session.close()
+        try:
+            user = session.query(User).filter(User.id == user_id).first()
+            if user:
+                # Проверка на подозрительные паттерны в БД
+                if user.message_count > 100 and user.active_days < 1:
+                    activity["suspicious_count"] += 1
+                    logger.warning(f"AntiFraud: User {user_id} has high message_count ({user.message_count}) but low active_days ({user.active_days})")
+                
+                # Проверка на множественные рефералы без активности
+                if user.referrals > 5 and user.message_count < 10:
+                    activity["suspicious_count"] += 1
+                    logger.warning(f"AntiFraud: User {user_id} has many referrals ({user.referrals}) but low activity ({user.message_count} messages)")
+        finally:
+            session.close()
         
-        if not user:
-            # Если пользователя нет в БД, это может быть новый пользователь. Пропускаем.
-            # Дальнейшая логика будет в user_sync middleware или при первом добавлении в БД
-            return await handler(event, data)
+        # Если накопилось много подозрительных действий
+        if activity["suspicious_count"] >= 3:
+            logger.error(f"AntiFraud: User {user_id} blocked due to suspicious activity (count: {activity['suspicious_count']})")
+            return True
         
-        # Пример простой эвристики для обнаружения подозрительной активности
-        # Если пользователь очень новый (например, < 1 часа) и имеет аномально высокий message_count
-        # или быстрое начисление баллов (хотя баллы уже проверяются в points_service)
-        # Это может быть более сложная логика, включающая время регистрации, частоту сообщений и т.д.
-        
-        # Сейчас, для MVP, просто логируем подозрительную активность.
-        # Более продвинутые методы (например, проверка IP, анализ поведенческих паттернов) требуют больше ресурсов.
-        
-        # Если пользователь был приглашен другим пользователем (invited_by не null),
-        # и у него очень низкий message_count, но при этом высокий pending_referral
-        # (хотя pending_referral уже используется для активации)
-        
-        # В данном случае, основная защита от накрутки рефералов будет через проверку message_count и last_checkin
-        # в check_and_activate_referral.
-
-        # Здесь можно добавить логику, которая блокирует или помечает пользователя.
-        # Например:
-        # if user.created_at > datetime.utcnow() - timedelta(hours=1) and user.message_count > 50:
-        #     logger.warning(f"AntiFraud: Potentially suspicious new user activity {user_id}")
-        #     await event.answer("Ваша активность кажется подозрительной. Если это ошибка, свяжитесь с администратором.")
-        #     return # Блокируем сообщение
-
-        return await handler(event, data) 
+        return False 

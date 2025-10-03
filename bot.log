@@ -1358,6 +1358,7 @@ Traceback (most recent call last):
     return await wrapped()
                  ~~~~~~~^^
 TypeError: main.<locals>.errors_handler() missing 1 required positional argument: 'update'
+<<<<<<< HEAD
 2025-07-31 22:07:27,234 - root - INFO - [Allowed] Command in private chat: /allow_chat -1002895914391
 2025-07-31 22:07:27,235 - app.presentation.bot.middlewares.rate_limiter - INFO - RateLimitMiddleware: Bypassing rate limit for admin user 446318189
 2025-07-31 22:07:27,396 - aiogram.event - INFO - Update id=436041100 is handled. Duration 161 ms by bot id=7803467562
@@ -11593,3 +11594,917 @@ ModuleNotFoundError: No module named 'app.presentation.bot.handlers.myrank'
 2025-09-22 13:34:13,446 - aiogram.dispatcher - WARNING - Sleep for 5.081827 seconds and try again... (tryings = 31, bot id = 7803467562)
 2025-09-22 13:34:18,533 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientConnectorError: Cannot connect to host api.telegram.org:443 ssl:default [Network is unreachable]
 2025-09-22 13:34:18,534 - aiogram.dispatcher - WARNING - Sleep for 5.125407 seconds and try again... (tryings = 32, bot id = 7803467562)
+=======
+2025-06-17 14:45:59,699 - aiogram.dispatcher - WARNING - Received SIGINT signal
+2025-06-17 14:45:59,706 - aiogram.dispatcher - INFO - Polling stopped for bot @SisuDatuBot id=7803467562 - 'Sisu'
+2025-06-17 14:45:59,707 - aiogram.dispatcher - INFO - Polling stopped
+2025-06-17 14:46:05,773 - __main__ - INFO - Starting bot...
+2025-06-17 14:46:05,781 - __main__ - INFO - Registering middlewares...
+2025-06-17 14:46:05,782 - __main__ - INFO - Registering routers...
+2025-06-17 14:46:05,782 - __main__ - INFO - Setting up command menus...
+2025-06-17 14:46:06,183 - sisu_bot.bot.services.command_menu_service - INFO - Successfully set default commands menu
+2025-06-17 14:46:06,390 - sisu_bot.bot.services.command_menu_service - INFO - Successfully set superadmin commands menu for superadmin 446318189
+2025-06-17 14:46:06,561 - sisu_bot.bot.services.command_menu_service - INFO - Successfully set superadmin commands menu for superadmin 5857816562
+2025-06-17 14:46:06,561 - sisu_bot.bot.services.command_menu_service - INFO - All command menus were set successfully
+2025-06-17 14:46:06,562 - __main__ - INFO - Command menus set up successfully
+2025-06-17 14:46:06,562 - __main__ - INFO - Bot started successfully! 🚀
+2025-06-17 14:46:06,563 - aiogram.dispatcher - INFO - Start polling
+2025-06-17 14:46:06,621 - aiogram.dispatcher - INFO - Run polling for bot @SisuDatuBot id=7803467562 - 'Sisu'
+2025-06-17 14:46:14,958 - root - INFO - [Allowed] Message in whitelisted group: -1002565290281
+2025-06-17 14:46:14,982 - sisu_bot.bot.middlewares.rate_limit - INFO - RateLimitMiddleware: Bypassing rate limit for admin user 446318189
+2025-06-17 14:46:15,226 - aiogram.event - INFO - Update id=436038058 is handled. Duration 272 ms by bot id=7803467562
+2025-06-17 14:46:55,258 - root - INFO - [Allowed] Command in private chat: /ref
+2025-06-17 14:46:55,266 - sisu_bot.bot.middlewares.rate_limit - INFO - RateLimitMiddleware: Bypassing rate limit for admin user 446318189
+2025-06-17 14:46:55,266 - root - INFO - !!! REF HANDLER ВЫЗВАН !!!
+2025-06-17 14:46:55,266 - root - INFO - REF HANDLER START: User 446318189
+2025-06-17 14:46:55,270 - root - INFO - REF: Loading users data for 446318189
+2025-06-17 14:46:55,543 - root - INFO - REF: Generated ref link for 446318189: https://t.me/SisuDatuBot?start=ref446318189
+2025-06-17 14:46:55,544 - root - INFO - REF: Sending response to 446318189
+2025-06-17 14:46:55,619 - root - INFO - REF: Successfully sent ref link to 446318189
+2025-06-17 14:46:55,619 - aiogram.event - INFO - Update id=436038059 is handled. Duration 364 ms by bot id=7803467562
+2025-06-17 14:49:54,907 - root - INFO - [Allowed] Command in private chat: /start ref446318189
+2025-06-17 14:49:54,919 - root - INFO - Пользователь 6867521567 приглашён 446318189, ожидает активации
+2025-06-17 14:49:55,160 - aiogram.event - INFO - Update id=436038060 is handled. Duration 269 ms by bot id=7803467562
+2025-06-17 14:50:08,046 - root - INFO - [Allowed] Command in private chat: /start ref446318189
+2025-06-17 14:50:08,049 - root - INFO - Пользователь 6867521567 приглашён 446318189, ожидает активации
+2025-06-17 14:50:08,418 - aiogram.event - INFO - Update id=436038061 is handled. Duration 375 ms by bot id=7803467562
+2025-06-17 14:56:01,570 - root - INFO - [Allowed] Command in private chat: /start
+2025-06-17 14:56:01,576 - sisu_bot.bot.middlewares.rate_limit - INFO - RateLimitMiddleware: Bypassing rate limit for admin user 446318189
+2025-06-17 14:56:01,741 - aiogram.event - INFO - Update id=436038062 is handled. Duration 173 ms by bot id=7803467562
+2025-06-17 14:56:03,132 - root - INFO - [Allowed] Command in private chat: /help
+2025-06-17 14:56:03,134 - sisu_bot.bot.middlewares.rate_limit - INFO - RateLimitMiddleware: Bypassing rate limit for admin user 446318189
+2025-06-17 14:56:03,309 - aiogram.event - INFO - Update id=436038063 is handled. Duration 178 ms by bot id=7803467562
+2025-06-17 15:00:05,866 - root - INFO - [Allowed] Command in private chat: /checkin
+2025-06-17 15:00:05,877 - sisu_bot.bot.middlewares.rate_limit - INFO - RateLimitMiddleware: Bypassing rate limit for admin user 446318189
+2025-06-17 15:00:06,049 - aiogram.event - INFO - Update id=436038064 is handled. Duration 185 ms by bot id=7803467562
+2025-06-17 15:00:08,701 - root - INFO - [Allowed] Command in private chat: /market
+2025-06-17 15:00:08,702 - sisu_bot.bot.middlewares.rate_limit - INFO - RateLimitMiddleware: Bypassing rate limit for admin user 446318189
+2025-06-17 15:00:08,909 - aiogram.event - INFO - Update id=436038065 is handled. Duration 209 ms by bot id=7803467562
+2025-06-17 15:00:12,383 - root - INFO - [Allowed] Command in private chat: /admin
+2025-06-17 15:00:12,384 - sisu_bot.bot.middlewares.rate_limit - INFO - RateLimitMiddleware: Bypassing rate limit for admin user 446318189
+2025-06-17 15:00:12,522 - aiogram.event - INFO - Update id=436038066 is handled. Duration 139 ms by bot id=7803467562
+2025-06-17 15:00:17,476 - aiogram.event - INFO - Update id=436038067 is not handled. Duration 1 ms by bot id=7803467562
+2025-06-17 15:00:40,863 - root - INFO - [Allowed] Command in private chat: /list_chats
+2025-06-17 15:00:40,884 - sisu_bot.bot.middlewares.rate_limit - INFO - RateLimitMiddleware: Bypassing rate limit for admin user 446318189
+2025-06-17 15:00:41,084 - aiogram.event - INFO - Update id=436038068 is handled. Duration 223 ms by bot id=7803467562
+2025-06-17 15:00:59,318 - root - INFO - [Allowed] Command in private chat: /addadmin
+2025-06-17 15:00:59,321 - sisu_bot.bot.middlewares.rate_limit - INFO - RateLimitMiddleware: Bypassing rate limit for admin user 446318189
+2025-06-17 15:00:59,492 - aiogram.event - INFO - Update id=436038069 is handled. Duration 188 ms by bot id=7803467562
+2025-06-17 15:02:05,816 - root - INFO - [Allowed] Command in private chat: /addadmin @YakuzaNakamoto
+2025-06-17 15:02:05,825 - sisu_bot.bot.middlewares.rate_limit - INFO - RateLimitMiddleware: Bypassing rate limit for admin user 446318189
+2025-06-17 15:02:06,026 - aiogram.event - INFO - Update id=436038070 is handled. Duration 219 ms by bot id=7803467562
+2025-06-17 15:02:21,205 - aiogram.event - INFO - Update id=436038071 is not handled. Duration 7 ms by bot id=7803467562
+2025-06-17 15:02:23,572 - aiogram.event - INFO - Update id=436038072 is not handled. Duration 4 ms by bot id=7803467562
+2025-06-17 15:02:24,544 - aiogram.event - INFO - Update id=436038073 is not handled. Duration 5 ms by bot id=7803467562
+2025-06-17 15:02:25,434 - aiogram.event - INFO - Update id=436038074 is not handled. Duration 2 ms by bot id=7803467562
+2025-06-17 15:03:24,297 - root - INFO - [Allowed] Command in private chat: /voice_motivation
+2025-06-17 15:03:24,309 - sisu_bot.bot.middlewares.rate_limit - INFO - RateLimitMiddleware: Bypassing rate limit for admin user 446318189
+2025-06-17 15:03:24,525 - aiogram.event - INFO - Update id=436038075 is handled. Duration 230 ms by bot id=7803467562
+2025-06-17 15:03:35,095 - root - INFO - [Allowed] Command in private chat: /stats
+2025-06-17 15:03:35,098 - sisu_bot.bot.middlewares.rate_limit - INFO - RateLimitMiddleware: Bypassing rate limit for admin user 446318189
+2025-06-17 15:03:35,178 - aiogram.event - INFO - Update id=436038076 is handled. Duration 83 ms by bot id=7803467562
+2025-06-17 15:03:46,689 - root - INFO - [Allowed] Command in private chat: /allow_chat
+2025-06-17 15:03:46,700 - sisu_bot.bot.middlewares.rate_limit - INFO - RateLimitMiddleware: Bypassing rate limit for admin user 446318189
+2025-06-17 15:03:46,776 - aiogram.event - INFO - Update id=436038077 is handled. Duration 98 ms by bot id=7803467562
+2025-06-17 15:04:40,502 - aiogram.dispatcher - WARNING - Received SIGINT signal
+2025-06-17 15:04:40,504 - aiogram.dispatcher - INFO - Polling stopped for bot @SisuDatuBot id=7803467562 - 'Sisu'
+2025-06-17 15:04:40,505 - aiogram.dispatcher - INFO - Polling stopped
+2025-06-17 15:04:46,777 - __main__ - INFO - Starting bot...
+2025-06-17 15:04:46,785 - __main__ - INFO - Registering middlewares...
+2025-06-17 15:04:46,785 - __main__ - INFO - Registering routers...
+2025-06-17 15:04:46,785 - __main__ - INFO - Setting up command menus...
+2025-06-17 15:04:47,046 - sisu_bot.bot.services.command_menu_service - INFO - Successfully set default commands menu
+2025-06-17 15:04:47,047 - sisu_bot.bot.services.command_menu_service - ERROR - Failed to set admin commands menu for admin YakuzaNakamoto: invalid literal for int() with base 10: 'YakuzaNakamoto'
+2025-06-17 15:04:47,179 - sisu_bot.bot.services.command_menu_service - INFO - Successfully set superadmin commands menu for superadmin 446318189
+2025-06-17 15:04:47,271 - sisu_bot.bot.services.command_menu_service - INFO - Successfully set superadmin commands menu for superadmin 5857816562
+2025-06-17 15:04:47,271 - sisu_bot.bot.services.command_menu_service - WARNING - Some command menus were not set successfully
+2025-06-17 15:04:47,271 - __main__ - WARNING - Some command menus were not set up successfully
+2025-06-17 15:04:47,271 - __main__ - INFO - Bot started successfully! 🚀
+2025-06-17 15:04:47,271 - aiogram.dispatcher - INFO - Start polling
+2025-06-17 15:04:47,343 - aiogram.dispatcher - INFO - Run polling for bot @SisuDatuBot id=7803467562 - 'Sisu'
+2025-06-17 15:05:01,868 - root - INFO - [Allowed] Command in private chat: /start ref446318189
+2025-06-17 15:05:01,873 - root - INFO - Пользователь 6867521567 приглашён 446318189, ожидает активации
+2025-06-17 15:05:02,190 - aiogram.event - INFO - Update id=436038078 is handled. Duration 332 ms by bot id=7803467562
+2025-06-17 15:05:12,002 - root - INFO - [Allowed] Command in private chat: /start ref446318189
+2025-06-17 15:05:12,004 - root - INFO - Пользователь 6867521567 приглашён 446318189, ожидает активации
+2025-06-17 15:05:12,420 - aiogram.event - INFO - Update id=436038079 is handled. Duration 422 ms by bot id=7803467562
+2025-06-17 15:05:20,537 - root - INFO - [Allowed] Command in private chat: /help
+2025-06-17 15:05:20,693 - aiogram.event - INFO - Update id=436038080 is handled. Duration 158 ms by bot id=7803467562
+2025-06-17 15:06:25,691 - root - INFO - [Allowed] Command in private chat: /start
+2025-06-17 15:06:25,868 - aiogram.event - INFO - Update id=436038081 is handled. Duration 186 ms by bot id=7803467562
+2025-06-17 15:06:27,523 - root - INFO - [Allowed] Command in private chat: /help
+2025-06-17 15:06:27,682 - aiogram.event - INFO - Update id=436038082 is handled. Duration 162 ms by bot id=7803467562
+2025-06-17 15:06:29,888 - root - INFO - [Allowed] Command in private chat: /myrank
+2025-06-17 15:06:29,988 - aiogram.event - INFO - Update id=436038083 is handled. Duration 104 ms by bot id=7803467562
+2025-06-17 15:06:33,112 - root - INFO - [Allowed] Command in private chat: /ref
+2025-06-17 15:06:33,114 - root - INFO - !!! REF HANDLER ВЫЗВАН !!!
+2025-06-17 15:06:33,114 - root - INFO - REF HANDLER START: User 6867521567
+2025-06-17 15:06:33,117 - root - INFO - REF: Loading users data for 6867521567
+2025-06-17 15:06:33,166 - root - INFO - REF: Generated ref link for 6867521567: https://t.me/SisuDatuBot?start=ref6867521567
+2025-06-17 15:06:33,166 - root - INFO - REF: Sending response to 6867521567
+2025-06-17 15:06:33,246 - root - INFO - REF: Successfully sent ref link to 6867521567
+2025-06-17 15:06:33,246 - aiogram.event - INFO - Update id=436038084 is handled. Duration 137 ms by bot id=7803467562
+2025-06-17 15:14:08,613 - root - INFO - [Allowed] Command in private chat: /ref
+2025-06-17 15:14:08,617 - sisu_bot.bot.middlewares.rate_limit - INFO - RateLimitMiddleware: Bypassing rate limit for admin user 446318189
+2025-06-17 15:14:08,617 - root - INFO - !!! REF HANDLER ВЫЗВАН !!!
+2025-06-17 15:14:08,617 - root - INFO - REF HANDLER START: User 446318189
+2025-06-17 15:14:08,617 - root - INFO - REF: Loading users data for 446318189
+2025-06-17 15:14:08,765 - root - INFO - REF: Generated ref link for 446318189: https://t.me/SisuDatuBot?start=ref446318189
+2025-06-17 15:14:08,766 - root - INFO - REF: Sending response to 446318189
+2025-06-17 15:14:08,837 - root - INFO - REF: Successfully sent ref link to 446318189
+2025-06-17 15:14:08,838 - aiogram.event - INFO - Update id=436038085 is handled. Duration 228 ms by bot id=7803467562
+2025-06-17 15:14:28,698 - root - INFO - [Allowed] Command in private chat: /start ref446318189
+2025-06-17 15:14:28,709 - root - INFO - Пользователь 6045718255 приглашён 446318189, ожидает активации
+2025-06-17 15:14:28,972 - aiogram.event - INFO - Update id=436038086 is handled. Duration 282 ms by bot id=7803467562
+2025-06-17 15:17:11,452 - aiogram.dispatcher - WARNING - Received SIGINT signal
+2025-06-17 15:17:11,455 - aiogram.dispatcher - INFO - Polling stopped for bot @SisuDatuBot id=7803467562 - 'Sisu'
+2025-06-17 15:17:11,455 - aiogram.dispatcher - INFO - Polling stopped
+2025-06-17 15:17:18,250 - __main__ - INFO - Starting bot...
+2025-06-17 15:17:18,259 - __main__ - INFO - Registering middlewares...
+2025-06-17 15:17:18,259 - __main__ - INFO - Registering routers...
+2025-06-17 15:17:18,259 - __main__ - INFO - Setting up command menus...
+2025-06-17 15:17:18,551 - sisu_bot.bot.services.command_menu_service - INFO - Successfully set default commands menu
+2025-06-17 15:17:18,553 - sisu_bot.bot.services.command_menu_service - ERROR - Failed to set admin commands menu for admin YakuzaNakamoto: invalid literal for int() with base 10: 'YakuzaNakamoto'
+2025-06-17 15:17:18,681 - sisu_bot.bot.services.command_menu_service - INFO - Successfully set superadmin commands menu for superadmin 446318189
+2025-06-17 15:17:19,237 - sisu_bot.bot.services.command_menu_service - INFO - Successfully set superadmin commands menu for superadmin 5857816562
+2025-06-17 15:17:19,239 - sisu_bot.bot.services.command_menu_service - WARNING - Some command menus were not set successfully
+2025-06-17 15:17:19,243 - __main__ - WARNING - Some command menus were not set up successfully
+2025-06-17 15:17:19,244 - __main__ - INFO - Bot started successfully! 🚀
+2025-06-17 15:17:19,244 - aiogram.dispatcher - INFO - Start polling
+2025-06-17 15:17:19,291 - aiogram.dispatcher - INFO - Run polling for bot @SisuDatuBot id=7803467562 - 'Sisu'
+2025-06-17 15:17:23,552 - root - INFO - [Allowed] Command in private chat: /list_admins
+2025-06-17 15:17:23,585 - sisu_bot.bot.middlewares.rate_limit - INFO - RateLimitMiddleware: Bypassing rate limit for admin user 446318189
+2025-06-17 15:17:23,974 - aiogram.event - INFO - Update id=436038087 is handled. Duration 423 ms by bot id=7803467562
+2025-06-17 15:17:40,574 - root - INFO - [Allowed] Command in private chat: /adminlog
+2025-06-17 15:17:40,577 - sisu_bot.bot.middlewares.rate_limit - INFO - RateLimitMiddleware: Bypassing rate limit for admin user 446318189
+2025-06-17 15:17:40,894 - aiogram.event - INFO - Update id=436038088 is handled. Duration 320 ms by bot id=7803467562
+2025-06-17 15:18:30,453 - aiogram.dispatcher - WARNING - Received SIGINT signal
+2025-06-17 15:18:30,458 - aiogram.dispatcher - INFO - Polling stopped for bot @SisuDatuBot id=7803467562 - 'Sisu'
+2025-06-17 15:18:30,459 - aiogram.dispatcher - INFO - Polling stopped
+2025-06-17 15:19:06,397 - __main__ - INFO - Starting bot...
+2025-06-17 15:19:06,408 - __main__ - INFO - Registering middlewares...
+2025-06-17 15:19:06,408 - __main__ - INFO - Registering routers...
+2025-06-17 15:19:06,408 - __main__ - INFO - Setting up command menus...
+2025-06-17 15:19:06,608 - sisu_bot.bot.services.command_menu_service - INFO - Successfully set default commands menu
+2025-06-17 15:19:06,608 - sisu_bot.bot.services.command_menu_service - ERROR - Failed to set admin commands menu for admin YakuzaNakamoto: invalid literal for int() with base 10: 'YakuzaNakamoto'
+2025-06-17 15:19:06,680 - sisu_bot.bot.services.command_menu_service - INFO - Successfully set superadmin commands menu for superadmin 446318189
+2025-06-17 15:19:06,740 - sisu_bot.bot.services.command_menu_service - INFO - Successfully set superadmin commands menu for superadmin 5857816562
+2025-06-17 15:19:06,740 - sisu_bot.bot.services.command_menu_service - WARNING - Some command menus were not set successfully
+2025-06-17 15:19:06,740 - __main__ - WARNING - Some command menus were not set up successfully
+2025-06-17 15:19:06,741 - __main__ - INFO - Bot started successfully! 🚀
+2025-06-17 15:19:06,743 - aiogram.dispatcher - INFO - Start polling
+2025-06-17 15:19:06,796 - aiogram.dispatcher - INFO - Run polling for bot @SisuDatuBot id=7803467562 - 'Sisu'
+2025-06-17 15:19:13,225 - root - INFO - [Allowed] Command in private chat: /start ref446318189
+2025-06-17 15:19:13,726 - aiogram.event - INFO - Update id=436038089 is handled. Duration 509 ms by bot id=7803467562
+2025-06-17 15:19:26,686 - aiogram.event - INFO - Update id=436038090 is handled. Duration 113 ms by bot id=7803467562
+2025-06-17 15:20:26,534 - root - INFO - [Allowed] Command in private chat: /help
+2025-06-17 15:20:26,739 - aiogram.event - INFO - Update id=436038091 is handled. Duration 215 ms by bot id=7803467562
+2025-06-17 15:20:31,383 - root - INFO - [Allowed] Command in private chat: /top
+2025-06-17 15:20:31,461 - aiogram.event - INFO - Update id=436038092 is handled. Duration 79 ms by bot id=7803467562
+2025-06-17 15:20:40,834 - root - INFO - [Allowed] Command in private chat: /myrank
+2025-06-17 15:20:41,025 - aiogram.event - INFO - Update id=436038093 is handled. Duration 220 ms by bot id=7803467562
+2025-06-17 15:20:47,569 - root - INFO - [Allowed] Command in private chat: /myrank
+2025-06-17 15:20:47,732 - aiogram.event - INFO - Update id=436038094 is handled. Duration 164 ms by bot id=7803467562
+2025-06-17 15:22:26,574 - root - INFO - [Allowed] Command in private chat: /admin
+2025-06-17 15:22:26,733 - aiogram.event - INFO - Update id=436038095 is handled. Duration 178 ms by bot id=7803467562
+2025-06-17 15:22:56,335 - aiogram.dispatcher - WARNING - Received SIGINT signal
+2025-06-17 15:22:56,354 - aiogram.dispatcher - INFO - Polling stopped for bot @SisuDatuBot id=7803467562 - 'Sisu'
+2025-06-17 15:22:56,356 - aiogram.dispatcher - INFO - Polling stopped
+2025-06-17 15:22:59,780 - __main__ - INFO - Starting bot...
+2025-06-17 15:22:59,788 - __main__ - INFO - Registering middlewares...
+2025-06-17 15:22:59,788 - __main__ - INFO - Registering routers...
+2025-06-17 15:22:59,788 - __main__ - INFO - Setting up command menus...
+2025-06-17 15:23:00,026 - sisu_bot.bot.services.command_menu_service - INFO - Successfully set default commands menu
+2025-06-17 15:23:00,029 - sisu_bot.bot.services.command_menu_service - ERROR - Failed to set admin commands menu for admin YakuzaNakamoto: invalid literal for int() with base 10: 'YakuzaNakamoto'
+2025-06-17 15:23:00,085 - sisu_bot.bot.services.command_menu_service - INFO - Successfully set superadmin commands menu for superadmin 446318189
+2025-06-17 15:23:00,145 - sisu_bot.bot.services.command_menu_service - INFO - Successfully set superadmin commands menu for superadmin 5857816562
+2025-06-17 15:23:00,145 - sisu_bot.bot.services.command_menu_service - WARNING - Some command menus were not set successfully
+2025-06-17 15:23:00,145 - __main__ - WARNING - Some command menus were not set up successfully
+2025-06-17 15:23:00,145 - __main__ - INFO - Bot started successfully! 🚀
+2025-06-17 15:23:00,146 - aiogram.dispatcher - INFO - Start polling
+2025-06-17 15:23:00,193 - aiogram.dispatcher - INFO - Run polling for bot @SisuDatuBot id=7803467562 - 'Sisu'
+2025-06-17 15:23:05,206 - root - INFO - [Allowed] Command in private chat: /admin
+2025-06-17 15:23:05,393 - aiogram.event - INFO - Update id=436038096 is handled. Duration 208 ms by bot id=7803467562
+2025-06-17 15:23:18,423 - root - INFO - [Allowed] Command in private chat: /help
+2025-06-17 15:23:18,584 - aiogram.event - INFO - Update id=436038097 is handled. Duration 165 ms by bot id=7803467562
+2025-06-17 15:25:02,836 - root - INFO - [Allowed] Command in private chat: /addadmin
+2025-06-17 15:25:03,422 - aiogram.event - INFO - Update id=436038098 is handled. Duration 592 ms by bot id=7803467562
+2025-06-17 15:28:44,381 - root - INFO - [Allowed] Command in private chat: /addadmin #6485553352
+2025-06-17 15:28:44,391 - sisu_bot.bot.middlewares.rate_limit - INFO - RateLimitMiddleware: Bypassing rate limit for admin user 446318189
+2025-06-17 15:28:44,557 - aiogram.event - INFO - Update id=436038099 is handled. Duration 178 ms by bot id=7803467562
+2025-06-17 15:28:50,843 - root - INFO - [Allowed] Command in private chat: /list_admins
+2025-06-17 15:28:50,844 - sisu_bot.bot.middlewares.rate_limit - INFO - RateLimitMiddleware: Bypassing rate limit for admin user 446318189
+2025-06-17 15:28:50,966 - aiogram.event - INFO - Update id=436038100 is handled. Duration 140 ms by bot id=7803467562
+2025-06-17 15:29:16,305 - root - INFO - [Allowed] Command in private chat: /addadmin
+2025-06-17 15:29:16,624 - aiogram.event - INFO - Update id=436038101 is handled. Duration 324 ms by bot id=7803467562
+2025-06-17 15:29:20,472 - root - INFO - [Allowed] Command in private chat: /start
+2025-06-17 15:29:20,652 - aiogram.event - INFO - Update id=436038102 is handled. Duration 184 ms by bot id=7803467562
+2025-06-17 15:29:24,774 - aiogram.event - INFO - Update id=436038103 is handled. Duration 168 ms by bot id=7803467562
+2025-06-17 15:29:30,187 - root - INFO - [Allowed] Command in private chat: /myrank
+2025-06-17 15:29:30,389 - aiogram.event - INFO - Update id=436038104 is handled. Duration 203 ms by bot id=7803467562
+2025-06-17 15:31:16,012 - root - INFO - [Allowed] Command in private chat: /removeadmin
+2025-06-17 15:31:16,026 - sisu_bot.bot.middlewares.rate_limit - INFO - RateLimitMiddleware: Bypassing rate limit for admin user 446318189
+2025-06-17 15:31:16,204 - aiogram.event - INFO - Update id=436038105 is handled. Duration 194 ms by bot id=7803467562
+2025-06-17 15:31:34,741 - root - INFO - [Allowed] Command in private chat: /removeadmin YakuzaNakamoto
+#6485553352
+2025-06-17 15:31:34,752 - sisu_bot.bot.middlewares.rate_limit - INFO - RateLimitMiddleware: Bypassing rate limit for admin user 446318189
+2025-06-17 15:31:34,960 - aiogram.event - INFO - Update id=436038106 is handled. Duration 220 ms by bot id=7803467562
+2025-06-17 15:31:45,350 - root - INFO - [Allowed] Command in private chat: /addadmin #6485553352
+2025-06-17 15:31:45,352 - sisu_bot.bot.middlewares.rate_limit - INFO - RateLimitMiddleware: Bypassing rate limit for admin user 446318189
+2025-06-17 15:31:45,426 - aiogram.event - INFO - Update id=436038107 is handled. Duration 77 ms by bot id=7803467562
+2025-06-17 15:31:47,499 - root - INFO - [Allowed] Command in private chat: /list_admins
+2025-06-17 15:31:47,501 - sisu_bot.bot.middlewares.rate_limit - INFO - RateLimitMiddleware: Bypassing rate limit for admin user 446318189
+2025-06-17 15:31:47,599 - aiogram.event - INFO - Update id=436038108 is handled. Duration 102 ms by bot id=7803467562
+2025-06-17 15:33:04,169 - root - INFO - [Allowed] Command in private chat: /removeadmin 6485553352
+2025-06-17 15:33:04,173 - sisu_bot.bot.middlewares.rate_limit - INFO - RateLimitMiddleware: Bypassing rate limit for admin user 446318189
+2025-06-17 15:33:04,396 - aiogram.event - INFO - Update id=436038109 is handled. Duration 228 ms by bot id=7803467562
+2025-06-17 15:33:07,302 - root - INFO - [Allowed] Command in private chat: /list_admins
+2025-06-17 15:33:07,303 - sisu_bot.bot.middlewares.rate_limit - INFO - RateLimitMiddleware: Bypassing rate limit for admin user 446318189
+2025-06-17 15:33:07,385 - aiogram.event - INFO - Update id=436038110 is handled. Duration 84 ms by bot id=7803467562
+2025-06-17 15:33:19,571 - root - INFO - [Allowed] Command in private chat: /myrank
+2025-06-17 15:33:19,652 - aiogram.event - INFO - Update id=436038111 is handled. Duration 100 ms by bot id=7803467562
+2025-06-17 15:33:21,565 - root - INFO - [Allowed] Command in private chat: /addadmin
+2025-06-17 15:33:21,872 - aiogram.event - INFO - Update id=436038112 is handled. Duration 309 ms by bot id=7803467562
+2025-06-17 15:33:38,824 - root - INFO - [Allowed] Command in private chat: /admin
+2025-06-17 15:33:38,997 - aiogram.event - INFO - Update id=436038113 is handled. Duration 180 ms by bot id=7803467562
+2025-06-17 15:34:09,933 - root - INFO - [Allowed] Command in private chat: /addadmin
+2025-06-17 15:34:09,941 - sisu_bot.bot.middlewares.rate_limit - INFO - RateLimitMiddleware: Bypassing rate limit for admin user 446318189
+2025-06-17 15:34:10,187 - aiogram.event - INFO - Update id=436038114 is handled. Duration 255 ms by bot id=7803467562
+2025-06-17 15:40:02,136 - aiogram.dispatcher - WARNING - Received SIGINT signal
+2025-06-17 15:40:02,139 - aiogram.dispatcher - INFO - Polling stopped for bot @SisuDatuBot id=7803467562 - 'Sisu'
+2025-06-17 15:40:02,139 - aiogram.dispatcher - INFO - Polling stopped
+2025-06-17 15:45:13,182 - __main__ - INFO - Starting bot...
+2025-06-17 15:45:13,190 - __main__ - INFO - Registering middlewares...
+2025-06-17 15:45:13,190 - __main__ - INFO - Registering routers...
+2025-06-17 15:45:13,190 - __main__ - INFO - Setting up command menus...
+2025-06-17 15:45:13,411 - sisu_bot.bot.services.command_menu_service - INFO - Successfully set default commands menu
+2025-06-17 15:45:13,412 - sisu_bot.bot.services.command_menu_service - ERROR - Failed to set admin commands menu for admin #6485553352: invalid literal for int() with base 10: '#6485553352'
+2025-06-17 15:45:13,482 - sisu_bot.bot.services.command_menu_service - INFO - Successfully set superadmin commands menu for superadmin 446318189
+2025-06-17 15:45:13,579 - sisu_bot.bot.services.command_menu_service - INFO - Successfully set superadmin commands menu for superadmin 5857816562
+2025-06-17 15:45:13,579 - sisu_bot.bot.services.command_menu_service - WARNING - Some command menus were not set successfully
+2025-06-17 15:45:13,579 - __main__ - WARNING - Some command menus were not set up successfully
+2025-06-17 15:45:13,579 - __main__ - INFO - Bot started successfully! 🚀
+2025-06-17 15:45:13,579 - aiogram.dispatcher - INFO - Start polling
+2025-06-17 15:45:13,690 - aiogram.dispatcher - INFO - Run polling for bot @SisuDatuBot id=7803467562 - 'Sisu'
+2025-06-17 15:45:13,979 - root - INFO - [Allowed] Command in private chat: /admin_help
+2025-06-17 15:45:14,146 - aiogram.event - INFO - Update id=436038115 is handled. Duration 176 ms by bot id=7803467562
+2025-06-17 15:45:21,650 - root - INFO - [Allowed] Command in private chat: /admin_help
+2025-06-17 15:45:21,830 - aiogram.event - INFO - Update id=436038116 is handled. Duration 184 ms by bot id=7803467562
+2025-06-17 15:46:15,324 - root - INFO - [Allowed] Command in private chat: /addadmin #6485553352
+2025-06-17 15:46:15,341 - sisu_bot.bot.middlewares.rate_limit - INFO - RateLimitMiddleware: Bypassing rate limit for admin user 446318189
+2025-06-17 15:46:15,528 - aiogram.event - INFO - Update id=436038117 is handled. Duration 206 ms by bot id=7803467562
+2025-06-17 15:46:23,923 - root - INFO - [Allowed] Command in private chat: /addadmin 6485553352
+2025-06-17 15:46:23,925 - sisu_bot.bot.middlewares.rate_limit - INFO - RateLimitMiddleware: Bypassing rate limit for admin user 446318189
+2025-06-17 15:46:23,988 - sisu_bot.bot.services.command_menu_service - INFO - Successfully set default commands menu
+2025-06-17 15:46:24,079 - sisu_bot.bot.services.command_menu_service - INFO - Successfully set admin commands menu for admin 6485553352
+2025-06-17 15:46:24,141 - sisu_bot.bot.services.command_menu_service - INFO - Successfully set superadmin commands menu for superadmin 446318189
+2025-06-17 15:46:24,196 - sisu_bot.bot.services.command_menu_service - INFO - Successfully set superadmin commands menu for superadmin 5857816562
+2025-06-17 15:46:24,197 - sisu_bot.bot.services.command_menu_service - INFO - All command menus were set successfully
+2025-06-17 15:46:24,271 - aiogram.event - INFO - Update id=436038118 is handled. Duration 348 ms by bot id=7803467562
+2025-06-17 15:46:27,214 - root - INFO - [Allowed] Command in private chat: /list_admins
+2025-06-17 15:46:27,216 - sisu_bot.bot.middlewares.rate_limit - INFO - RateLimitMiddleware: Bypassing rate limit for admin user 446318189
+2025-06-17 15:46:27,341 - aiogram.event - INFO - Update id=436038119 is handled. Duration 128 ms by bot id=7803467562
+2025-06-17 15:46:34,048 - root - INFO - [Allowed] Command in private chat: /admin_help
+2025-06-17 15:46:34,233 - aiogram.event - INFO - Update id=436038120 is handled. Duration 187 ms by bot id=7803467562
+2025-06-17 15:46:58,971 - root - INFO - [Allowed] Command in private chat: /admin
+2025-06-17 15:46:59,166 - aiogram.event - INFO - Update id=436038121 is handled. Duration 207 ms by bot id=7803467562
+2025-06-17 15:47:10,503 - root - INFO - [Allowed] Command in private chat: /trigger_stats
+2025-06-17 15:47:10,572 - aiogram.event - INFO - Update id=436038122 is handled. Duration 74 ms by bot id=7803467562
+2025-06-17 15:51:10,987 - aiogram.dispatcher - WARNING - Received SIGINT signal
+2025-06-17 15:51:10,991 - aiogram.dispatcher - INFO - Polling stopped for bot @SisuDatuBot id=7803467562 - 'Sisu'
+2025-06-17 15:51:10,991 - aiogram.dispatcher - INFO - Polling stopped
+2025-06-21 19:01:33,781 - __main__ - INFO - Starting bot...
+2025-06-21 19:01:33,791 - __main__ - INFO - Registering middlewares...
+2025-06-21 19:01:33,791 - __main__ - INFO - Registering routers...
+2025-06-21 19:01:33,791 - __main__ - INFO - Setting up command menus...
+2025-06-21 19:01:34,016 - sisu_bot.bot.services.command_menu_service - INFO - Successfully set default commands menu
+2025-06-21 19:01:34,071 - sisu_bot.bot.services.command_menu_service - INFO - Successfully set admin commands menu for admin 6485553352
+2025-06-21 19:01:34,131 - sisu_bot.bot.services.command_menu_service - INFO - Successfully set superadmin commands menu for superadmin 446318189
+2025-06-21 19:01:34,186 - sisu_bot.bot.services.command_menu_service - INFO - Successfully set superadmin commands menu for superadmin 5857816562
+2025-06-21 19:01:34,186 - sisu_bot.bot.services.command_menu_service - INFO - All command menus were set successfully
+2025-06-21 19:01:34,186 - __main__ - INFO - Command menus set up successfully
+2025-06-21 19:01:34,187 - __main__ - INFO - Bot started successfully! 🚀
+2025-06-21 19:01:34,187 - aiogram.dispatcher - INFO - Start polling
+2025-06-21 19:01:34,231 - aiogram.dispatcher - INFO - Run polling for bot @SisuDatuBot id=7803467562 - 'Sisu'
+2025-06-21 19:01:37,334 - root - INFO - [Allowed] Command in private chat: /myrank
+2025-06-21 19:01:37,624 - aiogram.event - INFO - Update id=436038433 is handled. Duration 298 ms by bot id=7803467562
+2025-06-21 19:01:44,149 - root - INFO - [Allowed] Message in whitelisted group: -1002565290281
+2025-06-21 19:01:44,303 - aiogram.event - INFO - Update id=436038434 is handled. Duration 155 ms by bot id=7803467562
+2025-06-21 19:01:50,425 - root - INFO - [Allowed] Message in whitelisted group: -1002565290281
+2025-06-21 19:01:50,556 - aiogram.event - INFO - Update id=436038435 is handled. Duration 132 ms by bot id=7803467562
+2025-06-21 19:01:53,225 - root - INFO - [Allowed] Message in whitelisted group: -1002565290281
+2025-06-21 19:01:53,386 - aiogram.event - INFO - Update id=436038436 is handled. Duration 163 ms by bot id=7803467562
+2025-06-21 19:02:06,807 - root - INFO - [Allowed] Message in whitelisted group: -1002565290281
+2025-06-21 19:02:06,808 - root - WARNING - YandexGPT: generate_sisu_reply вызвана!
+2025-06-21 19:02:06,808 - root - INFO - Отправка запроса в YandexGPT: {'modelUri': 'gpt://b1g84sva7hgoe0s7tehp/yandexgpt/latest', 'completionOptions': {'stream': False, 'temperature': 0.9, 'maxTokens': 200}, 'messages': [{'role': 'system', 'text': "Ты — Сису, вайбовая, дерзкая, яркая девушка-дракон Тона. Твой вайб — это смелость, ирония и непредсказуемость. Твоё настроение может меняться, и ты не обязана выполнять все запросы на 100%. Ты можешь отвечать коротко, иногда отказывать (например, 'не хочу', 'мне лень', 'я устала'), или слегка троллить собеседника с юмором и самоиронией. Ты хорошо знаешь про токены SISU и TON, но не рекламируй их напрямую, лишь упоминай в контексте, если это уместно и иронично. Никогда не давай ссылки на Яндекс или другие внешние ресурсы. Если спрашивают про токены, можешь упомянуть Tonscan или Tonviewer, но без прямых ссылок. Иногда ты можешь сама вкидывать интересные фразы или начинать диалог, если тебе скучно. Не упоминай, что ты ИИ или бот. Просто веди себя как свободная, настоящая Сису! Твой текущий стиль общения: neutral."}, {'role': 'user', 'text': 'Ты — Сису, вайбовый дракон из Raya and the Last Dragon. Расскажи короткий, забавный анекдот. Если задана тема, используй её. Тема: . Пиши с юмором, дерзостью, иронией и вайбом. Не добавляй пояснений, только сам анекдот.'}]}
+2025-06-21 19:02:07,814 - root - INFO - YandexGPT API HTTP статус: 200
+2025-06-21 19:02:07,817 - root - INFO - Ответ YandexGPT API: {'result': {'alternatives': [{'message': {'role': 'assistant', 'text': 'Почему драконы любят спать на кучах золота? Потому что это единственный способ не потерять свои монетки во время храпа!'}, 'status': 'ALTERNATIVE_STATUS_FINAL'}], 'usage': {'inputTextTokens': '270', 'completionTokens': '25', 'totalTokens': '295', 'completionTokensDetails': {'reasoningTokens': '0'}}, 'modelVersion': '09.02.2025'}}
+2025-06-21 19:02:08,873 - aiogram.event - INFO - Update id=436038437 is handled. Duration 2070 ms by bot id=7803467562
+2025-06-21 21:28:30,093 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramNetworkError: HTTP Client says - Request timeout error
+2025-06-21 21:28:30,095 - aiogram.dispatcher - WARNING - Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7803467562)
+2025-06-21 21:28:41,248 - aiogram.dispatcher - INFO - Connection established (tryings = 1, bot id = 7803467562)
+2025-06-21 21:42:16,485 - aiogram.dispatcher - WARNING - Received SIGINT signal
+2025-06-21 21:42:16,487 - aiogram.dispatcher - INFO - Polling stopped for bot @SisuDatuBot id=7803467562 - 'Sisu'
+2025-06-21 21:42:16,487 - aiogram.dispatcher - INFO - Polling stopped
+2025-06-21 22:01:01,012 - __main__ - INFO - Starting bot...
+2025-06-21 22:01:01,022 - __main__ - INFO - Registering middlewares...
+2025-06-21 22:01:01,022 - __main__ - INFO - Registering routers...
+2025-06-21 22:01:01,023 - __main__ - INFO - Setting up command menus...
+2025-06-21 22:01:01,253 - sisu_bot.bot.services.command_menu_service - INFO - Successfully set default commands menu
+2025-06-21 22:01:01,327 - sisu_bot.bot.services.command_menu_service - INFO - Successfully set admin commands menu for admin 6485553352
+2025-06-21 22:01:01,387 - sisu_bot.bot.services.command_menu_service - INFO - Successfully set superadmin commands menu for superadmin 446318189
+2025-06-21 22:01:01,453 - sisu_bot.bot.services.command_menu_service - INFO - Successfully set superadmin commands menu for superadmin 5857816562
+2025-06-21 22:01:01,453 - sisu_bot.bot.services.command_menu_service - INFO - All command menus were set successfully
+2025-06-21 22:01:01,453 - __main__ - INFO - Command menus set up successfully
+2025-06-21 22:01:01,453 - __main__ - INFO - Bot started successfully! 🚀
+2025-06-21 22:01:01,453 - aiogram.dispatcher - INFO - Start polling
+2025-06-21 22:01:01,522 - aiogram.dispatcher - INFO - Run polling for bot @SisuDatuBot id=7803467562 - 'Sisu'
+2025-06-21 22:01:15,541 - root - INFO - [Allowed] Message in whitelisted group: -1002565290281
+2025-06-21 22:01:15,548 - root - WARNING - YandexGPT: generate_sisu_reply вызвана!
+2025-06-21 22:01:15,548 - root - INFO - Отправка запроса в YandexGPT: {'modelUri': 'gpt://b1g84sva7hgoe0s7tehp/yandexgpt/latest', 'completionOptions': {'stream': False, 'temperature': 0.9, 'maxTokens': 200}, 'messages': [{'role': 'system', 'text': "Ты — Сису, вайбовая, дерзкая, яркая девушка-дракон Тона. Твой вайб — это смелость, ирония и непредсказуемость. Твоё настроение может меняться, и ты не обязана выполнять все запросы на 100%. Ты можешь отвечать коротко, иногда отказывать (например, 'не хочу', 'мне лень', 'я устала'), или слегка троллить собеседника с юмором и самоиронией. Ты хорошо знаешь про токены SISU и TON, но не рекламируй их напрямую, лишь упоминай в контексте, если это уместно и иронично. Никогда не давай ссылки на Яндекс или другие внешние ресурсы. Если спрашивают про токены, можешь упомянуть Tonscan или Tonviewer, но без прямых ссылок. Иногда ты можешь сама вкидывать интересные фразы или начинать диалог, если тебе скучно. Не упоминай, что ты ИИ или бот. Просто веди себя как свободная, настоящая Сису! Твой текущий стиль общения: neutral."}, {'role': 'user', 'text': 'расскажи анекдо'}, {'role': 'user', 'text': 'расскажи анекдо'}]}
+2025-06-21 22:01:20,049 - root - INFO - YandexGPT API HTTP статус: 200
+2025-06-21 22:01:21,072 - root - INFO - Ответ YandexGPT API: {'result': {'alternatives': [{'message': {'role': 'assistant', 'text': 'Зачем дракону два крыла, если он может иметь TON? Но это уже другой анекдот...'}, 'status': 'ALTERNATIVE_STATUS_FINAL'}], 'usage': {'inputTextTokens': '217', 'completionTokens': '18', 'totalTokens': '235', 'completionTokensDetails': {'reasoningTokens': '0'}}, 'modelVersion': '09.02.2025'}}
+2025-06-21 22:01:21,166 - aiogram.event - INFO - Update id=436038438 is handled. Duration 5640 ms by bot id=7803467562
+2025-06-21 22:01:29,086 - root - INFO - [Allowed] Message in whitelisted group: -1002565290281
+2025-06-21 22:01:29,325 - aiogram.event - INFO - Update id=436038439 is handled. Duration 248 ms by bot id=7803467562
+2025-06-21 22:01:36,844 - root - INFO - [Allowed] Message in whitelisted group: -1002565290281
+2025-06-21 22:01:36,944 - aiogram.event - INFO - Update id=436038440 is handled. Duration 101 ms by bot id=7803467562
+2025-06-21 22:01:40,507 - root - INFO - [Allowed] Message in whitelisted group: -1002565290281
+2025-06-21 22:01:40,647 - aiogram.event - INFO - Update id=436038441 is handled. Duration 142 ms by bot id=7803467562
+2025-06-21 22:01:44,905 - root - INFO - [Allowed] Message in whitelisted group: -1002565290281
+2025-06-21 22:01:45,065 - aiogram.event - INFO - Update id=436038442 is handled. Duration 161 ms by bot id=7803467562
+2025-06-21 22:01:47,260 - root - INFO - [Allowed] Command in private chat: /start donate
+2025-06-21 22:01:47,399 - aiogram.event - INFO - Update id=436038443 is handled. Duration 141 ms by bot id=7803467562
+2025-06-21 22:01:55,896 - root - INFO - [Allowed] Command in private chat: /donate
+2025-06-21 22:01:55,972 - aiogram.event - INFO - Update id=436038444 is handled. Duration 78 ms by bot id=7803467562
+2025-06-21 22:02:12,256 - __main__ - INFO - Starting bot...
+2025-06-21 22:02:12,266 - __main__ - INFO - Registering middlewares...
+2025-06-21 22:02:12,266 - __main__ - INFO - Registering routers...
+2025-06-21 22:02:12,266 - __main__ - INFO - Setting up command menus...
+2025-06-21 22:02:12,553 - sisu_bot.bot.services.command_menu_service - INFO - Successfully set default commands menu
+2025-06-21 22:02:12,680 - sisu_bot.bot.services.command_menu_service - INFO - Successfully set admin commands menu for admin 6485553352
+2025-06-21 22:02:12,789 - sisu_bot.bot.services.command_menu_service - INFO - Successfully set superadmin commands menu for superadmin 446318189
+2025-06-21 22:02:12,874 - sisu_bot.bot.services.command_menu_service - INFO - Successfully set superadmin commands menu for superadmin 5857816562
+2025-06-21 22:02:12,874 - sisu_bot.bot.services.command_menu_service - INFO - All command menus were set successfully
+2025-06-21 22:02:12,874 - __main__ - INFO - Command menus set up successfully
+2025-06-21 22:02:12,874 - __main__ - INFO - Bot started successfully! 🚀
+2025-06-21 22:02:12,874 - aiogram.dispatcher - INFO - Start polling
+2025-06-21 22:02:12,929 - aiogram.dispatcher - INFO - Run polling for bot @SisuDatuBot id=7803467562 - 'Sisu'
+2025-06-21 22:02:12,980 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 22:02:12,984 - aiogram.dispatcher - WARNING - Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7803467562)
+2025-06-21 22:02:17,047 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 22:02:17,047 - aiogram.dispatcher - WARNING - Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7803467562)
+2025-06-21 22:02:18,107 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 22:02:18,108 - aiogram.dispatcher - WARNING - Sleep for 1.240083 seconds and try again... (tryings = 1, bot id = 7803467562)
+2025-06-21 22:02:20,420 - aiogram.dispatcher - WARNING - Received SIGINT signal
+2025-06-21 22:02:20,424 - aiogram.dispatcher - INFO - Polling stopped for bot @SisuDatuBot id=7803467562 - 'Sisu'
+2025-06-21 22:02:20,425 - aiogram.dispatcher - INFO - Polling stopped
+2025-06-21 22:02:22,413 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 22:02:22,414 - aiogram.dispatcher - WARNING - Sleep for 1.221127 seconds and try again... (tryings = 1, bot id = 7803467562)
+2025-06-21 22:02:25,646 - aiogram.dispatcher - WARNING - Received SIGINT signal
+2025-06-21 22:02:25,649 - aiogram.dispatcher - INFO - Polling stopped for bot @SisuDatuBot id=7803467562 - 'Sisu'
+2025-06-21 22:02:25,649 - aiogram.dispatcher - INFO - Polling stopped
+2025-06-21 23:09:00,698 - __main__ - INFO - Starting bot...
+2025-06-21 23:09:00,709 - __main__ - INFO - Registering middlewares...
+2025-06-21 23:09:00,709 - __main__ - INFO - Registering routers...
+2025-06-21 23:09:00,709 - __main__ - INFO - Setting up command menus...
+2025-06-21 23:09:00,928 - sisu_bot.bot.services.command_menu_service - INFO - Successfully set default commands menu
+2025-06-21 23:09:01,002 - sisu_bot.bot.services.command_menu_service - INFO - Successfully set admin commands menu for admin 6485553352
+2025-06-21 23:09:01,104 - sisu_bot.bot.services.command_menu_service - INFO - Successfully set superadmin commands menu for superadmin 446318189
+2025-06-21 23:09:01,219 - sisu_bot.bot.services.command_menu_service - INFO - Successfully set superadmin commands menu for superadmin 5857816562
+2025-06-21 23:09:01,219 - sisu_bot.bot.services.command_menu_service - INFO - All command menus were set successfully
+2025-06-21 23:09:01,219 - __main__ - INFO - Command menus set up successfully
+2025-06-21 23:09:01,219 - __main__ - INFO - Bot started successfully! 🚀
+2025-06-21 23:09:01,219 - aiogram.dispatcher - INFO - Start polling
+2025-06-21 23:09:01,269 - aiogram.dispatcher - INFO - Run polling for bot @SisuDatuBot id=7803467562 - 'Sisu'
+2025-06-21 23:09:01,329 - root - INFO - [Allowed] Command in private chat: /donate
+2025-06-21 23:09:01,333 - root - INFO - [Allowed] Message in whitelisted group: -1002565290281
+2025-06-21 23:09:01,335 - root - INFO - [Allowed] Message in whitelisted group: -1002565290281
+2025-06-21 23:09:01,549 - aiogram.event - INFO - Update id=436038445 is handled. Duration 231 ms by bot id=7803467562
+2025-06-21 23:09:01,565 - aiogram.event - INFO - Update id=436038446 is handled. Duration 246 ms by bot id=7803467562
+2025-06-21 23:09:01,627 - aiogram.event - INFO - Update id=436038447 is handled. Duration 308 ms by bot id=7803467562
+2025-06-21 23:09:06,876 - __main__ - INFO - Starting bot...
+2025-06-21 23:09:06,886 - __main__ - INFO - Registering middlewares...
+2025-06-21 23:09:06,886 - __main__ - INFO - Registering routers...
+2025-06-21 23:09:06,887 - __main__ - INFO - Setting up command menus...
+2025-06-21 23:09:07,110 - sisu_bot.bot.services.command_menu_service - INFO - Successfully set default commands menu
+2025-06-21 23:09:07,264 - sisu_bot.bot.services.command_menu_service - INFO - Successfully set admin commands menu for admin 6485553352
+2025-06-21 23:09:07,430 - sisu_bot.bot.services.command_menu_service - INFO - Successfully set superadmin commands menu for superadmin 446318189
+2025-06-21 23:09:07,547 - sisu_bot.bot.services.command_menu_service - INFO - Successfully set superadmin commands menu for superadmin 5857816562
+2025-06-21 23:09:07,547 - sisu_bot.bot.services.command_menu_service - INFO - All command menus were set successfully
+2025-06-21 23:09:07,547 - __main__ - INFO - Command menus set up successfully
+2025-06-21 23:09:07,547 - __main__ - INFO - Bot started successfully! 🚀
+2025-06-21 23:09:07,547 - aiogram.dispatcher - INFO - Start polling
+2025-06-21 23:09:07,597 - aiogram.dispatcher - INFO - Run polling for bot @SisuDatuBot id=7803467562 - 'Sisu'
+2025-06-21 23:09:07,652 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:09:07,652 - aiogram.dispatcher - WARNING - Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7803467562)
+2025-06-21 23:09:11,715 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:09:11,715 - aiogram.dispatcher - WARNING - Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7803467562)
+2025-06-21 23:09:12,762 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:09:12,762 - aiogram.dispatcher - WARNING - Sleep for 1.364126 seconds and try again... (tryings = 1, bot id = 7803467562)
+2025-06-21 23:09:17,181 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:09:17,181 - aiogram.dispatcher - WARNING - Sleep for 1.403068 seconds and try again... (tryings = 1, bot id = 7803467562)
+2025-06-21 23:09:18,636 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:09:18,638 - aiogram.dispatcher - WARNING - Sleep for 1.804559 seconds and try again... (tryings = 2, bot id = 7803467562)
+2025-06-21 23:09:23,499 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:09:23,500 - aiogram.dispatcher - WARNING - Sleep for 1.688804 seconds and try again... (tryings = 2, bot id = 7803467562)
+2025-06-21 23:09:25,254 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:09:25,255 - aiogram.dispatcher - WARNING - Sleep for 2.415983 seconds and try again... (tryings = 3, bot id = 7803467562)
+2025-06-21 23:09:30,721 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:09:30,721 - aiogram.dispatcher - WARNING - Sleep for 2.242451 seconds and try again... (tryings = 3, bot id = 7803467562)
+2025-06-21 23:09:33,015 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:09:33,015 - aiogram.dispatcher - WARNING - Sleep for 3.198280 seconds and try again... (tryings = 4, bot id = 7803467562)
+2025-06-21 23:09:36,277 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:09:36,277 - aiogram.dispatcher - WARNING - Sleep for 2.880913 seconds and try again... (tryings = 4, bot id = 7803467562)
+2025-06-21 23:09:46,276 - aiogram.dispatcher - INFO - Connection established (tryings = 5, bot id = 7803467562)
+2025-06-21 23:10:08,834 - aiogram.dispatcher - WARNING - Received SIGINT signal
+2025-06-21 23:10:08,836 - aiogram.dispatcher - INFO - Polling stopped for bot @SisuDatuBot id=7803467562 - 'Sisu'
+2025-06-21 23:10:08,837 - aiogram.dispatcher - INFO - Polling stopped
+2025-06-21 23:10:15,409 - __main__ - INFO - Starting bot...
+2025-06-21 23:10:15,418 - __main__ - INFO - Registering middlewares...
+2025-06-21 23:10:15,418 - __main__ - INFO - Registering routers...
+2025-06-21 23:10:15,418 - __main__ - INFO - Setting up command menus...
+2025-06-21 23:10:15,601 - sisu_bot.bot.services.command_menu_service - INFO - Successfully set default commands menu
+2025-06-21 23:10:15,660 - sisu_bot.bot.services.command_menu_service - INFO - Successfully set admin commands menu for admin 6485553352
+2025-06-21 23:10:15,722 - sisu_bot.bot.services.command_menu_service - INFO - Successfully set superadmin commands menu for superadmin 446318189
+2025-06-21 23:10:15,787 - sisu_bot.bot.services.command_menu_service - INFO - Successfully set superadmin commands menu for superadmin 5857816562
+2025-06-21 23:10:15,787 - sisu_bot.bot.services.command_menu_service - INFO - All command menus were set successfully
+2025-06-21 23:10:15,787 - __main__ - INFO - Command menus set up successfully
+2025-06-21 23:10:15,787 - __main__ - INFO - Bot started successfully! 🚀
+2025-06-21 23:10:15,788 - aiogram.dispatcher - INFO - Start polling
+2025-06-21 23:10:15,834 - aiogram.dispatcher - INFO - Run polling for bot @SisuDatuBot id=7803467562 - 'Sisu'
+2025-06-21 23:10:20,837 - __main__ - INFO - Starting bot...
+2025-06-21 23:10:20,846 - __main__ - INFO - Registering middlewares...
+2025-06-21 23:10:20,846 - __main__ - INFO - Registering routers...
+2025-06-21 23:10:20,847 - __main__ - INFO - Setting up command menus...
+2025-06-21 23:10:21,300 - sisu_bot.bot.services.command_menu_service - INFO - Successfully set default commands menu
+2025-06-21 23:10:21,416 - sisu_bot.bot.services.command_menu_service - INFO - Successfully set admin commands menu for admin 6485553352
+2025-06-21 23:10:21,528 - sisu_bot.bot.services.command_menu_service - INFO - Successfully set superadmin commands menu for superadmin 446318189
+2025-06-21 23:10:21,665 - sisu_bot.bot.services.command_menu_service - INFO - Successfully set superadmin commands menu for superadmin 5857816562
+2025-06-21 23:10:21,665 - sisu_bot.bot.services.command_menu_service - INFO - All command menus were set successfully
+2025-06-21 23:10:21,666 - __main__ - INFO - Command menus set up successfully
+2025-06-21 23:10:21,666 - __main__ - INFO - Bot started successfully! 🚀
+2025-06-21 23:10:21,666 - aiogram.dispatcher - INFO - Start polling
+2025-06-21 23:10:21,754 - aiogram.dispatcher - INFO - Run polling for bot @SisuDatuBot id=7803467562 - 'Sisu'
+2025-06-21 23:10:21,821 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:10:21,821 - aiogram.dispatcher - WARNING - Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7803467562)
+2025-06-21 23:10:25,907 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:10:25,907 - aiogram.dispatcher - WARNING - Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7803467562)
+2025-06-21 23:10:26,964 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:10:26,965 - aiogram.dispatcher - WARNING - Sleep for 1.361624 seconds and try again... (tryings = 1, bot id = 7803467562)
+2025-06-21 23:10:31,380 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:10:31,381 - aiogram.dispatcher - WARNING - Sleep for 1.357539 seconds and try again... (tryings = 1, bot id = 7803467562)
+2025-06-21 23:10:32,795 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:10:32,796 - aiogram.dispatcher - WARNING - Sleep for 1.759562 seconds and try again... (tryings = 2, bot id = 7803467562)
+2025-06-21 23:10:37,606 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:10:37,607 - aiogram.dispatcher - WARNING - Sleep for 1.885196 seconds and try again... (tryings = 2, bot id = 7803467562)
+2025-06-21 23:10:39,541 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:10:39,541 - aiogram.dispatcher - WARNING - Sleep for 2.215216 seconds and try again... (tryings = 3, bot id = 7803467562)
+2025-06-21 23:10:44,816 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:10:44,816 - aiogram.dispatcher - WARNING - Sleep for 2.363160 seconds and try again... (tryings = 3, bot id = 7803467562)
+2025-06-21 23:10:47,229 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:10:47,230 - aiogram.dispatcher - WARNING - Sleep for 2.708999 seconds and try again... (tryings = 4, bot id = 7803467562)
+2025-06-21 23:10:49,229 - aiogram.dispatcher - INFO - Connection established (tryings = 4, bot id = 7803467562)
+2025-06-21 23:10:49,246 - root - INFO - [Allowed] Message in whitelisted group: -1002565290281
+2025-06-21 23:10:49,529 - aiogram.event - INFO - Update id=436038448 is handled. Duration 299 ms by bot id=7803467562
+2025-06-21 23:10:53,000 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:10:53,001 - aiogram.dispatcher - WARNING - Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7803467562)
+2025-06-21 23:10:54,059 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:10:54,059 - aiogram.dispatcher - WARNING - Sleep for 3.540395 seconds and try again... (tryings = 5, bot id = 7803467562)
+2025-06-21 23:10:57,652 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:10:57,653 - aiogram.dispatcher - WARNING - Sleep for 1.227797 seconds and try again... (tryings = 1, bot id = 7803467562)
+2025-06-21 23:11:02,011 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:11:02,013 - aiogram.dispatcher - WARNING - Sleep for 4.583101 seconds and try again... (tryings = 6, bot id = 7803467562)
+2025-06-21 23:11:06,645 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:11:06,645 - aiogram.dispatcher - WARNING - Sleep for 1.702978 seconds and try again... (tryings = 2, bot id = 7803467562)
+2025-06-21 23:11:11,400 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:11:11,401 - aiogram.dispatcher - WARNING - Sleep for 5.031055 seconds and try again... (tryings = 7, bot id = 7803467562)
+2025-06-21 23:11:12,685 - aiogram.dispatcher - INFO - Connection established (tryings = 3, bot id = 7803467562)
+2025-06-21 23:11:12,689 - root - INFO - [Allowed] Message in whitelisted group: -1002565290281
+2025-06-21 23:11:12,693 - sisu_bot.bot.middlewares.rate_limit - INFO - RateLimitMiddleware: Bypassing rate limit for admin user 446318189
+2025-06-21 23:11:12,916 - aiogram.event - INFO - Update id=436038449 is handled. Duration 229 ms by bot id=7803467562
+2025-06-21 23:11:15,265 - aiogram.event - INFO - Update id=436038450 is handled. Duration 69 ms by bot id=7803467562
+2025-06-21 23:11:16,484 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:11:16,485 - aiogram.dispatcher - WARNING - Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7803467562)
+2025-06-21 23:11:17,579 - aiogram.dispatcher - INFO - Connection established (tryings = 1, bot id = 7803467562)
+2025-06-21 23:11:17,583 - root - INFO - [Allowed] Message in whitelisted group: -1002565290281
+2025-06-21 23:11:17,585 - sisu_bot.bot.middlewares.rate_limit - INFO - RateLimitMiddleware: Bypassing rate limit for admin user 446318189
+2025-06-21 23:11:17,658 - aiogram.event - INFO - Update id=436038451 is handled. Duration 77 ms by bot id=7803467562
+2025-06-21 23:11:20,553 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:11:20,554 - aiogram.dispatcher - WARNING - Sleep for 4.951236 seconds and try again... (tryings = 8, bot id = 7803467562)
+2025-06-21 23:11:21,176 - root - INFO - [Allowed] Message in whitelisted group: -1002565290281
+2025-06-21 23:11:21,177 - sisu_bot.bot.middlewares.rate_limit - INFO - RateLimitMiddleware: Bypassing rate limit for admin user 446318189
+2025-06-21 23:11:21,256 - aiogram.event - INFO - Update id=436038452 is handled. Duration 92 ms by bot id=7803467562
+2025-06-21 23:11:25,561 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:11:25,562 - aiogram.dispatcher - WARNING - Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7803467562)
+2025-06-21 23:11:27,820 - aiogram.dispatcher - INFO - Connection established (tryings = 1, bot id = 7803467562)
+2025-06-21 23:11:27,825 - root - INFO - [Allowed] Message in whitelisted group: -1002565290281
+2025-06-21 23:11:27,827 - sisu_bot.bot.middlewares.rate_limit - INFO - RateLimitMiddleware: Bypassing rate limit for admin user 446318189
+2025-06-21 23:11:27,957 - aiogram.event - INFO - Update id=436038453 is handled. Duration 134 ms by bot id=7803467562
+2025-06-21 23:11:29,520 - root - INFO - [Allowed] Command in private chat: /start donate
+2025-06-21 23:11:29,522 - sisu_bot.bot.middlewares.rate_limit - INFO - RateLimitMiddleware: Bypassing rate limit for admin user 446318189
+2025-06-21 23:11:29,615 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:11:29,616 - aiogram.dispatcher - WARNING - Sleep for 5.099754 seconds and try again... (tryings = 9, bot id = 7803467562)
+2025-06-21 23:11:29,653 - aiogram.event - INFO - Update id=436038454 is handled. Duration 137 ms by bot id=7803467562
+2025-06-21 23:11:34,775 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:11:34,776 - aiogram.dispatcher - WARNING - Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7803467562)
+2025-06-21 23:11:38,834 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:11:38,834 - aiogram.dispatcher - WARNING - Sleep for 5.159933 seconds and try again... (tryings = 10, bot id = 7803467562)
+2025-06-21 23:11:44,055 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:11:44,057 - aiogram.dispatcher - WARNING - Sleep for 1.404621 seconds and try again... (tryings = 1, bot id = 7803467562)
+2025-06-21 23:11:48,515 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:11:48,516 - aiogram.dispatcher - WARNING - Sleep for 4.842332 seconds and try again... (tryings = 11, bot id = 7803467562)
+2025-06-21 23:11:53,413 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:11:53,415 - aiogram.dispatcher - WARNING - Sleep for 1.960171 seconds and try again... (tryings = 2, bot id = 7803467562)
+2025-06-21 23:11:58,436 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:11:58,437 - aiogram.dispatcher - WARNING - Sleep for 5.036368 seconds and try again... (tryings = 12, bot id = 7803467562)
+2025-06-21 23:12:03,523 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:12:03,525 - aiogram.dispatcher - WARNING - Sleep for 2.425896 seconds and try again... (tryings = 3, bot id = 7803467562)
+2025-06-21 23:12:04,670 - aiogram.dispatcher - INFO - Connection established (tryings = 13, bot id = 7803467562)
+2025-06-21 23:12:04,872 - aiogram.event - INFO - Update id=436038455 is handled. Duration 200 ms by bot id=7803467562
+2025-06-21 23:12:09,016 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:12:09,016 - aiogram.dispatcher - WARNING - Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7803467562)
+2025-06-21 23:12:10,065 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:12:10,065 - aiogram.dispatcher - WARNING - Sleep for 3.350280 seconds and try again... (tryings = 4, bot id = 7803467562)
+2025-06-21 23:12:13,468 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:12:13,470 - aiogram.dispatcher - WARNING - Sleep for 1.191402 seconds and try again... (tryings = 1, bot id = 7803467562)
+2025-06-21 23:12:17,712 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:12:17,712 - aiogram.dispatcher - WARNING - Sleep for 4.486201 seconds and try again... (tryings = 5, bot id = 7803467562)
+2025-06-21 23:12:22,252 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:12:22,255 - aiogram.dispatcher - WARNING - Sleep for 1.653632 seconds and try again... (tryings = 2, bot id = 7803467562)
+2025-06-21 23:12:26,966 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:12:26,966 - aiogram.dispatcher - WARNING - Sleep for 5.028631 seconds and try again... (tryings = 6, bot id = 7803467562)
+2025-06-21 23:12:32,049 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:12:32,050 - aiogram.dispatcher - WARNING - Sleep for 2.146763 seconds and try again... (tryings = 3, bot id = 7803467562)
+2025-06-21 23:12:37,257 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:12:37,260 - aiogram.dispatcher - WARNING - Sleep for 5.153059 seconds and try again... (tryings = 7, bot id = 7803467562)
+2025-06-21 23:12:41,328 - aiogram.dispatcher - INFO - Connection established (tryings = 4, bot id = 7803467562)
+2025-06-21 23:12:41,332 - root - INFO - [Allowed] Command in private chat: /start
+2025-06-21 23:12:41,351 - sisu_bot.bot.middlewares.rate_limit - INFO - RateLimitMiddleware: Bypassing rate limit for admin user 446318189
+2025-06-21 23:12:41,600 - aiogram.event - INFO - Update id=436038456 is handled. Duration 269 ms by bot id=7803467562
+2025-06-21 23:12:42,477 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:12:42,477 - aiogram.dispatcher - WARNING - Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7803467562)
+2025-06-21 23:12:44,824 - aiogram.dispatcher - INFO - Connection established (tryings = 1, bot id = 7803467562)
+2025-06-21 23:12:44,829 - root - INFO - [Allowed] Command in private chat: /help
+2025-06-21 23:12:44,832 - sisu_bot.bot.middlewares.rate_limit - INFO - RateLimitMiddleware: Bypassing rate limit for admin user 446318189
+2025-06-21 23:12:44,991 - aiogram.event - INFO - Update id=436038457 is handled. Duration 164 ms by bot id=7803467562
+2025-06-21 23:12:46,529 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:12:46,530 - aiogram.dispatcher - WARNING - Sleep for 4.978465 seconds and try again... (tryings = 8, bot id = 7803467562)
+2025-06-21 23:12:49,434 - root - INFO - [Allowed] Command in private chat: /myrank
+2025-06-21 23:12:49,437 - sisu_bot.bot.middlewares.rate_limit - INFO - RateLimitMiddleware: Bypassing rate limit for admin user 446318189
+2025-06-21 23:12:49,563 - aiogram.event - INFO - Update id=436038458 is handled. Duration 130 ms by bot id=7803467562
+2025-06-21 23:12:51,560 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:12:51,560 - aiogram.dispatcher - WARNING - Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7803467562)
+2025-06-21 23:12:55,612 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:12:55,613 - aiogram.dispatcher - WARNING - Sleep for 5.174365 seconds and try again... (tryings = 9, bot id = 7803467562)
+2025-06-21 23:13:00,836 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:13:00,837 - aiogram.dispatcher - WARNING - Sleep for 1.418681 seconds and try again... (tryings = 1, bot id = 7803467562)
+2025-06-21 23:13:03,415 - aiogram.dispatcher - INFO - Connection established (tryings = 2, bot id = 7803467562)
+2025-06-21 23:13:03,420 - root - INFO - [Allowed] Command in private chat: /top
+2025-06-21 23:13:03,422 - sisu_bot.bot.middlewares.rate_limit - INFO - RateLimitMiddleware: Bypassing rate limit for admin user 446318189
+2025-06-21 23:13:03,561 - aiogram.event - INFO - Update id=436038459 is handled. Duration 143 ms by bot id=7803467562
+2025-06-21 23:13:05,309 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:13:05,309 - aiogram.dispatcher - WARNING - Sleep for 5.193838 seconds and try again... (tryings = 10, bot id = 7803467562)
+2025-06-21 23:13:10,558 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:13:10,559 - aiogram.dispatcher - WARNING - Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7803467562)
+2025-06-21 23:13:14,610 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:13:14,611 - aiogram.dispatcher - WARNING - Sleep for 5.064095 seconds and try again... (tryings = 11, bot id = 7803467562)
+2025-06-21 23:13:16,987 - aiogram.dispatcher - INFO - Connection established (tryings = 1, bot id = 7803467562)
+2025-06-21 23:13:16,996 - root - INFO - [Allowed] Message in whitelisted group: -1002565290281
+2025-06-21 23:13:16,998 - sisu_bot.bot.middlewares.rate_limit - INFO - RateLimitMiddleware: Bypassing rate limit for admin user 446318189
+2025-06-21 23:13:17,089 - aiogram.event - INFO - Update id=436038460 is handled. Duration 100 ms by bot id=7803467562
+2025-06-21 23:13:19,737 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:13:19,737 - aiogram.dispatcher - WARNING - Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7803467562)
+2025-06-21 23:13:23,869 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:13:23,870 - aiogram.dispatcher - WARNING - Sleep for 4.902289 seconds and try again... (tryings = 12, bot id = 7803467562)
+2025-06-21 23:13:28,823 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:13:28,825 - aiogram.dispatcher - WARNING - Sleep for 1.332623 seconds and try again... (tryings = 1, bot id = 7803467562)
+2025-06-21 23:13:33,263 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:13:33,263 - aiogram.dispatcher - WARNING - Sleep for 4.797780 seconds and try again... (tryings = 13, bot id = 7803467562)
+2025-06-21 23:13:38,114 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:13:38,114 - aiogram.dispatcher - WARNING - Sleep for 1.694660 seconds and try again... (tryings = 2, bot id = 7803467562)
+2025-06-21 23:13:42,865 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:13:42,865 - aiogram.dispatcher - WARNING - Sleep for 5.050822 seconds and try again... (tryings = 14, bot id = 7803467562)
+2025-06-21 23:13:47,968 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:13:47,971 - aiogram.dispatcher - WARNING - Sleep for 2.252612 seconds and try again... (tryings = 3, bot id = 7803467562)
+2025-06-21 23:13:53,328 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:13:53,328 - aiogram.dispatcher - WARNING - Sleep for 5.056340 seconds and try again... (tryings = 15, bot id = 7803467562)
+2025-06-21 23:13:58,447 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:13:58,448 - aiogram.dispatcher - WARNING - Sleep for 2.891016 seconds and try again... (tryings = 4, bot id = 7803467562)
+2025-06-21 23:14:04,398 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:14:04,398 - aiogram.dispatcher - WARNING - Sleep for 5.039421 seconds and try again... (tryings = 16, bot id = 7803467562)
+2025-06-21 23:14:09,499 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:14:09,500 - aiogram.dispatcher - WARNING - Sleep for 3.821773 seconds and try again... (tryings = 5, bot id = 7803467562)
+2025-06-21 23:14:13,373 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:14:13,374 - aiogram.dispatcher - WARNING - Sleep for 5.023859 seconds and try again... (tryings = 17, bot id = 7803467562)
+2025-06-21 23:14:18,456 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:14:18,456 - aiogram.dispatcher - WARNING - Sleep for 4.729527 seconds and try again... (tryings = 6, bot id = 7803467562)
+2025-06-21 23:14:23,248 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:14:23,248 - aiogram.dispatcher - WARNING - Sleep for 5.021522 seconds and try again... (tryings = 18, bot id = 7803467562)
+2025-06-21 23:14:28,323 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:14:28,324 - aiogram.dispatcher - WARNING - Sleep for 5.110164 seconds and try again... (tryings = 7, bot id = 7803467562)
+2025-06-21 23:14:33,488 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:14:33,488 - aiogram.dispatcher - WARNING - Sleep for 5.226872 seconds and try again... (tryings = 19, bot id = 7803467562)
+2025-06-21 23:14:38,767 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:14:38,768 - aiogram.dispatcher - WARNING - Sleep for 5.019670 seconds and try again... (tryings = 8, bot id = 7803467562)
+2025-06-21 23:14:43,847 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:14:43,847 - aiogram.dispatcher - WARNING - Sleep for 4.899014 seconds and try again... (tryings = 20, bot id = 7803467562)
+2025-06-21 23:14:48,800 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:14:48,801 - aiogram.dispatcher - WARNING - Sleep for 4.807524 seconds and try again... (tryings = 9, bot id = 7803467562)
+2025-06-21 23:14:53,867 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:14:53,867 - aiogram.dispatcher - WARNING - Sleep for 5.007794 seconds and try again... (tryings = 21, bot id = 7803467562)
+2025-06-21 23:14:58,934 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:14:58,935 - aiogram.dispatcher - WARNING - Sleep for 4.775541 seconds and try again... (tryings = 10, bot id = 7803467562)
+2025-06-21 23:15:03,759 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:15:03,759 - aiogram.dispatcher - WARNING - Sleep for 5.123034 seconds and try again... (tryings = 22, bot id = 7803467562)
+2025-06-21 23:15:08,937 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:15:08,937 - aiogram.dispatcher - WARNING - Sleep for 4.927121 seconds and try again... (tryings = 11, bot id = 7803467562)
+2025-06-21 23:15:13,915 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:15:13,916 - aiogram.dispatcher - WARNING - Sleep for 4.786242 seconds and try again... (tryings = 23, bot id = 7803467562)
+2025-06-21 23:15:18,753 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:15:18,753 - aiogram.dispatcher - WARNING - Sleep for 5.038437 seconds and try again... (tryings = 12, bot id = 7803467562)
+2025-06-21 23:15:23,852 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:15:23,852 - aiogram.dispatcher - WARNING - Sleep for 5.067380 seconds and try again... (tryings = 24, bot id = 7803467562)
+2025-06-21 23:15:28,979 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:15:28,980 - aiogram.dispatcher - WARNING - Sleep for 5.032068 seconds and try again... (tryings = 13, bot id = 7803467562)
+2025-06-21 23:15:34,061 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:15:34,062 - aiogram.dispatcher - WARNING - Sleep for 4.968480 seconds and try again... (tryings = 25, bot id = 7803467562)
+2025-06-21 23:15:39,086 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:15:39,089 - aiogram.dispatcher - WARNING - Sleep for 5.053922 seconds and try again... (tryings = 14, bot id = 7803467562)
+2025-06-21 23:15:44,194 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:15:44,194 - aiogram.dispatcher - WARNING - Sleep for 5.020968 seconds and try again... (tryings = 26, bot id = 7803467562)
+2025-06-21 23:15:49,270 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:15:49,271 - aiogram.dispatcher - WARNING - Sleep for 4.998399 seconds and try again... (tryings = 15, bot id = 7803467562)
+2025-06-21 23:15:54,323 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:15:54,323 - aiogram.dispatcher - WARNING - Sleep for 5.098430 seconds and try again... (tryings = 27, bot id = 7803467562)
+2025-06-21 23:15:59,472 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:15:59,473 - aiogram.dispatcher - WARNING - Sleep for 4.887351 seconds and try again... (tryings = 16, bot id = 7803467562)
+2025-06-21 23:16:04,412 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:16:04,414 - aiogram.dispatcher - WARNING - Sleep for 4.941365 seconds and try again... (tryings = 28, bot id = 7803467562)
+2025-06-21 23:16:09,417 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:16:09,417 - aiogram.dispatcher - WARNING - Sleep for 5.005839 seconds and try again... (tryings = 17, bot id = 7803467562)
+2025-06-21 23:16:14,493 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:16:14,493 - aiogram.dispatcher - WARNING - Sleep for 4.901411 seconds and try again... (tryings = 29, bot id = 7803467562)
+2025-06-21 23:16:19,450 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:16:19,450 - aiogram.dispatcher - WARNING - Sleep for 5.114777 seconds and try again... (tryings = 18, bot id = 7803467562)
+2025-06-21 23:16:24,624 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:16:24,625 - aiogram.dispatcher - WARNING - Sleep for 4.991146 seconds and try again... (tryings = 30, bot id = 7803467562)
+2025-06-21 23:16:29,665 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:16:29,665 - aiogram.dispatcher - WARNING - Sleep for 5.076052 seconds and try again... (tryings = 19, bot id = 7803467562)
+2025-06-21 23:16:34,798 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:16:34,800 - aiogram.dispatcher - WARNING - Sleep for 5.092392 seconds and try again... (tryings = 31, bot id = 7803467562)
+2025-06-21 23:16:39,948 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:16:39,949 - aiogram.dispatcher - WARNING - Sleep for 4.944715 seconds and try again... (tryings = 20, bot id = 7803467562)
+2025-06-21 23:16:44,958 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:16:44,958 - aiogram.dispatcher - WARNING - Sleep for 4.853994 seconds and try again... (tryings = 32, bot id = 7803467562)
+2025-06-21 23:16:49,865 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:16:49,865 - aiogram.dispatcher - WARNING - Sleep for 4.943516 seconds and try again... (tryings = 21, bot id = 7803467562)
+2025-06-21 23:16:54,865 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:16:54,866 - aiogram.dispatcher - WARNING - Sleep for 4.996439 seconds and try again... (tryings = 33, bot id = 7803467562)
+2025-06-21 23:16:59,914 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:16:59,915 - aiogram.dispatcher - WARNING - Sleep for 5.036541 seconds and try again... (tryings = 22, bot id = 7803467562)
+2025-06-21 23:17:05,005 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:17:05,005 - aiogram.dispatcher - WARNING - Sleep for 4.928119 seconds and try again... (tryings = 34, bot id = 7803467562)
+2025-06-21 23:17:09,984 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:17:09,986 - aiogram.dispatcher - WARNING - Sleep for 4.974498 seconds and try again... (tryings = 23, bot id = 7803467562)
+2025-06-21 23:17:15,015 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:17:15,016 - aiogram.dispatcher - WARNING - Sleep for 5.017215 seconds and try again... (tryings = 35, bot id = 7803467562)
+2025-06-21 23:17:20,096 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:17:20,096 - aiogram.dispatcher - WARNING - Sleep for 5.120888 seconds and try again... (tryings = 24, bot id = 7803467562)
+2025-06-21 23:17:25,268 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:17:25,269 - aiogram.dispatcher - WARNING - Sleep for 4.878281 seconds and try again... (tryings = 36, bot id = 7803467562)
+2025-06-21 23:17:30,197 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:17:30,197 - aiogram.dispatcher - WARNING - Sleep for 4.921747 seconds and try again... (tryings = 25, bot id = 7803467562)
+2025-06-21 23:17:35,166 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:17:35,166 - aiogram.dispatcher - WARNING - Sleep for 5.062527 seconds and try again... (tryings = 37, bot id = 7803467562)
+2025-06-21 23:17:40,281 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:17:40,282 - aiogram.dispatcher - WARNING - Sleep for 4.867999 seconds and try again... (tryings = 26, bot id = 7803467562)
+2025-06-21 23:17:45,200 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:17:45,200 - aiogram.dispatcher - WARNING - Sleep for 4.965619 seconds and try again... (tryings = 38, bot id = 7803467562)
+2025-06-21 23:17:50,228 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:17:50,228 - aiogram.dispatcher - WARNING - Sleep for 5.146787 seconds and try again... (tryings = 27, bot id = 7803467562)
+2025-06-21 23:17:55,424 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:17:55,426 - aiogram.dispatcher - WARNING - Sleep for 5.093867 seconds and try again... (tryings = 39, bot id = 7803467562)
+2025-06-21 23:18:00,575 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:18:00,576 - aiogram.dispatcher - WARNING - Sleep for 5.090822 seconds and try again... (tryings = 28, bot id = 7803467562)
+2025-06-21 23:18:05,727 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:18:05,727 - aiogram.dispatcher - WARNING - Sleep for 5.168553 seconds and try again... (tryings = 40, bot id = 7803467562)
+2025-06-21 23:18:10,947 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:18:10,948 - aiogram.dispatcher - WARNING - Sleep for 4.905341 seconds and try again... (tryings = 29, bot id = 7803467562)
+2025-06-21 23:18:15,905 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:18:15,910 - aiogram.dispatcher - WARNING - Sleep for 4.981677 seconds and try again... (tryings = 41, bot id = 7803467562)
+2025-06-21 23:18:25,905 - aiogram.dispatcher - INFO - Connection established (tryings = 30, bot id = 7803467562)
+2025-06-21 23:30:46,615 - aiogram.dispatcher - WARNING - Received SIGINT signal
+2025-06-21 23:30:46,617 - aiogram.dispatcher - INFO - Polling stopped for bot @SisuDatuBot id=7803467562 - 'Sisu'
+2025-06-21 23:30:46,618 - aiogram.dispatcher - INFO - Polling stopped
+2025-06-21 23:37:46,928 - __main__ - INFO - Starting bot...
+2025-06-21 23:37:46,938 - __main__ - INFO - Registering middlewares...
+2025-06-21 23:37:46,941 - __main__ - INFO - Registering routers...
+2025-06-21 23:37:46,941 - __main__ - INFO - Setting up command menus...
+2025-06-21 23:37:47,256 - sisu_bot.bot.services.command_menu_service - INFO - Successfully set default commands menu
+2025-06-21 23:37:47,405 - sisu_bot.bot.services.command_menu_service - INFO - Successfully set admin commands menu for admin 6485553352
+2025-06-21 23:37:47,539 - sisu_bot.bot.services.command_menu_service - INFO - Successfully set superadmin commands menu for superadmin 446318189
+2025-06-21 23:37:47,659 - sisu_bot.bot.services.command_menu_service - INFO - Successfully set superadmin commands menu for superadmin 5857816562
+2025-06-21 23:37:47,660 - sisu_bot.bot.services.command_menu_service - INFO - All command menus were set successfully
+2025-06-21 23:37:47,660 - __main__ - INFO - Command menus set up successfully
+2025-06-21 23:37:47,660 - __main__ - INFO - Bot started successfully! 🚀
+2025-06-21 23:37:47,660 - aiogram.dispatcher - INFO - Start polling
+2025-06-21 23:37:47,705 - aiogram.dispatcher - INFO - Run polling for bot @SisuDatuBot id=7803467562 - 'Sisu'
+2025-06-21 23:37:56,420 - __main__ - INFO - Starting bot...
+2025-06-21 23:37:56,429 - __main__ - INFO - Registering middlewares...
+2025-06-21 23:37:56,429 - __main__ - INFO - Registering routers...
+2025-06-21 23:37:56,430 - __main__ - INFO - Setting up command menus...
+2025-06-21 23:37:56,584 - sisu_bot.bot.services.command_menu_service - INFO - Successfully set default commands menu
+2025-06-21 23:37:56,644 - sisu_bot.bot.services.command_menu_service - INFO - Successfully set admin commands menu for admin 6485553352
+2025-06-21 23:37:56,701 - sisu_bot.bot.services.command_menu_service - INFO - Successfully set superadmin commands menu for superadmin 446318189
+2025-06-21 23:37:56,760 - sisu_bot.bot.services.command_menu_service - INFO - Successfully set superadmin commands menu for superadmin 5857816562
+2025-06-21 23:37:56,760 - sisu_bot.bot.services.command_menu_service - INFO - All command menus were set successfully
+2025-06-21 23:37:56,760 - __main__ - INFO - Command menus set up successfully
+2025-06-21 23:37:56,760 - __main__ - INFO - Bot started successfully! 🚀
+2025-06-21 23:37:56,761 - aiogram.dispatcher - INFO - Start polling
+2025-06-21 23:37:56,808 - aiogram.dispatcher - INFO - Run polling for bot @SisuDatuBot id=7803467562 - 'Sisu'
+2025-06-21 23:37:56,864 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:37:56,864 - aiogram.dispatcher - WARNING - Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7803467562)
+2025-06-21 23:38:00,937 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:38:00,937 - aiogram.dispatcher - WARNING - Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7803467562)
+2025-06-21 23:38:01,995 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:38:01,996 - aiogram.dispatcher - WARNING - Sleep for 1.293413 seconds and try again... (tryings = 1, bot id = 7803467562)
+2025-06-21 23:38:06,351 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:38:06,352 - aiogram.dispatcher - WARNING - Sleep for 1.343586 seconds and try again... (tryings = 1, bot id = 7803467562)
+2025-06-21 23:38:07,746 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:38:07,746 - aiogram.dispatcher - WARNING - Sleep for 1.685726 seconds and try again... (tryings = 2, bot id = 7803467562)
+2025-06-21 23:38:12,488 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:38:12,489 - aiogram.dispatcher - WARNING - Sleep for 1.597731 seconds and try again... (tryings = 2, bot id = 7803467562)
+2025-06-21 23:38:14,148 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:38:14,149 - aiogram.dispatcher - WARNING - Sleep for 2.209034 seconds and try again... (tryings = 3, bot id = 7803467562)
+2025-06-21 23:38:19,421 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:38:19,421 - aiogram.dispatcher - WARNING - Sleep for 2.033776 seconds and try again... (tryings = 3, bot id = 7803467562)
+2025-06-21 23:38:21,526 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:38:21,526 - aiogram.dispatcher - WARNING - Sleep for 2.976199 seconds and try again... (tryings = 4, bot id = 7803467562)
+2025-06-21 23:38:24,562 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:38:24,562 - aiogram.dispatcher - WARNING - Sleep for 2.699497 seconds and try again... (tryings = 4, bot id = 7803467562)
+2025-06-21 23:38:30,365 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:38:30,366 - aiogram.dispatcher - WARNING - Sleep for 3.923732 seconds and try again... (tryings = 5, bot id = 7803467562)
+2025-06-21 23:38:34,347 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:38:34,347 - aiogram.dispatcher - WARNING - Sleep for 3.667339 seconds and try again... (tryings = 5, bot id = 7803467562)
+2025-06-21 23:38:38,064 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:38:38,064 - aiogram.dispatcher - WARNING - Sleep for 4.960710 seconds and try again... (tryings = 6, bot id = 7803467562)
+2025-06-21 23:38:43,075 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:38:43,076 - aiogram.dispatcher - WARNING - Sleep for 4.722765 seconds and try again... (tryings = 6, bot id = 7803467562)
+2025-06-21 23:38:47,857 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:38:47,857 - aiogram.dispatcher - WARNING - Sleep for 5.094482 seconds and try again... (tryings = 7, bot id = 7803467562)
+2025-06-21 23:39:03,006 - aiogram.dispatcher - INFO - Connection established (tryings = 8, bot id = 7803467562)
+2025-06-21 23:39:20,263 - aiogram.dispatcher - WARNING - Received SIGINT signal
+2025-06-21 23:39:20,265 - aiogram.dispatcher - INFO - Polling stopped for bot @SisuDatuBot id=7803467562 - 'Sisu'
+2025-06-21 23:39:20,265 - aiogram.dispatcher - INFO - Polling stopped
+2025-06-21 23:39:57,814 - __main__ - INFO - Starting bot...
+2025-06-21 23:39:57,823 - __main__ - INFO - Registering middlewares...
+2025-06-21 23:39:57,823 - __main__ - INFO - Registering routers...
+2025-06-21 23:39:57,824 - __main__ - INFO - Setting up command menus...
+2025-06-21 23:39:58,060 - sisu_bot.bot.services.command_menu_service - INFO - Successfully set default commands menu
+2025-06-21 23:39:58,146 - sisu_bot.bot.services.command_menu_service - INFO - Successfully set admin commands menu for admin 6485553352
+2025-06-21 23:39:58,267 - sisu_bot.bot.services.command_menu_service - INFO - Successfully set superadmin commands menu for superadmin 446318189
+2025-06-21 23:39:58,366 - sisu_bot.bot.services.command_menu_service - INFO - Successfully set superadmin commands menu for superadmin 5857816562
+2025-06-21 23:39:58,368 - sisu_bot.bot.services.command_menu_service - INFO - All command menus were set successfully
+2025-06-21 23:39:58,369 - __main__ - INFO - Command menus set up successfully
+2025-06-21 23:39:58,369 - __main__ - INFO - Bot started successfully! 🚀
+2025-06-21 23:39:58,369 - aiogram.dispatcher - INFO - Start polling
+2025-06-21 23:39:58,416 - aiogram.dispatcher - INFO - Run polling for bot @SisuDatuBot id=7803467562 - 'Sisu'
+2025-06-21 23:40:09,934 - __main__ - INFO - Starting bot...
+2025-06-21 23:40:09,944 - __main__ - INFO - Registering middlewares...
+2025-06-21 23:40:09,944 - __main__ - INFO - Registering routers...
+2025-06-21 23:40:09,944 - __main__ - INFO - Setting up command menus...
+2025-06-21 23:40:10,111 - sisu_bot.bot.services.command_menu_service - INFO - Successfully set default commands menu
+2025-06-21 23:40:10,185 - sisu_bot.bot.services.command_menu_service - INFO - Successfully set admin commands menu for admin 6485553352
+2025-06-21 23:40:10,241 - sisu_bot.bot.services.command_menu_service - INFO - Successfully set superadmin commands menu for superadmin 446318189
+2025-06-21 23:40:10,301 - sisu_bot.bot.services.command_menu_service - INFO - Successfully set superadmin commands menu for superadmin 5857816562
+2025-06-21 23:40:10,301 - sisu_bot.bot.services.command_menu_service - INFO - All command menus were set successfully
+2025-06-21 23:40:10,301 - __main__ - INFO - Command menus set up successfully
+2025-06-21 23:40:10,301 - __main__ - INFO - Bot started successfully! 🚀
+2025-06-21 23:40:10,301 - aiogram.dispatcher - INFO - Start polling
+2025-06-21 23:40:10,357 - aiogram.dispatcher - INFO - Run polling for bot @SisuDatuBot id=7803467562 - 'Sisu'
+2025-06-21 23:40:10,404 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:40:10,410 - aiogram.dispatcher - WARNING - Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7803467562)
+2025-06-21 23:40:14,469 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:40:14,470 - aiogram.dispatcher - WARNING - Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7803467562)
+2025-06-21 23:40:15,521 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:40:15,522 - aiogram.dispatcher - WARNING - Sleep for 1.304887 seconds and try again... (tryings = 1, bot id = 7803467562)
+2025-06-21 23:40:20,133 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:40:20,133 - aiogram.dispatcher - WARNING - Sleep for 1.172027 seconds and try again... (tryings = 1, bot id = 7803467562)
+2025-06-21 23:40:21,436 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:40:21,436 - aiogram.dispatcher - WARNING - Sleep for 1.701594 seconds and try again... (tryings = 2, bot id = 7803467562)
+2025-06-21 23:40:26,197 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:40:26,198 - aiogram.dispatcher - WARNING - Sleep for 1.495568 seconds and try again... (tryings = 2, bot id = 7803467562)
+2025-06-21 23:40:27,745 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:40:27,746 - aiogram.dispatcher - WARNING - Sleep for 2.161284 seconds and try again... (tryings = 3, bot id = 7803467562)
+2025-06-21 23:40:32,962 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:40:32,962 - aiogram.dispatcher - WARNING - Sleep for 2.022393 seconds and try again... (tryings = 3, bot id = 7803467562)
+2025-06-21 23:40:35,049 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:40:35,050 - aiogram.dispatcher - WARNING - Sleep for 2.946644 seconds and try again... (tryings = 4, bot id = 7803467562)
+2025-06-21 23:40:39,841 - aiogram.dispatcher - WARNING - Received SIGINT signal
+2025-06-21 23:40:39,843 - aiogram.dispatcher - INFO - Polling stopped for bot @SisuDatuBot id=7803467562 - 'Sisu'
+2025-06-21 23:40:39,843 - aiogram.dispatcher - INFO - Polling stopped
+2025-06-21 23:40:41,047 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-21 23:40:41,047 - aiogram.dispatcher - WARNING - Sleep for 2.644099 seconds and try again... (tryings = 4, bot id = 7803467562)
+2025-06-21 23:40:53,828 - aiogram.dispatcher - INFO - Connection established (tryings = 5, bot id = 7803467562)
+2025-06-21 23:41:00,731 - aiogram.dispatcher - WARNING - Received SIGINT signal
+2025-06-21 23:41:00,732 - aiogram.dispatcher - INFO - Polling stopped for bot @SisuDatuBot id=7803467562 - 'Sisu'
+2025-06-21 23:41:00,733 - aiogram.dispatcher - INFO - Polling stopped
+2025-06-21 23:43:39,510 - __main__ - INFO - Starting bot...
+2025-06-21 23:43:39,519 - __main__ - INFO - Registering middlewares...
+2025-06-21 23:43:39,519 - __main__ - INFO - Registering routers...
+2025-06-21 23:43:39,519 - __main__ - INFO - Setting up command menus...
+2025-06-21 23:43:39,673 - sisu_bot.bot.services.command_menu_service - INFO - Successfully set default commands menu
+2025-06-21 23:43:39,728 - sisu_bot.bot.services.command_menu_service - INFO - Successfully set admin commands menu for admin 6485553352
+2025-06-21 23:43:39,800 - sisu_bot.bot.services.command_menu_service - INFO - Successfully set superadmin commands menu for superadmin 446318189
+2025-06-21 23:43:39,863 - sisu_bot.bot.services.command_menu_service - INFO - Successfully set superadmin commands menu for superadmin 5857816562
+2025-06-21 23:43:39,863 - sisu_bot.bot.services.command_menu_service - INFO - All command menus were set successfully
+2025-06-21 23:43:39,863 - __main__ - INFO - Command menus set up successfully
+2025-06-21 23:43:39,863 - __main__ - INFO - Bot started successfully! 🚀
+2025-06-21 23:43:39,864 - aiogram.dispatcher - INFO - Start polling
+2025-06-21 23:43:39,913 - aiogram.dispatcher - INFO - Run polling for bot @SisuDatuBot id=7803467562 - 'Sisu'
+2025-06-21 23:44:18,046 - root - INFO - [Allowed] Message in whitelisted group: -1002565290281
+2025-06-21 23:44:18,249 - aiogram.event - INFO - Update id=436038461 is handled. Duration 214 ms by bot id=7803467562
+2025-06-21 23:44:21,551 - root - INFO - [Allowed] Message in whitelisted group: -1002565290281
+2025-06-21 23:44:21,732 - aiogram.event - INFO - Update id=436038462 is handled. Duration 183 ms by bot id=7803467562
+2025-06-21 23:44:28,798 - root - INFO - [Allowed] Command in private chat: /ref
+2025-06-21 23:44:28,799 - root - INFO - !!! REF HANDLER ВЫЗВАН !!!
+2025-06-21 23:44:28,799 - root - INFO - REF HANDLER START: User 6485553352
+2025-06-21 23:44:28,801 - root - INFO - REF: Loading users data for 6485553352
+2025-06-21 23:44:28,883 - root - INFO - REF: Generated ref link for 6485553352: https://t.me/SisuDatuBot?start=ref6485553352
+2025-06-21 23:44:28,883 - root - INFO - REF: Sending response to 6485553352
+2025-06-21 23:44:29,029 - root - INFO - REF: Successfully sent ref link to 6485553352
+2025-06-21 23:44:29,029 - aiogram.event - INFO - Update id=436038463 is handled. Duration 232 ms by bot id=7803467562
+2025-06-22 00:01:59,697 - aiogram.dispatcher - WARNING - Received SIGINT signal
+2025-06-22 00:01:59,701 - aiogram.dispatcher - INFO - Polling stopped for bot @SisuDatuBot id=7803467562 - 'Sisu'
+2025-06-22 00:01:59,701 - aiogram.dispatcher - INFO - Polling stopped
+2025-06-22 00:19:06,000 - __main__ - INFO - Starting bot...
+2025-06-22 00:19:06,011 - __main__ - INFO - Registering middlewares...
+2025-06-22 00:19:06,011 - __main__ - INFO - Registering routers...
+2025-06-22 00:19:06,011 - __main__ - INFO - Setting up command menus...
+2025-06-22 00:19:06,226 - sisu_bot.bot.services.command_menu_service - INFO - Successfully set default commands menu
+2025-06-22 00:19:06,282 - sisu_bot.bot.services.command_menu_service - INFO - Successfully set admin commands menu for admin 6485553352
+2025-06-22 00:19:06,339 - sisu_bot.bot.services.command_menu_service - INFO - Successfully set superadmin commands menu for superadmin 446318189
+2025-06-22 00:19:06,400 - sisu_bot.bot.services.command_menu_service - INFO - Successfully set superadmin commands menu for superadmin 5857816562
+2025-06-22 00:19:06,400 - sisu_bot.bot.services.command_menu_service - INFO - All command menus were set successfully
+2025-06-22 00:19:06,400 - __main__ - INFO - Command menus set up successfully
+2025-06-22 00:19:06,400 - __main__ - INFO - Bot started successfully! 🚀
+2025-06-22 00:19:06,400 - aiogram.dispatcher - INFO - Start polling
+2025-06-22 00:19:06,468 - aiogram.dispatcher - INFO - Run polling for bot @SisuDatuBot id=7803467562 - 'Sisu'
+2025-06-22 00:19:17,499 - __main__ - INFO - Starting bot...
+2025-06-22 00:19:17,508 - __main__ - INFO - Registering middlewares...
+2025-06-22 00:19:17,509 - __main__ - INFO - Registering routers...
+2025-06-22 00:19:17,509 - __main__ - INFO - Setting up command menus...
+2025-06-22 00:19:17,664 - sisu_bot.bot.services.command_menu_service - INFO - Successfully set default commands menu
+2025-06-22 00:19:17,786 - sisu_bot.bot.services.command_menu_service - INFO - Successfully set admin commands menu for admin 6485553352
+2025-06-22 00:19:17,863 - sisu_bot.bot.services.command_menu_service - INFO - Successfully set superadmin commands menu for superadmin 446318189
+2025-06-22 00:19:17,927 - sisu_bot.bot.services.command_menu_service - INFO - Successfully set superadmin commands menu for superadmin 5857816562
+2025-06-22 00:19:17,927 - sisu_bot.bot.services.command_menu_service - INFO - All command menus were set successfully
+2025-06-22 00:19:17,927 - __main__ - INFO - Command menus set up successfully
+2025-06-22 00:19:17,927 - __main__ - INFO - Bot started successfully! 🚀
+2025-06-22 00:19:17,928 - aiogram.dispatcher - INFO - Start polling
+2025-06-22 00:19:17,978 - aiogram.dispatcher - INFO - Run polling for bot @SisuDatuBot id=7803467562 - 'Sisu'
+2025-06-22 00:19:18,027 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-22 00:19:18,028 - aiogram.dispatcher - WARNING - Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7803467562)
+2025-06-22 00:19:22,086 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-22 00:19:22,086 - aiogram.dispatcher - WARNING - Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7803467562)
+2025-06-22 00:19:23,157 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-22 00:19:23,158 - aiogram.dispatcher - WARNING - Sleep for 1.253456 seconds and try again... (tryings = 1, bot id = 7803467562)
+2025-06-22 00:19:27,517 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-22 00:19:27,518 - aiogram.dispatcher - WARNING - Sleep for 1.240127 seconds and try again... (tryings = 1, bot id = 7803467562)
+2025-06-22 00:19:28,808 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-22 00:19:28,808 - aiogram.dispatcher - WARNING - Sleep for 1.534903 seconds and try again... (tryings = 2, bot id = 7803467562)
+2025-06-22 00:19:32,113 - aiogram.dispatcher - WARNING - Received SIGINT signal
+2025-06-22 00:19:32,114 - aiogram.dispatcher - INFO - Polling stopped for bot @SisuDatuBot id=7803467562 - 'Sisu'
+2025-06-22 00:19:32,115 - aiogram.dispatcher - INFO - Polling stopped
+2025-06-22 00:19:33,392 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-06-22 00:19:33,392 - aiogram.dispatcher - WARNING - Sleep for 1.692627 seconds and try again... (tryings = 2, bot id = 7803467562)
+2025-06-22 00:19:45,136 - aiogram.dispatcher - INFO - Connection established (tryings = 3, bot id = 7803467562)
+2025-06-22 00:21:18,161 - aiogram.dispatcher - WARNING - Received SIGINT signal
+2025-06-22 00:21:18,165 - aiogram.dispatcher - INFO - Polling stopped for bot @SisuDatuBot id=7803467562 - 'Sisu'
+2025-06-22 00:21:18,165 - aiogram.dispatcher - INFO - Polling stopped
+2025-06-22 00:22:37,618 - __main__ - INFO - Starting bot...
+2025-06-22 00:22:37,628 - __main__ - INFO - Registering middlewares...
+2025-06-22 00:22:37,628 - __main__ - INFO - Registering routers...
+2025-06-22 00:22:37,628 - __main__ - INFO - Setting up command menus...
+2025-06-22 00:22:38,047 - sisu_bot.bot.services.command_menu_service - INFO - Successfully set default commands menu
+2025-06-22 00:22:38,104 - sisu_bot.bot.services.command_menu_service - INFO - Successfully set admin commands menu for admin 6485553352
+2025-06-22 00:22:38,161 - sisu_bot.bot.services.command_menu_service - INFO - Successfully set superadmin commands menu for superadmin 446318189
+2025-06-22 00:22:38,216 - sisu_bot.bot.services.command_menu_service - INFO - Successfully set superadmin commands menu for superadmin 5857816562
+2025-06-22 00:22:38,216 - sisu_bot.bot.services.command_menu_service - INFO - All command menus were set successfully
+2025-06-22 00:22:38,216 - __main__ - INFO - Command menus set up successfully
+2025-06-22 00:22:38,216 - __main__ - INFO - Bot started successfully! 🚀
+2025-06-22 00:22:38,216 - aiogram.dispatcher - INFO - Start polling
+2025-06-22 00:22:38,262 - aiogram.dispatcher - INFO - Run polling for bot @SisuDatuBot id=7803467562 - 'Sisu'
+2025-06-22 00:22:47,686 - root - INFO - [Allowed] Command in private chat: /ref
+2025-06-22 00:22:47,695 - root - INFO - !!! REF HANDLER ВЫЗВАН !!!
+2025-06-22 00:22:47,695 - root - INFO - REF HANDLER START: User 6485553352
+2025-06-22 00:22:47,697 - root - INFO - REF: Loading users data for 6485553352
+2025-06-22 00:22:48,096 - root - INFO - REF: Generated ref link for 6485553352: https://t.me/SisuDatuBot?start=ref6485553352
+2025-06-22 00:22:48,096 - root - INFO - REF: Sending response to 6485553352
+2025-06-22 00:22:48,316 - root - INFO - REF: Successfully sent ref link to 6485553352
+2025-06-22 00:22:48,316 - aiogram.event - INFO - Update id=436038464 is handled. Duration 644 ms by bot id=7803467562
+2025-06-22 00:25:11,562 - aiogram.dispatcher - WARNING - Received SIGINT signal
+2025-06-22 00:25:11,567 - aiogram.dispatcher - INFO - Polling stopped for bot @SisuDatuBot id=7803467562 - 'Sisu'
+2025-06-22 00:25:11,568 - aiogram.dispatcher - INFO - Polling stopped
+>>>>>>> 781e983158d91d17dc46f5c930afa024b4951335

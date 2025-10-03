@@ -976,7 +976,13 @@ async def ai_dialog_handler(msg: Message, state: FSMContext):
             return
     current_state = await state.get_state()
     
-    # Allow general AI dialog in private chats ONLY for superadmins, not for regular users
+    # Проверка AI лимитов
+    can_use, reason = ai_limits_service.can_use_ai(msg.from_user.id)
+    if not can_use:
+        await msg.answer(reason)
+        return
+    
+    # Allow general AI dialog in private chats by default, regardless of AI_DIALOG_ENABLED for superadmin
     if msg.chat.type == "private":
         # Проверяем, является ли пользователь суперадмином
         if not is_superadmin(msg.from_user.id):
